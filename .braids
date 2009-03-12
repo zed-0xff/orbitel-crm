@@ -1,0 +1,8 @@
+--- 
+vendor/plugins/restful-authentication-i18n: 
+  squashed: true
+  url: git://github.com/dcrec1/restful-authentication-i18n.git
+  type: git
+  revision: 2884f0a395a1d1ccd1211c9cb03b2b6f101be595
+  branch: master
+  remote: braid/vendor/plugins/restful-authentication-i18n
