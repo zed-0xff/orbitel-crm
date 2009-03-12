@@ -1,0 +1,2 @@
+class SuperManager < User
+end
