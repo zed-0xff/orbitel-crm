@@ -218,6 +218,8 @@ describe User do
     users(:quentin).remember_token_expires_at.between?(before, after).should be_true
   end
 
+  it "should save created_by"
+
 protected
   def create_user(options = {})
     record = Manager.new({ 

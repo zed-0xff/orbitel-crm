@@ -14,6 +14,7 @@ class UsersController < ApplicationController
     @user = User.new params[:user]
     @user.type = params[:user][:type]
     @user.email = nil if @user.email.blank?
+    @user.created_by = current_user
 
     if @user.save
       flash[:notice] = 'User created successfully'

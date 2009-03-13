@@ -34,6 +34,7 @@ en-US:
   activation_required_email_subject : 'Please activate your new account'
   blank_activation_code : "The activation code was missing.  Please follow the URL from your email."
   bogus_activation_code : "We couldn't find a {{model}} with that activation code -- check your email? Or maybe you've already activated -- try signing in."
+  class : "Class"
   create_account : "Create account"
   email : "Email"
   log_in : "Log In"

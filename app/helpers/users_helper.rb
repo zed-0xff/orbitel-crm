@@ -90,4 +90,8 @@ module UsersHelper
     end
   end
 
+  def can_manages_for_select
+    current_user.class::CAN_MANAGE.map{ |t| [t,t] }
+  end
+
 end
