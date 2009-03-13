@@ -1,5 +1,6 @@
 .DS_Store
 log/*.log
+log/*.pid
 tmp/**/*
 config/database.yml
 db/schema.rb
