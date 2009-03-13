@@ -1,0 +1,7 @@
+<html><head>
+</head><body>
+<% if flash && flash[:error] %>
+  <div class="error"><%= h flash[:error] %></div>
+<% end %>
+<%= yield %>
+</body></html>
