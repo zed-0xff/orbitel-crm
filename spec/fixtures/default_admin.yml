@@ -1,0 +1,5 @@
+admin:
+  type:                  Admin
+  login:                 admin
+  password:              orbitel
+  password_confirmation: orbitel
