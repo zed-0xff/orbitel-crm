@@ -67,13 +67,13 @@ describe UsersController do
       route_for(:controller => 'users', :action => 'index').should == "/users"
     end
     
-    it "should route users's 'new' action correctly" do
-      route_for(:controller => 'users', :action => 'new').should == "/signup"
-    end
+#    it "should route users's 'new' action correctly" do
+#      route_for(:controller => 'users', :action => 'new').should == "/signup"
+#    end
     
-    it "should route {:controller => 'users', :action => 'create'} correctly" do
-      route_for(:controller => 'users', :action => 'create').should == "/register"
-    end
+#    it "should route {:controller => 'users', :action => 'create'} correctly" do
+#      route_for(:controller => 'users', :action => 'create').should == "/register"
+#    end
     
     it "should route users's 'show' action correctly" do
       route_for(:controller => 'users', :action => 'show', :id => '1').should == "/users/1"
