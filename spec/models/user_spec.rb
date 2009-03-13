@@ -71,12 +71,12 @@ describe User do
     end.should_not change(User, :count)
   end
 
-  it 'requires email' do
-    lambda do
-      u = create_user(:email => nil)
-      u.errors.on(:email).should_not be_nil
-    end.should_not change(User, :count)
-  end
+#  it 'requires email' do
+#    lambda do
+#      u = create_user(:email => nil)
+#      u.errors.on(:email).should_not be_nil
+#    end.should_not change(User, :count)
+#  end
 
   describe 'allows legitimate emails:' do
     ['foo@bar.com', 'foo@newskool-tld.museum', 'foo@twoletter-tld.de', 'foo@nonexistant-tld.qq',

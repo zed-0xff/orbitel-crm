@@ -41,13 +41,13 @@ describe UsersController do
     end.should_not change(User, :count)
   end
 
-  it 'requires email on signup' do
-    lambda do
-      create_user(:email => nil)
-      assigns[:user].errors.on(:email).should_not be_nil
-      response.should be_success
-    end.should_not change(User, :count)
-  end
+#  it 'requires email on signup' do
+#    lambda do
+#      create_user(:email => nil)
+#      assigns[:user].errors.on(:email).should_not be_nil
+#      response.should be_success
+#    end.should_not change(User, :count)
+#  end
   
   
   

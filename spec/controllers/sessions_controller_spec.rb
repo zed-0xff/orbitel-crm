@@ -90,7 +90,7 @@ describe SessionsController do
     it 'logs out keeping session'   do controller.should_receive(:logout_keeping_session!); do_create end
     it 'flashes an error'           do
       msg = "E R R O R"
-      I18n.should_receive(:t).with(:login_failed, :login => 'quentin').and_return(msg)
+      I18n.should_receive(:t).with(:login_failed).and_return(msg)
       do_create
       flash[:error].should eql(msg) 
     end
