@@ -1,0 +1,32 @@
+body {
+	padding: 0 0 0 0;
+	margin:  0 0 0 0;
+	font: 10pt Verdana, Tahoma;
+}
+
+* {
+	font-family: Verdana, Tahoma;
+}
+
+h1 {
+	margin-left: 0.5em;
+}
+
+div.copyright {
+	font:  7pt Verdana, Tahoma;
+	color: #afafaf;
+	text-align: right;
+}
+
+div#user-bar-greeting {
+	width: 50%;
+	float: left;
+}
+
+div#user-bar-action {
+	text-align:right;
+}
+
+div.content {
+	margin: 0 0.5em 0 0.5em;
+}

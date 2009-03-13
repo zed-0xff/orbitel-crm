@@ -1,8 +1,9 @@
 <% if logged_in? -%>
   <div id="user-bar-greeting">
-    <%= I18n.t(:logged_in_as, :login => link_to_current_user, :content_method => :login) %>
+    <%= I18n.t(:logged_in_as, :login => '<b>'+current_user.login+'</b>') %>
+    (<%= current_user.class.to_s %>).
   </div>
-  <div id="user-bar-action">(<%= link_to t(:log_out), logout_path, { :title => t(:log_out) }    %>)</div>
+  <div id="user-bar-action">(<%= link_to t(:log_out), logout_path, { :title => t(:log_out) } %>)</div>
 <% else -%>
   <div id="user-bar-greeting">
     <%= link_to_login_with_IP I18n.t(:not_logged_in), :style => 'border: none;' %>
