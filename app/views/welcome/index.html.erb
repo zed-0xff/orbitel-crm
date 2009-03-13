@@ -1,0 +1,8 @@
+<h1>Welcome to Orbitel CRM</h1>
+<p>
+  <% if logged_in? %>
+    Logged in.
+  <% else %>
+    Not logged in. Please <%= link_to "log in", :login %> first.
+  <% end %>
+</p>
