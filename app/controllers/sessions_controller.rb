@@ -43,7 +43,7 @@ class SessionsController < ApplicationController
 protected
   # Track failed login attempts
   def note_failed_signin
-    flash[:error] = I18n.t(:login_failed, :login => params[:login])
+    flash[:error] = I18n.t(:login_failed)
     logger.warn "Failed login for '#{params[:login]}' from #{request.remote_ip} at #{Time.now.utc}"
   end
 end

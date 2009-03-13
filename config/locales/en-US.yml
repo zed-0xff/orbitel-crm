@@ -42,7 +42,7 @@ en-US:
   logged_in_as : "Logged in as {{login}}"
   logged_out : "You have been logged out."
   login : "Login"
-  login_failed : "Couldn't log you in as {{login}}'"
+  login_failed : "Login failed"
   new_user_sign_up : "Sign up as a new user"
   not_logged_in : "Not logged in"
   password : "Password"
