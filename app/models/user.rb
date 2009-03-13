@@ -1,6 +1,8 @@
 class User < ActiveRecord::Base
   include UserAuth
 
+  validates_presence_of     :type,     :if => Proc.new{ |u| u.class == User }
+
   validates_presence_of     :login
   validates_length_of       :login,    :within => 3..40
   validates_format_of       :login,    :with => Authentication.login_regex, :message => Authentication.bad_login_message
@@ -15,4 +17,9 @@ class User < ActiveRecord::Base
   validates_uniqueness_of   :email,    :unless => Proc.new{ |u| u.errors.on(:email) || u.errors.on(:login) }, :allow_nil => true
 
   belongs_to :created_by, :class_name => 'User'
+
+  def can_manage_users?
+    self.class.const_defined?('CAN_MANAGE') && self.class::CAN_MANAGE.any?
+  end
+
 end

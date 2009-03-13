@@ -1,6 +1,9 @@
 body {
 	padding: 0 0 0 0;
 	margin:  0 0 0 0;
+}
+
+body, td, th {
 	font: 10pt Verdana, Tahoma;
 }
 
@@ -30,3 +33,120 @@ div#user-bar-action {
 div.content {
 	margin: 0 0.5em 0 0.5em;
 }
+
+div.error {
+	border: solid 1px red;
+	width: 40%;
+	padding: 3px 5px 4px 5px;
+	margin: 8px 4px 2px 4px;
+	background: #ffb0b0;
+}
+
+/*
+-------------------------
+ ERRORS
+-------------------------
+*/
+
+.fieldWithErrors {
+  padding: 2px;
+  background-color: red;
+  display: table;
+}
+
+#errorExplanation {
+  width: 400px;
+  border: 2px solid red;
+  padding: 7px;
+  padding-bottom: 12px;
+  margin-bottom: 20px;
+  background-color: #f0f0f0;
+}
+
+#errorExplanation h2 {
+  text-align: left;
+  font-weight: bold;
+  padding: 5px 5px 5px 15px;
+  font-size: 12px;
+  margin: -7px;
+  background-color: #c00;
+  color: #fff;
+}
+
+#errorExplanation p {
+  color: #333;
+  margin-bottom: 0;
+  padding: 5px;
+}
+
+#errorExplanation ul li {
+  font-size: 12px;
+  list-style: square;
+}
+
+/*
+-------------------------
+ TABLES
+-------------------------
+*/
+
+table.t1 {
+	border-collapse: collapse;
+	/* margin: 0 auto; */
+	margin-bottom: 1em;
+	margin-left: 1em;
+}
+
+input + form .t1 {
+	margin-top: 1em;
+}
+
+.t1 td, .t1 th{
+	padding: 0 4;
+	border: solid 1px #ccc;
+}
+
+.t1 caption {
+	font: 9pt tahoma;
+	color: #666;
+}
+
+.t1 th {
+	background: #d0d0d0;
+	padding-bottom: 2px;
+	padding-top: 1px;
+	font:bold 8pt tahoma;
+}
+
+.t1 thead th {
+	font-weight: bold;
+	text-align: center;
+}
+
+form .t1 td {
+	padding: 0;
+	margin: 0;
+	width: 1;
+}
+
+.t1 td input {
+	margin: 0;
+}
+
+.t1 td input[type=submit], .t1 td input[type=button], .t1 td input[type=reset] {
+	margin-top: 0.4em;
+	margin-bottom: 0.3em;
+	width: 8em;
+	margin-right: 0.2em;
+	margin-left: 0.2em;
+}
+
+.t1 .submits {
+	border: 0;
+	text-align: center;
+}
+
+.t1 td + td {		/* comments in forms */
+	padding: 0 4;
+}
+

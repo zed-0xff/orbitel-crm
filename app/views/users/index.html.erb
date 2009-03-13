@@ -1,0 +1,19 @@
+<h2>Users</h2>
+<table class="t1">
+  <tr>
+    <th>id</th>
+    <th>login</th>
+    <th>class</th>
+  </tr>
+  <% for user in @users do %>
+    <tr>
+      <td align="right"><%= user.id %></td>
+      <td><%= user.login %></td>
+      <td><%= user.class %></td>
+    </tr>
+  <% end %>
+</table>
+
+<p>
+  <%= link_to 'Create new', new_user_path %>
+</p>

@@ -8,9 +8,8 @@ describe UsersController do
   fixtures :users
 
   it 'DO NOT allows signup' do
-    lambda do
-      create_user
-    end.should raise_error
+    create_user
+    response.should be_redirect
   end
 
 

@@ -134,12 +134,12 @@ describe User do
   end
 
   it 'resets password' do
-    users(:quentin).update_attributes(:password => 'new password', :password_confirmation => 'new password')
+    users(:quentin).update_attributes!(:password => 'new password', :password_confirmation => 'new password')
     User.authenticate('quentin', 'new password').should == users(:quentin)
   end
 
   it 'does not rehash password' do
-    users(:quentin).update_attributes(:login => 'quentin2')
+    users(:quentin).update_attributes!(:login => 'quentin2')
     User.authenticate('quentin2', 'monkey').should == users(:quentin)
   end
 
@@ -220,7 +220,12 @@ describe User do
 
 protected
   def create_user(options = {})
-    record = User.new({ :login => 'quire', :email => 'quire@example.com', :password => 'quire69', :password_confirmation => 'quire69' }.merge(options))
+    record = Manager.new({ 
+      :login => 'quire', 
+      :email => 'quire@example.com', 
+      :password => 'quire69', 
+      :password_confirmation => 'quire69' 
+    }.merge(options))
     record.save
     record
   end
