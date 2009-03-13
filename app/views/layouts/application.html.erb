@@ -1,7 +1,12 @@
 <html><head>
 </head><body>
+
+<%= render :partial => 'users/user_bar' %>
+
 <% if flash && flash[:error] %>
   <div class="error"><%= h flash[:error] %></div>
 <% end %>
+
 <%= yield %>
+
 </body></html>
