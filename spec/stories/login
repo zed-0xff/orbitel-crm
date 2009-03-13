@@ -1,0 +1,22 @@
+Story: registered user logs in
+  As a registered user
+  I want to have to log in
+  So that only other registered users can see my data
+
+  Scenario: user logs in and sees welcome page
+    Given a user registered with login: foo and password: test123
+    When user logs in with login: foo and password: test123
+    Then user should see the welcome page
+
+  Scenario: user logs in with wrong password
+    Given a user registered with login: foo and password: test123
+    When user logs in with login: foo and password: wrong
+    Then user should see the login form
+    And page should include text: Login failed
+
+  Scenario: user logs in with wrong login name
+    Given a user registered with login: foo and password: test123
+    When user logs in with login: wrong and password: test123
+    Then user should see the login form
+    And page should include text: Login failed
+
