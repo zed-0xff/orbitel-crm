@@ -16,7 +16,7 @@ class User < ActiveRecord::Base
   validates_format_of       :email,    :with => Authentication.email_regex, :message => Authentication.bad_email_message, :allow_nil => true
   validates_uniqueness_of   :email,    :unless => Proc.new{ |u| u.errors.on(:email) || u.errors.on(:login) }, :allow_nil => true
 
-  belongs_to :created_by,   :class_name => 'User', :foreign_key => 'created_by_id'
+  belongs_to :created_by,   :class_name => 'User'
 
   def can_manage_users?
     self.class.const_defined?('CAN_MANAGE') && self.class::CAN_MANAGE.any?

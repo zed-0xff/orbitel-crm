@@ -218,7 +218,21 @@ describe User do
     users(:quentin).remember_token_expires_at.between?(before, after).should be_true
   end
 
-  it "should save created_by"
+  it "should save created_by" do
+    u1 = create_user
+    u1.should be_valid
+    u2 = create_user(
+      :login => u1.login + 'z',
+      :email => nil
+    )
+    u2.should be_valid
+    u2.created_by = u1
+    u2.save!
+
+    u = User.find( u2.id )
+    u.created_by.should_not be_nil
+    u.created_by.should == u1
+  end
 
 protected
   def create_user(options = {})
