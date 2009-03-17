@@ -127,9 +127,9 @@ describe SessionsController do
     it "should route the new sessions action correctly" do
       route_for(:controller => 'sessions', :action => 'new').should == "/login"
     end
-    it "should route the create sessions correctly" do
-      route_for(:controller => 'sessions', :action => 'create').should == "/session"
-    end
+#    it "should route the create sessions correctly" do
+#      route_for(:controller => 'sessions', :action => 'create').should == "/session"
+#    end
     it "should route the destroy sessions action correctly" do
       route_for(:controller => 'sessions', :action => 'destroy').should == "/logout"
     end
