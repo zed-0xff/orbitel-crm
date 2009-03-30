@@ -42,6 +42,15 @@ div.error {
 	background: #ffb0b0;
 }
 
+a, a:visited {
+	text-decoration: none;
+	color: #0000ee;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
 /*
 -------------------------
  ERRORS
@@ -161,3 +170,25 @@ form .t1 td {
 	padding: 0 4;
 }
 
+/*
+-------------------------
+ ACTIONS
+-------------------------
+*/
+
+div.actions {
+	font-size: 11pt;
+	font-weight: bold;
+	margin-left: 20px;
+}
+
+ul.actions {
+	font-size: 14pt;
+	list-style: none;
+	font-weight: normal;
+	margin-top: 0.5em;
+}
+
+ul.actions li {
+	margin-bottom: 0.2em;
+}

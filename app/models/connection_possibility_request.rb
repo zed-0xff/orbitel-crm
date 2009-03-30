@@ -1,0 +1,2 @@
+class ConnectionPossibilityRequest < Ticket
+end

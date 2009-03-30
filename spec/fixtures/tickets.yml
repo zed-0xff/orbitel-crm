@@ -1,0 +1,19 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  type: MyString
+  created_by_id: 1
+  assignee_id: 1
+  house_id: 1
+  status_id: 1
+  description: MyText
+  contact: MyText
+
+two:
+  type: MyString
+  created_by_id: 1
+  assignee_id: 1
+  house_id: 1
+  status_id: 1
+  description: MyText
+  contact: MyText

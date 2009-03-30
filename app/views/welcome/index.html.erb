@@ -1,8 +1,17 @@
 <h1>Welcome to Orbitel CRM</h1>
-<p>
-  <% if logged_in? %>
-    Logged in.
-  <% else %>
+<% if logged_in? %>
+  
+  <div class="actions">
+    Ваши действия:
+    <ul class="actions">
+      <li><%= link_to "&raquo; Создать запрос на возможность подключения", 
+                new_request_tickets_path %>
+      <li>&raquo; Создать заявку на подключение
+    </ul>
+  </div>
+
+<% else %>
+  <p>
     Not logged in. Please <%= link_to "log in", :login %> first.
-  <% end %>
-</p>
+  </p>
+<% end %>

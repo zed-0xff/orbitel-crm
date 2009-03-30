@@ -1,0 +1,9 @@
+<% form_for :ticket, :url => {:action => :create} do |f| %>
+  <%= f.hidden_field :type %>
+  <% field_set_tag 'Адрес' do %>
+    <% f.fields_for :house do |hf| %>
+      <p>Улица: <%= hf.text_field :number %></p>
+      <p>Номер дома: <%= hf.text_field :number %></p>
+    <% end %>
+  <% end %>
+<% end %>
