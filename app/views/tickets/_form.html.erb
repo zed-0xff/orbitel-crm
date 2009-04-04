@@ -1,9 +1,16 @@
 <% form_for :ticket, :url => {:action => :create} do |f| %>
   <%= f.hidden_field :type %>
-  <% field_set_tag 'Адрес' do %>
+  <% field_set_tag 'Адрес', :class => 'address' do %>
     <% f.fields_for :house do |hf| %>
-      <p>Улица: <%= hf.text_field :number %></p>
-      <p>Номер дома: <%= hf.text_field :number %></p>
+      <table>
+      <tr>
+        <td> Улица: 
+        <td> <%= text_field_with_auto_complete :street, :name, { :size => 20 }, :indicator => 'ai1' %>
+        <td> <%= image_tag 'ajax.gif', :style => 'display:none', :id => 'ai1' %>
+      <tr>
+        <td> Дом: 
+        <td> <%= hf.text_field :number, :size => 5 %>
+      </table>
     <% end %>
   <% end %>
 <% end %>

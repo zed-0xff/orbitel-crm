@@ -192,3 +192,14 @@ ul.actions {
 ul.actions li {
 	margin-bottom: 0.2em;
 }
+
+/*
+-------------------------
+ ADDRESS input form
+-------------------------
+*/
+
+fieldset.address {
+	width: 20em;
+}
+
