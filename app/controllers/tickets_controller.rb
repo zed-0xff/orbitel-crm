@@ -22,8 +22,13 @@ class TicketsController < ApplicationController
   end
 
   def create
-    klass  = Kernel.const_get(params[:ticket][:type])
-    ticket = klass.new( params[:ticket] )
+    klass  = Kernel.const_get(params[:ticket].delete(:type))
+    @ticket = klass.new( params[:ticket] )
+    if @ticket.valid?
+      @ticket.save!
+    else
+      render :new_request
+    end
   end
 
   def edit
