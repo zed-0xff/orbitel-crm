@@ -1,16 +1,58 @@
 <% form_for :ticket, :url => {:action => :create} do |f| %>
   <%= f.hidden_field :type %>
-  <% field_set_tag 'Адрес', :class => 'address' do %>
+  <% field_set_tag 'Адрес подключения', :class => 'address' do %>
     <% f.fields_for :house do |hf| %>
       <table>
       <tr>
         <td> Улица: 
-        <td> <%= text_field_with_auto_complete :street, :name, { :size => 20 }, :indicator => 'ai1' %>
+        <td> <%= text_field_with_auto_complete :street, :name, { :size => 20, :name => 'ticket[house][street]' }, :indicator => 'ai1' %>
         <td> <%= image_tag 'ajax.gif', :style => 'display:none', :id => 'ai1' %>
       <tr>
         <td> Дом: 
         <td> <%= hf.text_field :number, :size => 5 %>
+      <tr>
+        <td> <span class="small">Квартира<br/>(Офис)</span>: 
+        <td> <%= f.text_field :flat, :size => 5 %>
       </table>
     <% end %>
   <% end %>
+
+  <br/>
+
+  <table>
+    <tr>
+      <td> Тип клиента: 
+      <td> <%= f.select :contact_type, contact_types_for_select %>
+    <tr>
+      <td> <label for="ticket_contact_name" id="contact_name_label">ФИО клиента:</label>
+      <td> <%= f.text_field :contact_name, :size => 25 %>
+  </table>
+
+  <br/>
+  Контактные данные: <br/>
+  <%= f.text_area :contact_info, :rows => 3, :cols => 30 %>
+
+  <br/>
+  <br/>
+  Примечания: <br/>
+  <%= f.text_area :notes, :rows => 3, :cols => 30 %>
+
+  <br/>
+  <br/>
+  <%= submit_tag 'Далее &gt;&gt;' %> или <%= link_to 'отмена','/' %>.
+
 <% end %>
+
+<%= javascript_tag <<-EOJS
+  function update_contact_type(){
+    if( $F('ticket_contact_type') == #{Ticket::CONTACT_TYPE_FIZ} ){
+      $('contact_name_label').innerHTML = "ФИО клиента:";
+    } else {
+      $('contact_name_label').innerHTML = "Название<br/>предприятия:";
+    }
+  }
+
+  Event.observe('ticket_contact_type', 'change', update_contact_type);
+EOJS
+
+%>
