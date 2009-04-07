@@ -24,6 +24,7 @@ class TicketsController < ApplicationController
   def create
     klass  = Kernel.const_get(params[:ticket].delete(:type))
     @ticket = klass.new( params[:ticket] )
+    @ticket.created_by = current_user
     if @ticket.valid?
       @ticket.save!
     else
@@ -37,7 +38,24 @@ class TicketsController < ApplicationController
   def update
   end
 
+  def mine
+    @title = 'My tickets'
+    @tickets = Ticket.all :conditions => {:created_by_id => current_user}
+    render 'list'
+  end
+
+  def assigned_to_me
+    @title = 'Tickets assigned to me'
+    @tickets = Ticket.all :conditions => {:assignee_id => current_user}
+    render 'list'
+  end
   
+  def all
+    @title = 'All tickets'
+    @tickets = Ticket.all
+    render 'list'
+  end
+
   private
 
   def check_type

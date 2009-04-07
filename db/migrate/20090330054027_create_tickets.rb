@@ -16,6 +16,9 @@ class CreateTickets < ActiveRecord::Migration
 
       t.timestamps
     end
+
+    add_index :tickets, :created_at
+    add_index :tickets, :assignee_id
   end
 
   def self.down

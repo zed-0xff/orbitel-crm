@@ -99,11 +99,11 @@ a:hover {
 
 /*
 -------------------------
- TOP MENU
+ MENU
 -------------------------
 */
 
-div#topmenu {
+div#topmenu, div.menu {
   margin: 10px 10px;
   text-align: center;
 }
@@ -207,3 +207,23 @@ fieldset.address {
 	width: 20em;
 }
 
+/*
+-------------------------
+ icons
+-------------------------
+*/
+
+img.user {
+	padding: 0;
+	margin: 0;
+	width: 16px;
+	height: 16px;
+	position: absolute;
+}
+
+a.user {
+	background: url(/images/user-black.png) no-repeat left 1px;
+	padding-left: 18px;
+	text-transform: none;
+	cursor: pointer;
+}

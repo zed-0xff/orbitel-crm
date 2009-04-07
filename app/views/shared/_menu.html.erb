@@ -1,7 +1,10 @@
 <div id='topmenu'>
   [
   <% if current_user.can_manage_users? %>
+    <%= link_to 'Home', '/' %> |
     <%= link_to 'Users', users_path %> 
   <% end %>
   ]
 </div>
+
+<%= render :partial => "#{controller_name}/menu" if File.exists?("#{RAILS_ROOT}/app/views/#{controller_name}/_menu.html.erb") %>

@@ -1,0 +1,16 @@
+<table class=t1>
+  <tr>
+    <th>#</th>
+    <th>Дата создания</th>
+    <th>Автор</th>
+    <th>Контакт</th>
+  </tr>
+  <% for ticket in @tickets do %>
+    <tr>
+      <td><%= ticket.id %></td>
+      <td><%= ticket.created_at.strftime('%Y.%m.%d %H:%M') %></td>
+      <td><%= user_link ticket.created_by %></td>
+      <td><%= h ticket.contact_name %></td>
+    </tr>
+  <% end %>
+</table>
