@@ -1,11 +1,16 @@
-<% form_for :ticket, :url => {:action => :create} do |f| %>
+<% form_for :ticket, @ticket, :url => {:action => :create} do |f| %>
+  <%= f.error_messages %>
   <%= f.hidden_field :type %>
   <% field_set_tag 'Адрес подключения', :class => 'address' do %>
     <% f.fields_for :house do |hf| %>
       <table>
       <tr>
         <td> Улица: 
-        <td> <%= text_field_with_auto_complete :street, :name, { :size => 20, :name => 'ticket[house][street]' }, :indicator => 'ai1' %>
+        <td> <%= text_field_with_auto_complete :street, :name, { 
+          :size => 20, 
+          :name => 'ticket[house_attributes][street]', 
+          :value => (@ticket.house && @ticket.house.street && @ticket.house.street.name)
+          }, :indicator => 'ai1' %>
         <td> <%= image_tag 'ajax.gif', :style => 'display:none', :id => 'ai1' %>
       <tr>
         <td> Дом: 

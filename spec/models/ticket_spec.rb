@@ -16,7 +16,7 @@ describe Ticket do
     Ticket.create!(@valid_attributes)
   end
 
-  describe "should create house if it not exists" do
+  describe "should create house if it not exists AND" do
     it "should create street if it not exists" do
       attrs = @valid_attributes
       attrs.delete(:house_id)
@@ -41,6 +41,27 @@ describe Ticket do
 
       ticket.house.street.name.should == 'TestStreet#2'
       ticket.house.number.should == '1'
+    end
+
+    it "should NOT create street with blank name" do
+      attrs = @valid_attributes
+      attrs.delete(:house_id)
+      attrs[:house] = {
+        :number    => 1,
+        :street    => ''
+      }
+
+      ticket = nil
+
+      lambda{
+        lambda{
+          lambda{
+            ticket = Ticket.create attrs
+          }.should_not change(Ticket, :count).by(1)
+        }.should_not change(House, :count).by(1)
+      }.should_not change(Street, :count).by(1)
+
+      ticket.should_not be_valid
     end
 
     it "should use existing street" do

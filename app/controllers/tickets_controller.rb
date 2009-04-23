@@ -8,7 +8,7 @@ class TicketsController < ApplicationController
     method = 'name'
 
     find_options = {
-      :conditions => [ "LOWER(#{method}) LIKE ?", '%' + params[:ticket][:house][:street].downcase + '%' ],
+      :conditions => [ "LOWER(#{method}) LIKE ?", '%' + params[:ticket][:house_attributes][:street].downcase + '%' ],
       :order => "#{method} ASC",
       :limit => 10 }
 
@@ -19,10 +19,12 @@ class TicketsController < ApplicationController
 
   def new_request
     @ticket = ConnectionPossibilityRequest.new
+    @ticket.house = House.new
   end
 
   def create
     klass  = Kernel.const_get(params[:ticket].delete(:type))
+    logger.info params[:ticket].inspect
     @ticket = klass.new( params[:ticket] )
     @ticket.created_by = current_user
     if @ticket.valid?

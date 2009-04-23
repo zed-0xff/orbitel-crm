@@ -2,7 +2,10 @@ class House < ActiveRecord::Base
   belongs_to :street
   has_many :tickets
 
+  accepts_nested_attributes_for :street
+
   validates_presence_of :number, :street
+  validates_associated  :street
 
   # статусы для возможностей подключения:
   ST_YES            =  1 # подключаем без всяких ограничений
