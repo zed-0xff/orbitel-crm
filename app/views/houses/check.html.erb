@@ -1,10 +1,17 @@
+<%= javascript_include_tag '/OpenLayers/OpenLayers', '/OpenLayers/map_init' %>
+
 <h1>Houses#check</h1>
-<% form_for :house do |f| %>
+
+<div style="width: 280px; float:left">
+<% remote_form_for(:house, 
+    :loading => "$('spinner').show()",
+    :loaded  => "$('spinner').hide()"
+   ) do |f| %>
   <% field_set_tag 'Адрес', :class => 'address' do %>
     <table>
     <tr>
       <td> Улица:
-      <td> <%= text_field_with_auto_complete :street, :name, {
+      <td colspan=2> <%= text_field_with_auto_complete :street, :name, {
           :size => 20,
           :name => 'house[street]',
         }, 
@@ -13,7 +20,22 @@
       <td> <%= image_tag 'ajax.gif', :style => 'display:none', :id => 'ai1' %>
     <tr>
       <td> Дом:
-      <td> <%= f.text_field :number, :size => 5 %>
+      <td> 
+        <%= f.text_field :number, :size => 5 %>
+      <td align=right>
+        <%= submit_tag 'проверить', :name => nil %>
+      <td>
+        <%= image_tag 'ajax.gif', :style => 'display:none', :id => 'spinner' %>
     </table>
   <% end %>
 <% end %>
+</div>
+
+<div id="map" class="bigmap"></div>
+
+<%= javascript_tag <<-EOJS
+  Event.observe(window, 'load', function(){
+    initmap();
+  });
+EOJS
+%>

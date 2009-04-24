@@ -205,6 +205,8 @@ ul.actions li {
 
 fieldset.address {
 	width: 20em;
+	padding-left: 5px;
+	padding-right: 0;
 }
 
 /*
@@ -227,3 +229,17 @@ a.user {
 	text-transform: none;
 	cursor: pointer;
 }
+
+/*
+-------------------------
+ map
+-------------------------
+*/
+
+div.bigmap {
+	margin-left: 290px;
+	margin-right: 3px;
+	border: solid 1px gray;
+	height: 600px;
+}
+
