@@ -4,12 +4,19 @@ ActionController::Routing::Routes.draw do |map|
   #map.register '/register', :controller => 'users', :action => 'create'
   #map.signup '/signup', :controller => 'users', :action => 'new'
   map.resources :users
+  map.resources :houses, :collection => {
+    :check => :any
+  }
+
+  map.resources :streets, :collection => {
+    :auto_complete => :post
+  }
 
   map.resources :tickets, :collection => { 
-    :new_request => :get,
-    :mine        => :get,
+    :new_request    => :get,
+    :mine           => :get,
     :assigned_to_me => :get,
-    :all         => :get
+    :all            => :get
   }
 
   map.resource :session
