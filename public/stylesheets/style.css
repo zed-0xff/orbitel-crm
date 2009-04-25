@@ -238,8 +238,9 @@ a.user {
 
 div.bigmap {
 	margin-left: 290px;
-	margin-right: 3px;
+	margin-right:  3px;
+	margin-top:   25px;
 	border: solid 1px gray;
-	height: 600px;
+	height: 700px;
 }
 

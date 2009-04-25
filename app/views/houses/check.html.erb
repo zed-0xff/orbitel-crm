@@ -29,13 +29,22 @@
     </table>
   <% end %>
 <% end %>
+
+<div id="result"></div>
+
 </div>
 
 <div id="map" class="bigmap"></div>
 
 <%= javascript_tag <<-EOJS
   Event.observe(window, 'load', function(){
+    $('street_name').focus();
     initmap();
+    var markers = new OpenLayers.Layer.Markers( "Markers" );
+    map.addLayer(markers);
+
+    var marker = new OpenLayers.Marker( new OpenLayers.LonLat(1111776,-982193) );
+    markers.addMarker( marker );
   });
 EOJS
 %>
