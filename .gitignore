@@ -3,4 +3,5 @@ log/*.log
 log/*.pid
 tmp/**/*
 config/database.yml
+config/initializers/double_gis.rb
 db/schema.rb

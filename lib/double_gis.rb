@@ -18,9 +18,12 @@ class Numeric
 end
 
 class DoubleGis
+  cattr_accessor :default_port, :default_host
+  attr_accessor :host, :port, :debug
+
   def initialize params = {}
-    @host  = params[:host]  || 'localhost'
-    @port  = params[:port]  || 4783
+    @host  = params[:host]  || default_host || 'localhost'
+    @port  = params[:port]  || default_port || 4783
     @debug = params[:debug] || false
 
     @default_width = params[:default_width]  || 800
