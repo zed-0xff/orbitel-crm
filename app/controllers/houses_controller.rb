@@ -28,7 +28,11 @@ class HousesController < ApplicationController
           page.replace_html 'result', html
           page.visual_effect :highlight, 'result'
           if coords
-            page << "map.setCenter(new OpenLayers.LonLat(#{coords[0]}, #{-coords[1]},5));"
+            page << "marker.lonlat.lon = #{coords[0]};"
+            page << "marker.lonlat.lat = #{-coords[1]};"
+            page << "markers.drawMarker(marker);"
+            page << "map.setCenter( new OpenLayers.LonLat( #{coords[0]}, #{-coords[1]} ), 5 );"
+            #page << "map.panTo( new OpenLayers.LonLat( #{coords[0]}, #{-coords[1]} ));"
           end
         end
       }

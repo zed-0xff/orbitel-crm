@@ -37,13 +37,19 @@
 <div id="map" class="bigmap"></div>
 
 <%= javascript_tag <<-EOJS
+  var markers, marker;
   Event.observe(window, 'load', function(){
     $('street_name').focus();
     initmap();
-    var markers = new OpenLayers.Layer.Markers( "Markers" );
+    var icon = new OpenLayers.Icon( 
+      'http://localhost:3000/OpenLayers/img/google-marker.png',
+      new OpenLayers.Size(37,34),
+      new OpenLayers.Pixel(-10, -34)
+    );
+    markers  = new OpenLayers.Layer.Markers( "Markers" );
     map.addLayer(markers);
 
-    var marker = new OpenLayers.Marker( new OpenLayers.LonLat(1111776,-982193) );
+    marker = new OpenLayers.Marker( new OpenLayers.LonLat(0,0), icon );
     markers.addMarker( marker );
   });
 EOJS
