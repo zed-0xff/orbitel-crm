@@ -18,7 +18,7 @@ class Numeric
 end
 
 class DoubleGis
-  cattr_accessor :default_port, :default_host
+  cattr_accessor :default_port, :default_host, :default_cache_file, :default_cache
   attr_accessor :host, :port, :debug
 
   def initialize params = {}
@@ -29,8 +29,8 @@ class DoubleGis
     @default_width = params[:default_width]  || 800
     @default_height= params[:default_height] || 600
 
-    if params[:cache]
-      @cache_file = params[:cache_file] || '2gis.cache'
+    if params.key?(:cache) ? params[:cache] : default_cache
+      @cache_file = params[:cache_file] || default_cache_file || '2gis.cache'
       if File.exists?(@cache_file)
         @cache = YAML::load_file(@cache_file)
       end

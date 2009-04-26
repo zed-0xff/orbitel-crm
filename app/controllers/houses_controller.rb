@@ -8,12 +8,15 @@ class HousesController < ApplicationController
       begin
         street = params[:house][:street]
         number = params[:house][:number]
-        if coords = DoubleGis.new.house_coords(street, number)
+        @@dgis ||= DoubleGis.new
+        if coords = @@dgis.house_coords(street, number)
           html = coords.inspect
         else
           html = "<font color='red'><b>Невозможно определить координаты</b></font>"
         end
       rescue Exception => ex
+        logger.error "#{ex.inspect} while ran DoubleGis.new.house_coords(#{street.inspect}, #{number.inspect})"
+        logger.error ex.backtrace.join("\n")
         html = "<font color='red'><b>#{ex.to_s}</b></font>"
       end
     end

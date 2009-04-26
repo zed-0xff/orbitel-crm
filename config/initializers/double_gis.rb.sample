@@ -1,2 +1,5 @@
-DoubleGis.default_host = '62.165.61.2'
-
+ActionController::Dispatcher.to_prepare(:double_gis) do
+  #DoubleGis.default_host = '62.165.61.2'
+  DoubleGis.default_cache      = true
+  DoubleGis.default_cache_file = "#{RAILS_ROOT}/config/house_coords.yml"
+end
