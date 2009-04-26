@@ -18,13 +18,14 @@ class Numeric
 end
 
 class DoubleGis
-  cattr_accessor :default_port, :default_host, :default_cache_file, :default_cache
-  attr_accessor :host, :port, :debug
+  cattr_accessor :default_port, :default_host, :default_cache_file, :default_cache, :default_timeout
+  attr_accessor :host, :port, :debug, :timeout
 
   def initialize params = {}
-    @host  = params[:host]  || default_host || 'localhost'
-    @port  = params[:port]  || default_port || 4783
-    @debug = params[:debug] || false
+    @host    = params[:host]  || default_host || 'localhost'
+    @port    = params[:port]  || default_port || 4783
+    @timeout = params[:timeout] || default_timeout || 5 # seconds
+    @debug   = params[:debug] || false
 
     @default_width = params[:default_width]  || 800
     @default_height= params[:default_height] || 600
@@ -43,6 +44,8 @@ class DoubleGis
 
   # Преобразование адреса дома в его координаты
   def house_coords street, house
+    raise "NULL street string" unless street
+    raise "empty street string" if street.empty?
     house = house.to_s if house
     addr = 
       if house
@@ -51,7 +54,7 @@ class DoubleGis
       else
         street.strip
       end
-    raise "NULL input string" unless addr
+    raise "NULL addr string" unless addr
     raise "too short input string" if addr.size < 4
     raise "Input string must have at least one space" unless addr[' ']
     raise "Input string must have at least one digit" unless addr[/\d/]
@@ -153,19 +156,21 @@ class DoubleGis
   end
 
   def send_cmd cmd
-    socket = TCPSocket.new( @host, @port )
-    socket.write( "#{cmd}\n" )
-    r = socket.read(4)
-    if r.size!=4 || r!='4GIZ'
+    SystemTimer.timeout_after(@timeout.seconds) do
+      socket = TCPSocket.new( @host, @port )
+      socket.write( "#{cmd}\n" )
+      r = socket.read(4)
+      if r.size!=4 || r!='4GIZ'
+        socket.close
+        raise "Invalid response! (#{r.inspect})"
+        #return false
+      end
+      r = socket.read(4)
+      len = r.to_s.unpack('l').first
+      puts "[d] got data len: #{len}" if @debug
+      r = socket.read(len)
       socket.close
-      raise "Invalid response! (#{r.inspect})"
-      #return false
     end
-    r = socket.read(4)
-    len = r.to_s.unpack('l').first
-    puts "[d] got data len: #{len}" if @debug
-    r = socket.read(len)
-    socket.close
     puts "[d] got data: #{r.to_s[0..40].inspect}.." if @debug
     r.to_s.strip
   end
