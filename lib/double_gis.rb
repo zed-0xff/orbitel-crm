@@ -46,7 +46,21 @@ class DoubleGis
   def house_coords street, house
     raise "NULL street string" unless street
     raise "empty street string" if street.empty?
+
+    # try to downcase string. it will work if 'jcode' gem is installed
+    # if gem is not installed - it will do nothing
+    if street.respond_to?(:chars) && street.chars.respond_to?(:downcase)
+      street = street.chars.downcase.to_s
+    end
+
     house = house.to_s if house
+
+    # try to downcase string. it will work if 'jcode' gem is installed
+    # if gem is not installed - it will do nothing
+    if house.respond_to?(:chars) && house.chars.respond_to?(:downcase)
+      house = house.chars.downcase.to_s
+    end
+
     addr = 
       if house
         raise "Do not use double quotes when using 2-arguments syntax" if street['"'] || house['"']

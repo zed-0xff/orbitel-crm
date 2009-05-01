@@ -3,21 +3,22 @@ class HousesController < ApplicationController
     @title = 'Проверка дома'
 
     coords = nil
-    html   = nil
+    error  = nil
+    house  = nil
     if params[:house] && params[:house][:street] && params[:house][:number]
       begin
         street = params[:house][:street]
         number = params[:house][:number]
-        @@dgis ||= DoubleGis.new
-        if coords = @@dgis.house_coords(street, number)
-          html = coords.inspect
-        else
-          html = "<font color='red'><b>Невозможно определить координаты</b></font>"
+        house  = House.find_or_initialize_by_street_and_number(street, number)
+        coords = house.coords || begin
+          @@dgis ||= DoubleGis.new
+          @@dgis.house_coords(street, number)
         end
+        error = "Невозможно определить координаты дома" unless coords
       rescue Exception => ex
-        logger.error "#{ex.inspect} while ran DoubleGis.new.house_coords(#{street.inspect}, #{number.inspect})"
+        logger.error "#{ex.inspect} while ran DoubleGis#house_coords(#{street.inspect}, #{number.inspect})"
         logger.error ex.backtrace.join("\n")
-        html = "<font color='red'><b>#{ex.to_s}</b></font>"
+        error = ex.to_s
       end
     end
 
@@ -25,7 +26,9 @@ class HousesController < ApplicationController
       format.html
       format.js {
         render :update do |page|
-          page.replace_html 'result', html
+          page.replace_html('result', :partial => 'house_status', 
+            :locals => {:error => error, :house => house}
+          )
           page.visual_effect :highlight, 'result'
           if coords
             page << "marker.lonlat.lon = #{coords[0]};"

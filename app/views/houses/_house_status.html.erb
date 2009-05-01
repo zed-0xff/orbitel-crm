@@ -1,0 +1,12 @@
+<% if defined?(error) && error %>
+  <div style="color:red;font-weight:bold"><%=h error%></div>
+<% end %>
+<% if defined?(house) && house %>
+  <table class="t1">
+  <tr><td>Улица:    <td><%= h house.street.name %>
+  <tr><td>Дом:      <td><%= h house.number %>
+  <tr><td>Интернет: <%= status_tag house, :inet,  :td %>
+  <tr><td>Телефоны: <%= status_tag house, :phone, :td %>
+  <tr><td>Видео:    <%= status_tag house, :video, :td %>
+  </table>
+<% end %>
