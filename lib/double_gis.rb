@@ -47,19 +47,8 @@ class DoubleGis
     raise "NULL street string" unless street
     raise "empty street string" if street.empty?
 
-    # try to downcase string. it will work if 'jcode' gem is installed
-    # if gem is not installed - it will do nothing
-    if street.respond_to?(:chars) && street.chars.respond_to?(:downcase)
-      street = street.chars.downcase.to_s
-    end
-
-    house = house.to_s if house
-
-    # try to downcase string. it will work if 'jcode' gem is installed
-    # if gem is not installed - it will do nothing
-    if house.respond_to?(:chars) && house.chars.respond_to?(:downcase)
-      house = house.chars.downcase.to_s
-    end
+    street = unicode_downcase(street)
+    house  = unicode_downcase(house.to_s) if house
 
     addr = 
       if house
@@ -198,6 +187,16 @@ class DoubleGis
   def cache_store key,value
     return false unless @cache
     @cache[key] = value
+  end
+
+  def unicode_downcase s
+    if s.respond_to?(:mb_chars) && s.mb_chars.respond_to?(:downcase)
+      s.mb_chars.downcase.to_s
+    elsif s.respond_to?(:chars) && s.chars.respond_to?(:downcase)
+      s.chars.downcase.to_s
+    else
+      s.downcase
+    end
   end
 end
 
