@@ -7,6 +7,8 @@ class House < ActiveRecord::Base
   validates_presence_of :number, :street
   validates_associated  :street
 
+  validates_uniqueness_of :number, :scope => :street_id
+
   # статусы для возможностей подключения:
   ST_YES            =  1 # подключаем без всяких ограничений
   ST_MINOR_PROBLEMS = 10 # вообще подключаем, но сейчас есть небольшие проблемы
@@ -16,6 +18,13 @@ class House < ActiveRecord::Base
 
   def coords
     (x && y) ? [x,y] : nil
+  end
+
+  def initialize *args
+    if args.first.is_a?(Hash) && args.first[:street].is_a?(String)
+      args.first[:street] = Street.find_or_initialize_by_name args.first[:street]
+    end
+    super *args
   end
 
   def self.find_or_initialize_by_street_and_number street_name, number

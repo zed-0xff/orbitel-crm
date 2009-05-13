@@ -1,0 +1,22 @@
+<h2>Houses</h2>
+<table class="t1">
+  <tr>
+    <th>Улица</th>
+    <th>Дом</th>
+    <th>Дата создания</th>
+    <th>Интернет</th>
+  </tr>
+  <% for house in @houses %> 
+    <tr>
+      <td><%= h house.street.name %></td>
+      <td align="right"><%= h house.number %></td>
+      <td><%= time_ago_in_words house.created_at %> ago</td>
+      <%= status_tag house, :inet, :td %>
+    </tr>
+  <% end %> 
+</table>
+
+<p>
+  <%= link_to 'Create new', new_house_path %>
+</p>
+

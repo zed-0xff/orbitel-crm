@@ -29,4 +29,10 @@ module HousesHelper
         'magenta'
     end
   end
+
+  def statuses_for_select
+    options_for_select(
+      [House::ST_YES, House::ST_NO].map{|st| [status_desc(st),st] }
+    )
+  end
 end

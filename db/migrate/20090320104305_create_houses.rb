@@ -8,6 +8,8 @@ class CreateHouses < ActiveRecord::Migration
       t.integer :inet_status
       t.integer :phone_status
       t.integer :video_status
+
+      t.timestamps
     end
 
     add_index :houses, :street_id

@@ -22,6 +22,11 @@ class User < ActiveRecord::Base
     self.class.const_defined?('CAN_MANAGE') && self.class::CAN_MANAGE.any?
   end
 
+  def can_manage? what
+    self.class.const_defined?('CAN_MANAGE') && 
+      self.class::CAN_MANAGE.include?(what.to_s.singularize.humanize)
+  end
+
   def type
     @attributes['type']
   end

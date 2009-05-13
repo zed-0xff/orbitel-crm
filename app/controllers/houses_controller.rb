@@ -1,4 +1,9 @@
 class HousesController < ApplicationController
+  
+  def index
+    @houses = House.find :all, :order => "created_at DESC"
+  end
+
   def check
     @title = 'Проверка дома'
 
@@ -43,6 +48,16 @@ class HousesController < ApplicationController
   end
 
   def new
+    @house = House.new
+  end
+
+  def create
+    @house = House.create params[:house]
+    if @house.valid?
+      redirect_to houses_path
+    else
+      render :action => 'new'
+    end
   end
 
   def edit
