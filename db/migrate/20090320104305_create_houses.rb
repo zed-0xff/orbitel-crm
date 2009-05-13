@@ -1,7 +1,7 @@
 class CreateHouses < ActiveRecord::Migration
   def self.up
     create_table :houses do |t|
-      t.integer :street_id
+      t.belongs_to:street
       t.string  :number
       t.integer :x              # абсцисса ;)
       t.integer :y              # ордината ;)

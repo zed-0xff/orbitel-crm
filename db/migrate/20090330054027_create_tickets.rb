@@ -2,11 +2,11 @@ class CreateTickets < ActiveRecord::Migration
   def self.up
     create_table :tickets do |t|
       t.string :type
-      t.integer :created_by_id
-      t.integer :assignee_id
-      t.integer :house_id
+      t.belongs_to :created_by
+      t.belongs_to :assignee
+      t.belongs_to :house
       t.string  :flat           # номер квартиры / офиса
-      t.integer :status_id
+      t.belongs_to :status
 
       t.integer :contact_type
       t.string  :contact_name
