@@ -16,6 +16,8 @@ class House < ActiveRecord::Base
   ST_IN_PLANS       = 40 # пока нет возможности, но возможность планируется
   ST_NO             = 50 # нет технической возможности
 
+  STATUSES = [1, 10, 30, 40, 50]
+
   def coords
     (x && y) ? [x,y] : nil
   end

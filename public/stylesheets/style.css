@@ -11,6 +11,10 @@ body, td, th, textarea {
 	font-family: Verdana, Tahoma;
 }
 
+img {
+	border: 0;
+}
+
 h1 {
 	margin-left: 0.5em;
 }

@@ -1,0 +1,11 @@
+<h2>Houses :: show</h2>
+<table class="t1">
+  <% @house.attributes.sort.each do |k,v| %>
+    <tr>
+      <th><%= h(k) -%></th>
+      <td><%= h(v) -%></td>
+    </tr>
+  <% end %>
+</table>
+
+<%= link_to "&laquo;&laquo; Back", :back %>

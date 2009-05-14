@@ -5,9 +5,12 @@ class CreateHouses < ActiveRecord::Migration
       t.string  :number
       t.integer :x              # абсцисса ;)
       t.integer :y              # ордината ;)
+
       t.integer :inet_status
       t.integer :phone_status
       t.integer :video_status
+
+      t.string  :comment
 
       t.timestamps
     end

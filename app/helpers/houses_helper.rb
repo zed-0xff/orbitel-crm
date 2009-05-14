@@ -8,6 +8,12 @@ module HousesHelper
     case st
       when House::ST_YES
         "Подключаем"
+      when House::ST_MINOR_PROBLEMS
+        "Есть небольшие проблемы"
+      when House::ST_MAJOR_PROBLEMS
+        "Есть серьёзные проблемы"
+      when House::ST_IN_PLANS
+        "Возможность планируется"
       when House::ST_NO
         "Нет тех.возможности"
       when nil
@@ -20,9 +26,13 @@ module HousesHelper
   def status_color st
     case st
       when House::ST_YES
-        'green'
+        '#75D700'
+      when House::ST_MINOR_PROBLEMS
+        "#92D79D"
+      when House::ST_IN_PLANS
+        '#C48888'
       when House::ST_NO
-        'red'
+        '#ff6060'
       when nil
         'lightgrey'
       else
@@ -30,9 +40,11 @@ module HousesHelper
     end
   end
 
-  def statuses_for_select
-    options_for_select(
-      [House::ST_YES, House::ST_NO].map{|st| [status_desc(st),st] }
-    )
+  def statuses_for_select selected
+    House::STATUSES.map do |st|
+      "<option style=\"background:#{status_color(st)}\" value=\"#{st}\"" +
+      ((selected == st) ? ' selected="selected"' : '') +
+      ">#{status_desc(st)}</option>"
+    end.join("\n")
   end
 end

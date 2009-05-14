@@ -1,4 +1,5 @@
 class HousesController < ApplicationController
+  before_filter :prepare_house
   
   def index
     @houses = House.find :all, :order => "created_at DESC"
@@ -60,10 +61,25 @@ class HousesController < ApplicationController
     end
   end
 
-  def edit
+  def update
+    if params[:house][:street]
+      params[:house][:street] = Street.find_or_initialize_by_name params[:house][:street]
+    end
+    if @house.update_attributes(params[:house])
+      flash[:notice] = "Данные дома обновлены"
+      redirect_to houses_path
+    else
+      render :action => 'edit'
+    end
   end
 
-  def update
+  private
+
+  def prepare_house
+    if params[:id]
+      @house = House.find params[:id].to_i
+    end
+    true
   end
 
 end
