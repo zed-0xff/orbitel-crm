@@ -3,10 +3,21 @@
 <% end %>
 <% if defined?(house) && house %>
   <table class="t1">
+  <tr>
+    <th colspan="2">Информация о доме</th>
+  </tr>
   <tr><td>Улица:    <td><%= h house.street.name %>
   <tr><td>Дом:      <td><%= h house.number %>
   <tr><td>Интернет: <%= status_tag house, :inet,  :td %>
   <tr><td>Телефоны: <%= status_tag house, :phone, :td %>
   <tr><td>Видео:    <%= status_tag house, :video, :td %>
+  <% unless house.comment.blank? %>
+    <tr>
+      <th colspan="2">Примечания</th>
+    </tr>
+    <tr>
+      <td colspan="2"><%= h(house.comment).gsub("\n","<br/>") %></td>
+    </tr>
+  <% end %>
   </table>
 <% end %>
