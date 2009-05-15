@@ -6,3 +6,10 @@ vendor/plugins/restful-authentication-i18n:
   revision: 2884f0a395a1d1ccd1211c9cb03b2b6f101be595
   branch: master
   remote: braid/vendor/plugins/restful-authentication-i18n
+vendor/plugins/role_requirement: 
+  squashed: true
+  url: git://github.com/timcharper/role_requirement.git
+  type: git
+  revision: 2a28d1500d69a1b82dc2df0697975af3dbdbc7e3
+  branch: master
+  remote: braid/vendor/plugins/role-requirement
