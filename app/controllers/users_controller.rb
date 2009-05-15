@@ -26,8 +26,13 @@ class UsersController < ApplicationController
   end
 
   def update
-   if @user.update_attributes(params[:user])
+    type_key = @user.type.underscore
+    if @user.update_attributes(params[type_key])
       flash[:notice] = "Данные пользователя обновлены"
+      if params[type_key][:type] != @user.type && current_user.is_a?(Admin)
+        # only admins can change other user types
+        @user.update_attribute :type, params[type_key][:type]
+      end
       redirect_to users_path
     else
       render :action => 'edit'
