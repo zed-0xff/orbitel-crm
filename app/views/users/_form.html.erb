@@ -1,0 +1,20 @@
+<% form_for @user do |f| -%>
+  <%= f.error_messages %>
+
+  <p><%= f.label :type %><br/>
+  <%= f.select :type, can_manages_for_select %></p>
+
+  <p><%= f.label :login %><br/>
+  <%= f.text_field :login %></p>
+
+  <p><%= f.label :email %><br/>
+  <%= f.text_field :email, :autocomplete => 'off' %></p>
+
+  <p><%= f.label :password %><br/>
+  <%= f.password_field :password %></p>
+
+  <p><%= f.label :password_confirmation %><br/>
+  <%= f.password_field :password_confirmation %></p>
+
+  <p><%= submit_tag %></p>
+<% end -%>
