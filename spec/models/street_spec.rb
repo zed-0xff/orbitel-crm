@@ -26,4 +26,6 @@ describe Street do
     @street.name = '     '
     @street.should_not be_valid
   end
+
+  it "should capitalize street names on create"
 end

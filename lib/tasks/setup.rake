@@ -41,7 +41,8 @@ namespace :setup do
 
   desc "create initial sample data"
   task :data => :admin do
-    %w'Гоголя М.Горького Ленина Пролетарская'.each do |street_name|
+    %w'Гоголя Максима_Горького Ленина Пролетарская'.each do |street_name|
+      street_name.tr!('_',' ')
       s = Street.new :name => street_name
       if s.valid?
         s.save!
