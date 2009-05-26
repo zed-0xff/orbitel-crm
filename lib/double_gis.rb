@@ -159,6 +159,7 @@ class DoubleGis
   end
 
   def send_cmd cmd
+    r = nil
     SystemTimer.timeout_after(@timeout.seconds) do
       socket = TCPSocket.new( @host, @port )
       socket.write( "#{cmd}\n" )
