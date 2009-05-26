@@ -18,7 +18,12 @@ class HousesController < ApplicationController
         house  = House.find_or_initialize_by_street_and_number(street, number)
         coords = house.coords || begin
           @@dgis ||= DoubleGis.new
-          @@dgis.house_coords(street, number)
+          dgis_coords = @@dgis.house_coords(street, number)
+          if dgis_coords && !house.new_record?
+            # house IS NOT new, but has no saved coords. save them.
+            house.update_attributes :x => dgis_coords[0], :y => dgis_coords[1]
+          end
+          dgis_coords
         end
         error = "Невозможно определить координаты дома" unless coords
       rescue Exception => ex
