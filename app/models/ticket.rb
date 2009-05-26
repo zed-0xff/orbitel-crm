@@ -39,4 +39,12 @@ class Ticket < ActiveRecord::Base
     end
     super *args
   end
+
+  def address
+    if house
+      "#{house.street.name} #{house.number}" + (flat.blank? ? '' : "-#{flat}")
+    else
+      nil
+    end
+  end
 end

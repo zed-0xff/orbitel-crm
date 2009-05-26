@@ -36,7 +36,7 @@ class TicketsController < ApplicationController
     render 'list'
   end
   
-  def all
+  def index
     @title = 'All tickets'
     @tickets = Ticket.all
     render 'list'
