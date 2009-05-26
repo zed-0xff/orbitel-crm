@@ -4,4 +4,10 @@ class Street < ActiveRecord::Base
   validates_uniqueness_of :name
 
   has_many :houses
+
+  before_save :capitalize_name
+
+  def capitalize_name
+    self.name = self.name.mb_chars.capitalize.to_s
+  end
 end
