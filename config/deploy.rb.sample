@@ -1,0 +1,47 @@
+set :deploy_via, :remote_cache
+set :use_sudo, false
+set :application, "crm"
+set :scm, :git
+set :repository, "git://github.com/zed-0xff/orbitel-crm.git"
+set :deploy_to, "/deploy/to/#{application}"
+set :user, 'rails'
+
+server "my.crm.server", :app, :web, :db, :primary => true
+
+necessary_shared_configs = %w'database.yml mongrel_cluster.yml'
+optional_shared_configs = %w''
+
+namespace :deploy do
+  task :symlink_shared_configs do
+    necessary_shared_configs.each do |config|
+      shared_config = "#{shared_path}/config/#{config}"
+      run "test -f #{shared_config} && ln -s #{shared_config} #{latest_release}/config/#{config}"
+    end
+
+    optional_shared_configs.each do |config|
+      shared_config = "#{shared_path}/config/#{config}"
+      run "test -f #{shared_config} && ln -s #{shared_config} #{latest_release}/config/#{config}; true"
+    end
+
+    run "ln -s #{shared_path}/locks #{latest_release}/"
+  end
+
+  task :install_gems do
+    run("cd #{latest_release}; /usr/bin/rake gems:install RAILS_ENV=production")
+  end
+
+  task :restart do
+    run "mongrel_rails cluster::restart -C #{latest_release}/config/mongrel_cluster.yml"
+  end
+
+  task :start do
+    run "mongrel_rails cluster::start -C #{latest_release}/config/mongrel_cluster.yml"
+  end
+
+  task :stop do
+    run "mongrel_rails cluster::stop -C #{latest_release}/config/mongrel_cluster.yml"
+  end
+end
+
+after "deploy:finalize_update", "deploy:symlink_shared_configs"
+after "deploy:symlink_shared_configs", "deploy:install_gems"
