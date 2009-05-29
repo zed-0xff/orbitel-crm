@@ -9,6 +9,8 @@ class House < ActiveRecord::Base
 
   validates_uniqueness_of :number, :scope => :street_id
 
+  validates_inclusion_of :vlan, :in => 1..4095, :allow_nil => true, :message => "must be in range 1..4095"
+
   # статусы для возможностей подключения:
   ST_YES            =  1 # подключаем без всяких ограничений
   ST_MINOR_PROBLEMS = 10 # вообще подключаем, но сейчас есть небольшие проблемы

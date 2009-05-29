@@ -21,6 +21,9 @@
   <p><%= label_tag 'inet_status', 'Интернет' %><br/>
   <%= select_tag 'house[inet_status]', statuses_for_select(@house.inet_status) %></p>
 
+  <p><%= label_tag 'vlan' %><br/>
+  <%= f.text_field :vlan, :size => 5 %></p>
+
   <p><%= label_tag 'house_comment', 'Примечания' %><br/>
   <%= f.text_area :comment, :rows => 4 %></p>
 
