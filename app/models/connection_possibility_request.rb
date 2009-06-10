@@ -1,5 +1,5 @@
 class ConnectionPossibilityRequest < Ticket
-  def description
+  def title
     "Запрос на возможность подключения"
   end
 end

@@ -42,7 +42,7 @@ class Ticket < ActiveRecord::Base
 
   def address
     if house
-      "#{house.street.name} #{house.number}" + (flat.blank? ? '' : "-#{flat}")
+      "#{house.street.try(:name)} #{house.number}" + (flat.blank? ? '' : "-#{flat}")
     else
       nil
     end

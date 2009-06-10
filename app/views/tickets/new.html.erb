@@ -1,0 +1,83 @@
+<h1>Tickets#new</h1>
+<% form_for :ticket do |f| %>
+  <%= f.error_messages %>
+  <%= f.hidden_field :type %>
+
+  <% field_set_tag 'Описание проблемы' do %>
+    <div>
+      <label for="ticket_title">
+        Кратко суть проблемы, например "потери на линии":
+      </label><br/>
+      <%= f.text_field :title, :size => 35 %>
+    </div>
+
+    <div style="margin-top: 0.8em">
+      <label for="ticket_notes">
+        Примечания и дополнительная информация, если нужно:
+      </label><br/>
+      <%= f.text_area :notes, :rows => 3, :cols => 30 %>
+    </div>
+  <% end %>
+
+  <% field_set_tag 'Адрес подключения', :class => 'address' do %>
+    <% f.fields_for :house do |hf| %>
+      <table>
+      <tr>
+        <td> Улица: 
+        <td> <%= text_field_with_auto_complete :street, :name, { 
+            :size  => 20, 
+            :name  => 'ticket[house_attributes][street]', 
+            :value => (@ticket.house && @ticket.house.street && @ticket.house.street.name)
+          }, 
+          :url  => auto_complete_streets_path,
+          :indicator => 'ai1' %>
+        <td> <%= image_tag 'ajax.gif', :style => 'display:none', :id => 'ai1' %>
+      <tr>
+        <td> Дом: 
+        <td> <%= hf.text_field :number, :size => 5 %>
+      <tr>
+        <td> <span class="small">Квартира<br/>(Офис)</span>: 
+        <td> <%= f.text_field :flat, :size => 5 %>
+      </table>
+    <% end %>
+  <% end %>
+
+  <br/>
+
+  <table>
+    <tr>
+      <td> Тип клиента: 
+      <td> <%= f.select :contact_type, contact_types_for_select %>
+    <tr>
+      <td> <label for="ticket_contact_name" id="contact_name_label">ФИО клиента:</label>
+      <td> <%= f.text_field :contact_name, :size => 25 %>
+  </table>
+
+  <br/>
+  Контактные данные: <br/>
+  <%= f.text_area :contact_info, :rows => 3, :cols => 30 %>
+
+  <br/>
+  <br/>
+  Примечания: <br/>
+  <%= f.text_area :notes, :rows => 3, :cols => 30 %>
+
+  <br/>
+  <br/>
+  <%= submit_tag 'Далее &gt;&gt;' %> или <%= link_to 'отмена','/' %>.
+
+<% end %>
+
+<%= javascript_tag <<-EOJS
+  function update_contact_type(){
+    if( $F('ticket_contact_type') == #{Ticket::CONTACT_TYPE_FIZ} ){
+      $('contact_name_label').innerHTML = "ФИО клиента:";
+    } else {
+      $('contact_name_label').innerHTML = "Название<br/>предприятия:";
+    }
+  }
+
+  Event.observe('ticket_contact_type', 'change', update_contact_type);
+EOJS
+
+%>

@@ -6,6 +6,11 @@ class TicketsController < ApplicationController
     @ticket.house = House.new
   end
 
+  def new
+    @ticket = Ticket.new
+    @ticket.house = House.new
+  end
+
   def create
     klass  = Kernel.const_get(params[:ticket].delete(:type))
     logger.info params[:ticket].inspect
