@@ -7,7 +7,7 @@
     <th>Автор</th>
   </tr>
   <% for ticket in @tickets do %>
-    <tr>
+    <tr class="clickable priority<%=ticket.priority-%>" url="<%=ticket_path(ticket)%>">
       <td><%= ticket.id %></td>
       <td><%= h ticket.address %></td>
       <td><%= h ticket.title %></td>
@@ -16,3 +16,5 @@
     </tr>
   <% end %>
 </table>
+
+<%= javascript_tag 'make_clickable_rows()' %>

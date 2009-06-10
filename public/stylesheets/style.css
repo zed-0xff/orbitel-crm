@@ -178,6 +178,14 @@ form .t1 td {
 	padding: 0 4;
 }
 
+.t1 tr:hover td {
+	background: #ffffcc;
+}
+
+.t1 tr.clickable {
+	cursor: pointer;
+}
+
 /*
 -------------------------
  ACTIONS
@@ -199,6 +207,21 @@ ul.actions {
 
 ul.actions li {
 	margin-bottom: 0.2em;
+}
+
+/*
+-------------------------
+ default fieldset
+-------------------------
+*/
+
+fieldset {
+	width: 400px;
+	margin-bottom: 8px;
+}
+
+fieldset legend {
+	font-weight: bold;
 }
 
 /*
@@ -247,4 +270,16 @@ div.bigmap {
 	border: solid 1px gray;
 	height: 700px;
 }
+
+/*
+-------------------------
+ ticket priorities
+-------------------------
+*/
+
+.priority10  { color:#990000; background: #ffc4c4 }
+.priority5   { color:#990000; background: #fff2f2 }
+.priority0   { }
+.priority-5  { color:#555599; background: #f2faff }
+.priority-10 { color:#555599; background: #ddf2ff }
 

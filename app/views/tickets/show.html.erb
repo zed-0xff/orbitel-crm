@@ -1,0 +1,11 @@
+<h2>Tickets :: show</h2>
+<table class="t1">
+  <% @ticket.attributes.sort.each do |k,v| %>
+    <tr>
+      <th><%= h(k) -%></th>
+      <td><%= h(v) -%></td>
+    </tr>
+  <% end %>
+</table>
+
+<%= link_to "&laquo;&laquo; Back", :back %>

@@ -1,9 +1,11 @@
 class TicketsController < ApplicationController
   before_filter :check_type, :only => :create
+  before_filter :prepare_ticket
 
   def new_request
     @ticket = ConnectionPossibilityRequest.new
     @ticket.house = House.new
+    render :new
   end
 
   def new
@@ -12,14 +14,15 @@ class TicketsController < ApplicationController
   end
 
   def create
-    klass  = Kernel.const_get(params[:ticket].delete(:type))
+    ticket_type = params[:ticket].delete(:type)
+    klass  = ticket_type.blank? ? Ticket : Kernel.const_get(ticket_type)
     logger.info params[:ticket].inspect
     @ticket = klass.new( params[:ticket] )
     @ticket.created_by = current_user
     if @ticket.valid?
       @ticket.save!
     else
-      render :new_request
+      render :new
     end
   end
 
@@ -52,4 +55,12 @@ class TicketsController < ApplicationController
   def check_type
     params[:ticket] && %w'ConnectionPossibilityRequest'.include?(params[:ticket][:type])
   end
+
+  def prepare_ticket
+    if params[:id]
+      @ticket = Ticket.find params[:id].to_i
+    end
+    true
+  end
+
 end

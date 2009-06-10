@@ -11,6 +11,14 @@ class Ticket < ActiveRecord::Base
   CONTACT_TYPE_UR  = 1
   CONTACT_TYPE_FIZ = 2
 
+  PRIORITY_HIGHEST = 10
+  PRIORITY_HIGH    = 5
+  PRIORITY_NORMAL  = 0
+  PRIORITY_LOW     = -5
+  PRIORITY_LOWEST  = -10
+
+  PRIORITIES = [10, 5, 0, -5, -10]
+
   # create a house/street if needed, or find an existing by their attributes
   def initialize *args
     if args.first.is_a?(Hash) && (house_attrs=(args.first[:house] || args.first[:house_attributes])).is_a?(Hash)
