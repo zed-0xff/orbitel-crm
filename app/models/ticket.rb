@@ -19,6 +19,8 @@ class Ticket < ActiveRecord::Base
 
   PRIORITIES = [10, 5, 0, -5, -10]
 
+  STATUS_NEW = "Новая"
+
   # create a house/street if needed, or find an existing by their attributes
   def initialize *args
     if args.first.is_a?(Hash) && (house_attrs=(args.first[:house] || args.first[:house_attributes])).is_a?(Hash)

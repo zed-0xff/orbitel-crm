@@ -1,11 +1,60 @@
-<h2>Tickets :: show</h2>
+<h2>
+  Заявка №<%=@ticket.id-%>:
+  <span style="<%=priority_style(@ticket.priority)-%>">
+    <u><%= h @ticket.title %></u>
+  </span>
+</h2>
+
 <table class="t1">
-  <% @ticket.attributes.sort.each do |k,v| %>
+
+  <tr>
+    <th>адрес</th>
+    <td><b><%=h @ticket.address %></b></td>
+  </tr>
+
+  <% unless @ticket.contact_name.blank? %>
     <tr>
-      <th><%= h(k) -%></th>
-      <td><%= h(v) -%></td>
+      <th>абонент</th>
+      <td><b><%=h @ticket.contact_name %></b></td>
     </tr>
   <% end %>
+
+  <% unless @ticket.contact_info.blank? %>
+    <tr>
+      <th>контакты</th>
+      <td><b><%= h(@ticket.contact_info).strip.gsub("\n",'<br/>') %></b></td>
+    </tr>
+  <% end %>
+
+  <tr><td colspan="2"><hr width="90%"/></td></tr>
+
+  <tr>
+    <th>приоритет</th>
+    <td style="<%= priority_style(@ticket.priority)-%>">
+      <%= priority_desc(@ticket.priority) %>
+    </td>
+  </tr>
+
+  <tr>
+    <th>дата создания</th>
+    <td>
+      <%= @ticket.created_at.strftime('%Y.%m.%d %H:%M') %><br/>
+      <small style="font-size: 7pt; color:gray">
+        ( <%= time_ago_in_words @ticket.created_at %> )
+      </small>
+    </td>
+  </tr>
+
+  <tr>
+    <th>создатель</th>
+    <td><%= user_link @ticket.created_by %></td>
+  </tr>
+
+  <tr>
+    <th>примечания</th>
+    <td><%= h(@ticket.notes).strip.gsub("\n",'<br/>') %></td>
+  </tr>
+
 </table>
 
 <%= link_to "&laquo;&laquo; Back", :back %>

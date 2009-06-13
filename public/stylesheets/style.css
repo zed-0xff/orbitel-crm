@@ -59,6 +59,13 @@ a:hover {
 	font-size: 7pt;
 }
 
+hr {
+	height: 1px;
+	border-width: 1px 0 0 0;
+	border-color: lightgrey;
+	margin: 5 auto 5 auto;
+}
+
 /*
 -------------------------
  ERRORS
