@@ -11,6 +11,11 @@
   <div class="error"><%= h flash[:error] %></div>
 <% end %>
 
+<% if flash && flash[:notice] %>
+  <div id="notices" class="notice"><%= h flash[:notice] %></div>
+  <%= javascript_tag(visual_effect(:highlight, "notices", :duration => 0.75)) %>
+<% end %>
+
 <div class="content">
 <%= yield %>
 </div>

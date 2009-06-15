@@ -46,6 +46,14 @@ div.error {
 	background: #ffb0b0;
 }
 
+div.notice {
+	border: solid 1px green;
+	width: 40%;
+	padding: 3px 5px 4px 5px;
+	margin: 8px 4px 2px 4px;
+	background: #c4ffc4;
+}
+
 a, a:visited {
 	text-decoration: none;
 	color: #0000ee;
