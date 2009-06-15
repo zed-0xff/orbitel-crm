@@ -3,7 +3,7 @@
 
 class ApplicationController < ActionController::Base
   include AuthenticatedSystem
-  helper :all # include all helpers, all the time
+  helper :users # include all helpers, all the time
 
   before_filter :localizate
 
