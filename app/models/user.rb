@@ -1,6 +1,8 @@
 class User < ActiveRecord::Base
   include UserAuth
 
+  before_validation :fix_email
+
   validates_presence_of     :type,     :if => Proc.new{ |u| u.class == User }
 
   validates_presence_of     :login
@@ -29,5 +31,11 @@ class User < ActiveRecord::Base
 
   def type
     @attributes['type']
+  end
+
+  private
+
+  def fix_email
+    self.email = nil if self.email.blank?
   end
 end
