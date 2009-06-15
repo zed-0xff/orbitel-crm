@@ -1,6 +1,7 @@
 class Ticket < ActiveRecord::Base
   belongs_to :house
-  belongs_to :created_by,   :class_name => 'User'
+  belongs_to :created_by, :class_name => 'User'
+  belongs_to :assignee,   :class_name => 'User'
 
   validates_associated :house
 
@@ -19,7 +20,13 @@ class Ticket < ActiveRecord::Base
 
   PRIORITIES = [10, 5, 0, -5, -10]
 
-  STATUS_NEW = "Новая"
+  # statuses
+  ST_NEW       = 0
+  ST_ACCEPTED  = 5
+  ST_CLOSED    = 10
+  ST_REOPENED  = 15
+
+  STATUSES = [0, 5, 10, 15]
 
   # create a house/street if needed, or find an existing by their attributes
   def initialize *args

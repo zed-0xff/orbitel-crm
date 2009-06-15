@@ -36,6 +36,13 @@
   </tr>
 
   <tr>
+    <th>статус заявки</th>
+    <td>
+      <b><%= status_desc(@ticket.status) %></b>
+    </td>
+  </tr>
+
+  <tr>
     <th>дата создания</th>
     <td>
       <%= @ticket.created_at.strftime('%Y.%m.%d %H:%M') %><br/>
@@ -50,11 +57,36 @@
     <td><%= user_link @ticket.created_by %></td>
   </tr>
 
-  <tr>
-    <th>примечания</th>
-    <td><%= h(@ticket.notes).strip.gsub("\n",'<br/>') %></td>
-  </tr>
+  <% if @ticket.assignee %>
+    <tr>
+      <th>исполнитель</th>
+      <td><%= user_link @ticket.assignee %></td>
+    </tr>
+  <% end %>
+
+  <% unless @ticket.notes.blank? %>
+    <tr>
+      <th>примечания</th>
+      <td><%= h(@ticket.notes).strip.gsub("\n",'<br/>') %></td>
+    </tr>
+  <% end %>
 
 </table>
 
-<%= link_to "&laquo;&laquo; Back", :back %>
+<ul class="actions">
+  <% if [nil, Ticket::ST_NEW, Ticket::ST_REOPENED].include?(@ticket.status) %>
+    <li><%= link_to "&raquo; принять в обработку", 
+              accept_ticket_path(@ticket), 
+              :method => :post %>
+  <% elsif @ticket.status == Ticket::ST_ACCEPTED %>
+    <li><%= link_to "&raquo; закрыть заявку", 
+              close_ticket_path(@ticket), 
+              :method => :post %>
+  <% elsif @ticket.status == Ticket::ST_CLOSED %>
+    <li><%= link_to "&raquo; переоткрыть заявку", 
+              reopen_ticket_path(@ticket), 
+              :method => :post %>
+  <% end %>
+</ul>
+
+<%= link_to "&laquo;&laquo; назад к списку заявок", tickets_path %>

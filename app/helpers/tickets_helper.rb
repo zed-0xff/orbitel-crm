@@ -48,4 +48,19 @@ module TicketsHelper
       ">#{priority_desc(pr)}</option>"
     end
   end
+
+  def status_desc st
+    case st
+      when Ticket::ST_NEW, nil
+        "новая"
+      when Ticket::ST_CLOSED
+        "закрыта"
+      when Ticket::ST_ACCEPTED
+        "в обработке"
+      when Ticket::ST_REOPENED
+        "переоткрыта"
+      else
+        "?? #{st} ??"
+    end
+  end
 end

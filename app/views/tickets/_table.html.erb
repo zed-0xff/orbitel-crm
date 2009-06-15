@@ -3,6 +3,7 @@
     <th>#</th>
     <th>Адрес</th>
     <th>Описание</th>
+    <th>Статус</th>
     <th>Дата создания</th>
     <th>Автор</th>
   </tr>
@@ -11,6 +12,7 @@
       <td><%= ticket.id %></td>
       <td><%= h ticket.address %></td>
       <td><%= h ticket.title %></td>
+      <td style="text-align:center; font-weight:bold"><%= status_desc(ticket.status) %></td>
       <td><%= ticket.created_at.strftime('%Y.%m.%d %H:%M') %></td>
       <td><%= user_link ticket.created_by %></td>
     </tr>

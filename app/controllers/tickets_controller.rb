@@ -50,6 +50,30 @@ class TicketsController < ApplicationController
     render 'list'
   end
 
+  def accept
+    @ticket.assignee = current_user
+    @ticket.status = Ticket::ST_ACCEPTED
+    @ticket.save!
+    flash[:notice] = "Заявка принята в обработку"
+    redirect_to ticket_path(@ticket)
+  end
+
+  def close
+    @ticket.assignee = current_user
+    @ticket.status = Ticket::ST_CLOSED
+    @ticket.save!
+    flash[:notice] = "Заявка закрыта"
+    redirect_to ticket_path(@ticket)
+  end
+
+  def reopen
+    #@ticket.assignee = current_user
+    @ticket.status = Ticket::ST_REOPENED
+    @ticket.save!
+    flash[:notice] = "Заявка переоткрыта"
+    redirect_to ticket_path(@ticket)
+  end
+
   private
 
   def check_type
