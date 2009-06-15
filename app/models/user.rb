@@ -20,8 +20,11 @@ class User < ActiveRecord::Base
 
   belongs_to :created_by,   :class_name => 'User'
 
+  validates_inclusion_of    :type, :in => %w'Manager Technician Admin SuperManager'
+
   def can_manage_users?
-    self.class.const_defined?('CAN_MANAGE') && self.class::CAN_MANAGE.any?
+    self.class.const_defined?('CAN_MANAGE') && 
+      self.class::CAN_MANAGE.any?{ |entity| %w'User Manager Technician SuperManager'.include?(entity) }
   end
 
   def can_manage? what
