@@ -65,9 +65,14 @@
   <% end %>
 
   <% unless @ticket.notes.blank? %>
+    <tr><td colspan="2"><hr width="90%"/></td></tr>
     <tr>
-      <th>примечания</th>
-      <td><%= h(@ticket.notes).strip.gsub("\n",'<br/>') %></td>
+      <th colspan="2">примечания</th>
+    </tr>
+    <tr>
+      <td colspan="2" style="font-size:120%">
+        <%= h(@ticket.notes).strip.gsub("\n",'<br/>') %>
+      </td>
     </tr>
   <% end %>
 
