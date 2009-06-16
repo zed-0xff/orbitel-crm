@@ -7,7 +7,7 @@ class Ticket < ActiveRecord::Base
 
   accepts_nested_attributes_for :house
 
-  default_scope :order => 'created_at DESC'
+  default_scope :order => 'created_at'
 
   CONTACT_TYPE_UR  = 1
   CONTACT_TYPE_FIZ = 2

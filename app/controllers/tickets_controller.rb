@@ -46,7 +46,10 @@ class TicketsController < ApplicationController
   
   def index
     @title = 'Заявки'
-    @tickets = Ticket.all :conditions => ["status NOT IN (?)", Ticket::ST_CLOSED]
+    @tickets = Ticket.all(
+      :conditions => ["status != ?", Ticket::ST_CLOSED],
+      :order => "priority DESC, created_at"
+    )
     render 'list'
   end
 
