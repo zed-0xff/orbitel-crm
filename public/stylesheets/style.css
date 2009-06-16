@@ -298,3 +298,17 @@ div.bigmap {
 .priority-5  { color:#555599; background: #f2faff }
 .priority-10 { color:#555599; background: #ddf2ff }
 
+/*
+-------------------------
+ pagination
+-------------------------
+*/
+
+div.pagination {
+	margin-left: 1.5em;
+	margin-bottom: 5px;
+}
+
+div.pagination + table.t1 {
+	margin-bottom: 5px;
+}

@@ -1,4 +1,7 @@
-<h2>Houses</h2>
+<h2>Дома</h2>
+
+<%= will_paginate @houses %>
+
 <table class="t1">
   <tr>
     <th>Улица</th>
@@ -20,7 +23,9 @@
   <% end %> 
 </table>
 
+<%= will_paginate @houses %>
+
 <p>
-  <%= link_to 'Create new', new_house_path %>
+  <%= link_to 'Создать..', new_house_path %>
 </p>
 

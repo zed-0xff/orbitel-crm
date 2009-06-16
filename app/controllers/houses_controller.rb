@@ -2,7 +2,7 @@ class HousesController < ApplicationController
   before_filter :prepare_house
   
   def index
-    @houses = House.find :all, :order => "created_at DESC"
+    @houses = House.paginate :page => params[:page], :order => "created_at DESC"
   end
 
   def check
