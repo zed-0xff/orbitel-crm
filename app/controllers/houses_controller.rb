@@ -2,7 +2,26 @@ class HousesController < ApplicationController
   before_filter :prepare_house
   
   def index
-    @houses = House.paginate :page => params[:page], :order => "created_at DESC"
+    if params[:street] || params[:number]
+      conditions = ["TRUE"]
+      unless params[:street].blank?
+        conditions[0] << " AND name LIKE ?"
+        conditions    << "%#{params[:street].strip}%"
+      end
+      unless params[:number].blank?
+        conditions[0] << " AND number LIKE ?"
+        conditions    << "#{params[:number].strip}%"
+      end
+      @houses = House.paginate(
+        :page       => params[:page], 
+        :order      => "streets.name, convert(number,unsigned), number",
+        :include    => :street,
+        :joins      => 'LEFT JOIN streets ON houses.street_id = streets.id',
+        :conditions => conditions
+      )
+    else
+      @houses = House.paginate :page => params[:page], :order => "created_at DESC"
+    end
   end
 
   def check

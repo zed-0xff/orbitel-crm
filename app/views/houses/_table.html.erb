@@ -1,0 +1,24 @@
+<%= will_paginate @houses %>
+
+<table class="t1">
+  <tr>
+    <th>Улица</th>
+    <th>Дом</th>
+    <th>Интернет</th>
+    <th>Создан</th>
+    <th></th>
+  </tr>
+  <% for house in @houses %> 
+    <tr>
+      <td><%= link_to h(house.street.name), house_path(house) %></td>
+      <td align="right"><%= link_to h(house.number), house_path(house) %></td>
+      <%= status_tag house, :inet, :td %>
+      <td style="font-size: 7pt; color:gray"><%= time_ago_in_words house.created_at %> ago</td>
+      <td>
+        <%= link_to image_tag('edit.png'), edit_house_path(house) %>
+      </td>
+    </tr>
+  <% end %> 
+</table>
+
+<%= will_paginate @houses %>
