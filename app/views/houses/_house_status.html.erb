@@ -20,4 +20,17 @@
     </tr>
   <% end %>
   </table>
+
+  <% if current_user && current_user.can_manage?(House) %>
+    <div class="t1">
+      <% if house.new_record? %>
+        <%= link_to "&raquo; редактировать..", new_house_path(
+          :number => house.number,
+          :street => house.street.name
+        ) %>
+      <% else %>
+        <%= link_to "&raquo; редактировать..", edit_house_path(house) %>
+      <% end %>
+    </div>
+  <% end %>
 <% end %>

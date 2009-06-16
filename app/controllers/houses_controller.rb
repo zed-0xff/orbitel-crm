@@ -74,6 +74,8 @@ class HousesController < ApplicationController
 
   def new
     @house = House.new
+    @house.number = params[:number] if params[:number] 
+    @house.street = Street.find_or_initialize_by_name(params[:street]) if params[:street] 
   end
 
   def create
