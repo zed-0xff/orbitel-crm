@@ -8,6 +8,8 @@ class Street < ActiveRecord::Base
   before_save :capitalize_name
 
   def capitalize_name
-    self.name = self.name.mb_chars.titleize.to_s
+    if self.name == self.name.mb_chars.downcase.to_s
+      self.name = self.name.mb_chars.capitalize.to_s
+    end
   end
 end
