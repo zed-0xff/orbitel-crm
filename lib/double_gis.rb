@@ -199,6 +199,34 @@ class DoubleGis
       s.downcase
     end
   end
+
+  ##########################################################
+
+  # parse DGL file
+  def self.parse_dgl fname
+    parse_dgl_data(File.read(fname))
+  end
+
+  # parse DGL raw data
+  def self.parse_dgl_data data
+    require 'iconv'
+    require 'hpricot'
+    require 'ostruct'
+
+    begin
+      data = Iconv.conv 'utf8','utf16', data
+    rescue
+    end
+
+    doc = Hpricot::XML(data)
+    (doc/'HouseItem').map do |house|
+      OpenStruct.new(
+        :street => (house/'Street').first.innerText.to_s,
+        :number => (house/'HouseNr').first.innerText.to_s
+      )
+    end
+  end
+
 end
 
 ##########################################################
