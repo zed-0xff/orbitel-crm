@@ -6,7 +6,6 @@ describe Ticket do
       :created_by_id => 1,
       :assignee_id => 1,
       :house_id => 1,
-      :status_id => 1,
       :notes => "value for notes",
       :contact_info => "value for contact info"
     }
@@ -16,13 +15,18 @@ describe Ticket do
     Ticket.create!(@valid_attributes)
   end
 
+  it "newly created ticket status should be ST_NEW" do
+    t = Ticket.create!(@valid_attributes)
+    t.status.should == Ticket::ST_NEW
+  end
+
   describe "should create house if it not exists AND" do
     it "should create street if it not exists" do
       attrs = @valid_attributes
       attrs.delete(:house_id)
       attrs[:house] = {
         :number    => 1,
-        :street    => 'TestStreet#2'
+        :street    => 'Test Street#2'
       }
 
       ticket = nil
@@ -39,7 +43,7 @@ describe Ticket do
       ticket.house.reload
       ticket.house.street.reload
 
-      ticket.house.street.name.should == 'TestStreet#2'
+      ticket.house.street.name.should == 'Test Street#2'
       ticket.house.number.should == '1'
     end
 

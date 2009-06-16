@@ -45,10 +45,18 @@ class TicketsController < ApplicationController
   end
   
   def index
-    @title = 'All tickets'
+    @title = 'Заявки'
+    @tickets = Ticket.all :conditions => ["status NOT IN (?)", Ticket::ST_CLOSED]
+    render 'list'
+  end
+
+  def all
+    @title = 'Все заявки'
     @tickets = Ticket.all
     render 'list'
   end
+
+##########################################################
 
   def accept
     @ticket.assignee = current_user
