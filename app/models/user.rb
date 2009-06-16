@@ -1,6 +1,8 @@
 class User < ActiveRecord::Base
   include UserAuth
 
+  has_many :ticket_history_entries
+
   before_validation :fix_email
 
   validates_presence_of     :type,     :if => Proc.new{ |u| u.class == User }

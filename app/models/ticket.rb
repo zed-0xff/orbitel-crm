@@ -3,6 +3,9 @@ class Ticket < ActiveRecord::Base
   belongs_to :created_by, :class_name => 'User'
   belongs_to :assignee,   :class_name => 'User'
 
+  has_many :ticket_history_entries, :order => 'created_at DESC'
+  alias :history :ticket_history_entries
+
   validates_associated :house
 
   accepts_nested_attributes_for :house
@@ -63,5 +66,20 @@ class Ticket < ActiveRecord::Base
     else
       nil
     end
+  end
+
+  def change_status! new_status, options = {}
+    if options[:user] 
+      if options[:assign]
+        self.assignee = options[:user]
+      end
+      self.history << TicketHistoryEntry.new(
+        :user => options[:user],
+        :old_status => self.status,
+        :new_status => new_status
+      )
+    end
+    self.status = new_status
+    self.save!
   end
 end

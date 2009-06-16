@@ -62,28 +62,27 @@ class TicketsController < ApplicationController
 ##########################################################
 
   def accept
-    @ticket.assignee = current_user
-    @ticket.status = Ticket::ST_ACCEPTED
-    @ticket.save!
+    @ticket.change_status! Ticket::ST_ACCEPTED, 
+      :user => current_user, :assign => true
     flash[:notice] = "Заявка принята в обработку"
     redirect_to ticket_path(@ticket)
   end
 
   def close
-    @ticket.assignee = current_user
-    @ticket.status = Ticket::ST_CLOSED
-    @ticket.save!
+    @ticket.change_status! Ticket::ST_CLOSED, 
+      :user => current_user, :assign => false
     flash[:notice] = "Заявка закрыта"
     redirect_to ticket_path(@ticket)
   end
 
   def reopen
-    #@ticket.assignee = current_user
-    @ticket.status = Ticket::ST_REOPENED
-    @ticket.save!
+    @ticket.change_status! Ticket::ST_REOPENED, 
+      :user => current_user, :assign => false
     flash[:notice] = "Заявка переоткрыта"
     redirect_to ticket_path(@ticket)
   end
+
+##########################################################
 
   private
 
