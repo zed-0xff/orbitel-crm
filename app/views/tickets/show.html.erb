@@ -105,8 +105,7 @@
           <%= entry.created_at.strftime('%H:%M') %>
         </td>
         <td><%= user_link entry.user %>
-        <td><%= status_desc(entry.old_status) %>
-        <td><%= status_desc(entry.new_status) %>
+        <td><%= history_desc(entry) %>
       </tr>
     <% end %>
   <% end %>

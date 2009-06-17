@@ -12,6 +12,8 @@ class Ticket < ActiveRecord::Base
 
   default_scope :order => 'created_at'
 
+  after_create :log_new_ticket
+
   CONTACT_TYPE_UR  = 1
   CONTACT_TYPE_FIZ = 2
 
@@ -81,5 +83,15 @@ class Ticket < ActiveRecord::Base
     end
     self.status = new_status
     self.save!
+  end
+
+  private
+
+  def log_new_ticket
+    self.history.create!(
+      :user => self.created_by,
+      :old_status => nil,
+      :new_status => self.status
+    )
   end
 end
