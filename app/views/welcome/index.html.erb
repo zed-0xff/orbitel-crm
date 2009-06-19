@@ -16,6 +16,10 @@
     </ul>
   </div>
 
+  <% if @history %>
+    <%= render 'tickets/global_history' %>
+  <% end %>
+
 <% else %>
   <p>
     Not logged in. Please <%= link_to "log in", :login %> first.

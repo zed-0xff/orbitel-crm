@@ -211,10 +211,9 @@ form .t1 td {
 -------------------------
 */
 
-div.actions {
+div.actions, h2 {
 	font-size: 11pt;
 	font-weight: bold;
-	margin-left: 20px;
 }
 
 ul.actions {

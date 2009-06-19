@@ -1,0 +1,22 @@
+<h2 style="margin: 30 0 0 0">Последние события:</h2>
+<table style="margin: 0 0 8 8">
+  <% @history.group_by{ |he| he.created_at.to_date }.each do |date,entries| %>
+    <tr>
+      <td colspan="10" style="font-size:10pt; font-weight:bold"><%= date %></td>
+    </tr>
+    <% entries.each do |entry| %>
+      <tr>
+        <td style="padding-left:12px">
+          <%= entry.created_at.strftime('%H:%M') %>
+        </td>
+        <td><%= user_link entry.user %>
+        <td><%= history_desc(entry) %>
+        <% next if entry.ticket.blank? %>
+        <td><%= link_to( "№#{entry.ticket_id}: #{entry.ticket.title}", ticket_path(entry.ticket_id)) %>
+        <td><%= h(entry.ticket.address) %>
+      </tr>
+    <% end %>
+  <% end %>
+</table>
+
+<%= will_paginate @history %>
