@@ -2,7 +2,7 @@
 <table style="margin: 0 0 8 8" class="history">
   <% @history.group_by{ |he| he.created_at.to_date }.each do |date,entries| %>
     <tr>
-      <td colspan="10" class="date"><%= date %></td>
+      <td colspan="10" class="date"><%= date_with_mark(date) %></td>
     </tr>
     <% entries.each do |entry| %>
       <tr>

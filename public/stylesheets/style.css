@@ -88,6 +88,10 @@ table.history tr:first-child td.date {
 	padding-top: 2px;
 }
 
+.clear {
+	clear:both;
+}
+
 /*
 -------------------------
  ERRORS

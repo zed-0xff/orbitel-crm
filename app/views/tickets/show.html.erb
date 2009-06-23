@@ -92,12 +92,26 @@
               reopen_ticket_path(@ticket), 
               :method => :post %>
   <% end %>
+
+  <li><%= link_to_function "&raquo; добавить комментарий" do |page|
+            page.visual_effect :toggle_blind, :comment_form, :duration => 0.3
+            page << 'window.setTimeout("$(\'text\').focus()",300);'
+          end %>
+
+    <% form_tag( add_comment_ticket_path(@ticket), 
+        :id => 'comment_form', 
+        :style => 'display:none; margin: 5px 0 0 18px' 
+       ) do %>
+        <%= text_area_tag 'text', '', :style => 'height:3.1em; width:30em; float:left' %>
+        <%= submit_tag 'Отправить', :name => nil %>
+        <p class="clear"></p>
+    <% end %>
 </ul>
 
-<table style="margin-bottom:12px">
+<table style="margin-bottom:12px" class="history">
   <% @ticket.history.group_by{ |he| he.created_at.to_date }.each do |date,entries| %>
     <tr>
-      <td colspan="10" style="font-size:10.5pt; font-weight:bold"><%= date %></td>
+      <td colspan="10" class="date"><%= date_with_mark(date) %></td>
     </tr>
     <% entries.each do |entry| %>
       <tr>

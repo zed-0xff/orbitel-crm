@@ -61,6 +61,20 @@ class TicketsController < ApplicationController
 
 ##########################################################
 
+  def add_comment
+    text = params[:text].to_s.strip
+    unless text.blank?
+      @ticket.history.create!(
+        :user    => current_user,
+        :comment => text
+      )
+      flash[:notice] = "Комментарий добавлен"
+    end
+    redirect_to ticket_path(@ticket)
+  end
+
+##########################################################
+
   def accept
     @ticket.change_status! Ticket::ST_ACCEPTED, 
       :user => current_user, :assign => true

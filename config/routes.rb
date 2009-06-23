@@ -18,9 +18,10 @@ ActionController::Routing::Routes.draw do |map|
     :assigned_to_me => :get,
     :all            => :get
   }, :member => {
-    :close  => :post,
-    :reopen => :post,
-    :accept => :post
+    :close       => :post,
+    :reopen      => :post,
+    :accept      => :post,
+    :add_comment => :post
   }
 
   map.resource :session

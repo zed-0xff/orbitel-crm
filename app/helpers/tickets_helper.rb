@@ -81,9 +81,14 @@ module TicketsHelper
         "\"#{status_desc(he.old_status)}\" &rarr; \"#{status_desc(he.new_status)}\""
     end
     if he.comment
-      desc += "<br/>" if desc
-      desc += h(comment)
+      desc += "<br/>" unless desc.blank?
+      desc += "<b>" + h(he.comment) + "</b>"
     end
     desc
+  end
+
+  # date with '(today)' mark if date is today
+  def date_with_mark date
+    date.to_s + (date == Date.today ? " (сегодня)" : '')
   end
 end
