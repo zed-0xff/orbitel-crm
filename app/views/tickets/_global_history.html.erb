@@ -1,8 +1,8 @@
 <h2 style="margin: 30 0 0 0">Последние события:</h2>
-<table style="margin: 0 0 8 8">
+<table style="margin: 0 0 8 8" class="history">
   <% @history.group_by{ |he| he.created_at.to_date }.each do |date,entries| %>
     <tr>
-      <td colspan="10" style="font-size:10pt; font-weight:bold"><%= date %></td>
+      <td colspan="10" class="date"><%= date %></td>
     </tr>
     <% entries.each do |entry| %>
       <tr>

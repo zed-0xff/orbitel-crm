@@ -78,6 +78,16 @@ div.t1 {
 	margin-left: 2em;
 }
 
+table.history td.date {
+	font-size: 10pt;
+	font-weight: bold;
+	padding-top: 10px;
+}
+
+table.history tr:first-child td.date {
+	padding-top: 2px;
+}
+
 /*
 -------------------------
  ERRORS
