@@ -1,0 +1,76 @@
+<style>
+  table#cal tr.days td {
+    width: 22px;
+    text-align: center;
+    font-weight: bold;
+    padding: 0;
+  }
+
+  td.weekend {
+    background-color: #ffcccc !important;
+  }
+
+  table#cal {
+    border: solid 2px black;
+  }
+
+  td.rb { border-right:  solid 2px black }
+  td.bb, tr.bb { border-bottom: solid 2px black }
+
+  td.selected {
+    background: url(/images/smiley-eek.png) no-repeat center;
+  }
+</style>
+
+<table id="cal" class="t1">
+  <tr class="days bb">
+    <td class="rb"></td>
+    <% (@start_date..@end_date).each do |date| %>
+      <%- wday_td(date) do -%>
+        <%= date.day -%>
+      <%- end -%>
+    <% end %>
+  </tr>
+  <% (1..7).each do |uid| %>
+    <tr>
+      <td class="rb">User<%=uid%></td>
+      <% (@start_date..@end_date).each do |date| %>
+        <%- wday_td(date, 'wday') do -%>
+        <%- end -%>
+      <% end %>
+    </tr>
+  <% end %>
+</table>
+
+<%= javascript_tag <<-EOJS
+  Event.observe('cal','click',function(ev){
+    var td = ev.element();
+    if( td.tagName != 'TD' || !td.hasClassName('wday') ) return;
+    if( td.hasClassName('selected') ){
+      td.removeClassName('selected');
+    } else {
+      td.addClassName('selected');
+      if(td.previousElementSibling){
+        td.previousElementSibling.removeClassName('selected');
+      }
+      if(td.nextElementSibling){
+        td.nextElementSibling.removeClassName('selected');
+      }
+      checkCol(td);
+    }
+  });
+
+  // checks the table column to have the only _one_ instance of selected cell
+  function checkCol(td){
+    var ci       = td.cellIndex;
+    var ri       = td.parentNode.rowIndex;
+    var tbody    = td.parentNode.parentNode;
+    var tbody_cl = tbody.children.length;
+    for(var i=0; i<tbody_cl; i++){
+      var tr = tbody.children[i];
+      if( tr.rowIndex == ri ) continue;
+      tr.children[ci].removeClassName('selected');
+    }
+  }
+EOJS
+%>

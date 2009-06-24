@@ -212,7 +212,7 @@ form .t1 td {
 }
 
 .t1 tr:hover td {
-	background: #ffffcc;
+	background-color: #ffffcc;
 }
 
 .t1 tr.clickable {
