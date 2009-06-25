@@ -2,14 +2,14 @@
 <table class="t1">
   <tr>
     <th>id</th>
-    <th>login</th>
+    <th>name</th>
     <th>class</th>
     <th></th>
   </tr>
   <% for user in @users do %>
     <tr>
       <td align="right"><%= user.id %></td>
-      <td><%= user.login %></td>
+      <td><%= link_to_user(user) %></td>
       <td><%= user.class %></td>
       <td>
         <%= link_to image_tag('edit.png'), edit_user_path(user) %>

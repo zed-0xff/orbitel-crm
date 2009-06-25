@@ -54,13 +54,13 @@
 
   <tr>
     <th>создатель</th>
-    <td><%= user_link @ticket.created_by %></td>
+    <td><%= link_to_user @ticket.created_by %></td>
   </tr>
 
   <% if @ticket.assignee %>
     <tr>
       <th>исполнитель</th>
-      <td><%= user_link @ticket.assignee %></td>
+      <td><%= link_to_user @ticket.assignee %></td>
     </tr>
   <% end %>
 
@@ -118,7 +118,7 @@
         <td style="padding-left:12px">
           <%= entry.created_at.strftime('%H:%M') %>
         </td>
-        <td><%= user_link entry.user %>
+        <td><%= link_to_user entry.user %>
         <td><%= history_desc(entry) %>
       </tr>
     <% end %>

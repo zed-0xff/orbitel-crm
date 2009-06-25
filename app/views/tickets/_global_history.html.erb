@@ -9,7 +9,7 @@
         <td style="padding-left:12px">
           <%= entry.created_at.strftime('%H:%M') %>
         </td>
-        <td><%= user_link entry.user %>
+        <td><%= link_to_user entry.user %>
         <td><%= history_desc(entry) %>
         <% next if entry.ticket.blank? %>
         <td><%= link_to( "№#{entry.ticket_id}: #{entry.ticket.title}", ticket_path(entry.ticket_id)) %>

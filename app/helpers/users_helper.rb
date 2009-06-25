@@ -45,10 +45,11 @@ module UsersHelper
   #
   def link_to_user(user, options={})
     raise "Invalid user" unless user
-    options.reverse_merge! :content_method => :login, :title_method => :login, :class => :nickname
-    content_text      = options.delete(:content_text)
-    content_text    ||= user.send(options.delete(:content_method))
-    options[:title] ||= user.send(options.delete(:title_method))
+    options.reverse_merge! :content_method => :name, :title_method => :login, :class => :user
+    content_text   = options.delete(:content_text)
+    content_text ||= user.send(options.delete(:content_method))
+    content_text = user.login if content_text.blank?
+#    options[:title] ||= user.send(options.delete(:title_method))
     link_to h(content_text), user_path(user), options
   end
 
