@@ -283,12 +283,21 @@ img.user {
 }
 
 a.user {
-	background: url(/images/user-black.png) no-repeat left 1px;
+	background: url(/images/user-disable.png) no-repeat left 1px;
 	padding-left: 18px;
 	text-transform: none;
 	cursor: pointer;
 	white-space: pre;
 }
+
+a.admin             { background-image: url(/images/user-white.png) }
+a.admin.female      { background-image: url(/images/user-white-female.png) }
+a.technician        { background-image: url(/images/user-black.png) }
+a.technician.female { background-image: url(/images/user-black-female.png) }
+a.manager           { background-image: url(/images/user-nude.png) }
+a.manager.female    { background-image: url(/images/user-nude-female.png) }
+a.super_manager           { background-image: url(/images/user-orange.png) }
+a.super_manager.female    { background-image: url(/images/user-orange-female.png) }
 
 /*
 -------------------------

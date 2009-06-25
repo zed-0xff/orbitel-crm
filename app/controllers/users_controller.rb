@@ -8,7 +8,7 @@ class UsersController < ApplicationController
   end
 
   def new
-    @user = User.new
+    @user = User.new :male => true
   end
 
   def create
@@ -27,6 +27,15 @@ class UsersController < ApplicationController
 
   def update
     type_key = @user.type.underscore
+    params[type_key][:male] = 
+      case params[type_key][:male]
+        when 'true':
+          true
+        when 'false':
+          false
+        else
+          nil
+      end
     if @user.update_attributes(params[type_key])
       flash[:notice] = "Данные пользователя обновлены"
       if params[type_key][:type] != @user.type && current_user.is_a?(Admin)

@@ -13,6 +13,9 @@
   <p><%= f.label :email %><br/>
   <%= f.text_field :email, :autocomplete => 'off' %></p>
 
+  <p><%= f.label :male, "Пол" %><br/>
+  <%= f.select :male, [['Мужской',true], ['Женский',false], ['Неопределен O_o',nil]] %></p>
+
   <p><%= f.label :password %><br/>
   <%= f.password_field :password %></p>
 

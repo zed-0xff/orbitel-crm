@@ -38,6 +38,10 @@ class User < ActiveRecord::Base
     @attributes['type']
   end
 
+  def female?
+    male.nil? ? nil : !male
+  end
+
   private
 
   def fix_email
