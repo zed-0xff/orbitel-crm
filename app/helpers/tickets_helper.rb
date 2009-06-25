@@ -64,7 +64,7 @@ module TicketsHelper
     end
   end
 
-  def history_desc he
+  def history_desc he, length = nil
     desc = case [he.old_status, he.new_status]
       when [nil, Ticket::ST_NEW]
         "создал заявку"
@@ -82,7 +82,9 @@ module TicketsHelper
     end
     if he.comment
       desc += "<br/>" unless desc.blank?
-      desc += "<b>" + h(he.comment) + "</b>"
+      desc += "<b>" 
+      desc += h(length ? truncate(he.comment, length) : he.comment)
+      desc += "</b>"
     end
     desc
   end
