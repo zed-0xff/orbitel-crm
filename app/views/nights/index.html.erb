@@ -7,11 +7,26 @@
   }
 
   td.weekend {
-    background-color: #ffcccc !important;
+    border: solid 1px #888888;
+/*    background-color: #ffcccc !important;*/
+    background-image: url(/images/ffcccc.png);
   }
+  td.weekend.selected {
+    border: solid 1px #888888;
+    background: url(/images/smiley-eek-ffcccc.png) no-repeat center;
+  }
+
 
   table#cal {
     border: solid 2px black;
+  }
+
+  table#cal thead td {
+    background-color: white !important;
+  }
+
+  table#cal thead td.weekend {
+    background-color: #ffcccc !important;
   }
 
   td.rb { border-right:  solid 2px black }
@@ -20,29 +35,53 @@
   td.selected {
     background: url(/images/smiley-eek.png) no-repeat center;
   }
+
+  tbody#cal_tbody td { cursor: pointer }
 </style>
 
 <table id="cal" class="t1">
-  <tr class="days bb">
-    <td class="rb"></td>
-    <% (@start_date..@end_date).each do |date| %>
-      <%- wday_td(date) do -%>
-        <%= date.day -%>
-      <%- end -%>
-    <% end %>
-  </tr>
-  <% (1..7).each do |uid| %>
-    <tr>
-      <td class="rb">User<%=uid%></td>
+  <thead>
+    <tr class="days bb">
+      <td class="rb"></td>
       <% (@start_date..@end_date).each do |date| %>
-        <%- wday_td(date, 'wday') do -%>
+        <%- wday_td(date) do -%>
+          <%= date.day -%>
         <%- end -%>
       <% end %>
     </tr>
-  <% end %>
+  </thead>
+  <tbody id="cal_tbody">
+    <% @users.each do |user| %>
+      <tr>
+        <td class="rb username"><%=link_to_user(user)%></td>
+        <% (@start_date..@end_date).each do |date| %>
+          <%- wday_td(date, 'wday') do -%>
+          <%- end -%>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
 </table>
 
+<table class="t1">
+  <tbody id="tb">
+    <tr><td>aaa<td>12983791
+    <tr><td>bbb<td>832947293
+    <tr><td>ccc<td>032948
+  </tbody>
+</table>
+
+<ol id="ttt2">
+<li>lllllll
+<li>mmmmmmm
+<li>nnnnnnn
+</ol>
+
 <%= javascript_tag <<-EOJS
+  Sortable.create("tb",{tag:"tr", ghosting:true });
+  Sortable.create("ttt2", {ghosting:true});
+  Sortable.create("cal_tbody", {tag:"tr", ghosting:true, handle:"username"});
+
   Event.observe('cal','click',function(ev){
     var td = ev.element();
     if( td.tagName != 'TD' || !td.hasClassName('wday') ) return;
