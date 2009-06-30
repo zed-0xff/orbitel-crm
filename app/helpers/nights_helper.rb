@@ -27,7 +27,7 @@ module NightsHelper
     @drawed_vacations[vacation.id] = true
     ndays = 
       [vacation.end_date, Date.civil(date.year, date.mon, -1)].min -
-      [vacation.start_date, date].max
+      [vacation.start_date, date].max + 1
     "<td class=\"vacation\" colspan=\"#{ndays}\">отпуск"
   end
 end
