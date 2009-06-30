@@ -10,6 +10,7 @@
   <% if current_user.can_manage? :houses %>
     | <%= link_to 'Дома', houses_path %> 
   <% end %>
+  | <%= link_to 'Ночные дежурства', '/nights' %> 
   ]
 </div>
 
