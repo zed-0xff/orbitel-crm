@@ -92,6 +92,17 @@ table.history tr:first-child td.date {
 	clear:both;
 }
 
+@media print {
+	.noprint, 
+	div.copyright,
+	#user-bar-action,
+	#user-bar-greeting,
+	#topmenu,
+	ul.actions {
+		display:none;
+	}
+}
+
 /*
 -------------------------
  ERRORS

@@ -1,3 +1,3 @@
 class Admin < User
-  CAN_MANAGE = %w'Admin User Manager SuperManager Technician House'
+  CAN_MANAGE = User::SUBCLASSES + %w'House'
 end

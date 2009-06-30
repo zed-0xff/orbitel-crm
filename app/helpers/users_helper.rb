@@ -56,7 +56,8 @@ module UsersHelper
     content_text ||= user.send(options.delete(:content_method))
     content_text = user.login if content_text.blank?
 #    options[:title] ||= user.send(options.delete(:title_method))
-    link_to h(content_text), user_path(user), options
+#    link_to h(content_text), user_path(user), options
+    link_to h(content_text), '#', options
   end
 
   #

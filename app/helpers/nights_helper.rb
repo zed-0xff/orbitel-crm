@@ -8,26 +8,58 @@ module NightsHelper
 
     buffer << "<td class=\"#{klass}\">"
 
-    buffer <<
-      if block_called_from_erb?(block)
-        with_output_buffer { block.call }
-      else
-        # Return block result otherwise, but protect buffer also.
-        with_output_buffer { return block.call }
-      end
+    if block_given?
+      buffer <<
+        if block_called_from_erb?(block)
+          with_output_buffer { block.call }
+        else
+          # Return block result otherwise, but protect buffer also.
+          with_output_buffer { return block.call }
+        end
+    end
 
     buffer << "</td>"
 
-    output_buffer.concat(buffer)
+    block_given? ? output_buffer.concat(buffer) : buffer
   end
 
   def draw_vacation vacation, date
     @drawed_vacations ||= {}
-    return '' if @drawed_vacations[vacation.id]
+    return '<td style="display:none"></td>' if @drawed_vacations[vacation.id]
     @drawed_vacations[vacation.id] = true
     ndays = 
       [vacation.end_date, Date.civil(date.year, date.mon, -1)].min -
       [vacation.start_date, date].max + 1
     "<td class=\"vacation\" colspan=\"#{ndays}\">отпуск"
+  end
+
+  # TODO: implement thru i18n
+  def wday_shortname date
+    %w'вс пн вт ср чт пт сб'[date.wday]
+  end
+
+  # TODO: implement thru i18n
+  def month_name month
+    %w'Нулябрь Январь Февраль Март Апрель Май Июнь Июль Август Сентябрь Октябрь Ноябрь Декабрь'[month]
+  end
+
+  def link_to_next_month title='&raquo;'
+    month = @month + 1
+    year  = @year
+    if month == 13
+      month = 1
+      year += 1
+    end
+    link_to title, {:month => month, :year => year}, :class => 'noprint'
+  end
+
+  def link_to_prev_month title='&laquo;'
+    month = @month - 1
+    year  = @year
+    if month == 0
+      month = 12
+      year -= 1
+    end
+    link_to title, {:month => month, :year => year}, :class => 'noprint'
   end
 end

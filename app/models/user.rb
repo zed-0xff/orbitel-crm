@@ -1,6 +1,8 @@
 class User < ActiveRecord::Base
   include UserAuth
 
+  SUBCLASSES = %w'Manager Technician Admin SuperManager VirtualUser'
+
   has_many :ticket_history_entries
   has_many :vacations
 
@@ -23,11 +25,11 @@ class User < ActiveRecord::Base
 
   belongs_to :created_by,   :class_name => 'User'
 
-  validates_inclusion_of    :type, :in => %w'Manager Technician Admin SuperManager'
+  validates_inclusion_of    :type, :in => SUBCLASSES
 
   def can_manage_users?
     self.class.const_defined?('CAN_MANAGE') && 
-      self.class::CAN_MANAGE.any?{ |entity| %w'User Manager Technician SuperManager'.include?(entity) }
+      self.class::CAN_MANAGE.any?{ |entity| SUBCLASSES.include?(entity) }
   end
 
   def can_manage? what

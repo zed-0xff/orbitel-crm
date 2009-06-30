@@ -11,14 +11,10 @@
 /*    background-color: #ffcccc !important;*/
     background-image: url(/images/ffcccc.png);
   }
-  td.weekend.selected {
-    border: solid 1px #888888;
-    background: url(/images/smiley-eek-ffcccc.png) no-repeat center;
-  }
-
 
   table#cal {
     border: solid 2px black;
+    margin-bottom: 0;
   }
 
   table#cal thead td {
@@ -36,6 +32,11 @@
     background: url(/images/smiley-eek.png) no-repeat center;
   }
 
+  table#cal td.weekend.selected {
+    border: solid 1px #888888;
+    background: url(/images/smiley-eek-ffcccc.png) no-repeat center;
+  }
+
   tbody#cal_tbody td { cursor: pointer }
 
   td.vacation {
@@ -43,39 +44,93 @@
     color: grey;
     background-color: lightgrey;
   }
+
+  table.notable, table.notable > tbody > tr > td {
+    padding: 0;
+    margin:  0;
+  }
+
+  table.notable caption {
+    font-weight: bold;
+  }
+
+  @media print {
+    table#cal {
+      border: solid 3px black;
+    }
+    td.bb, tr.bb { border-bottom: solid 3px black }
+    td.username {
+      font-size: 105%;
+      padding: 1 8 1 8;
+    }
+  }
+
 </style>
 
 <%= calendar_date_select_includes %>
 
-<table id="cal" class="t1">
-  <thead>
-    <tr class="days bb">
-      <td class="rb"></td>
-      <% (@start_date..@end_date).each do |date| %>
-        <%- wday_td(date) do -%>
-          <%= date.day -%>
-        <%- end -%>
-      <% end %>
-    </tr>
-  </thead>
-  <tbody id="cal_tbody">
-    <% @users.each do |user| %>
-      <tr>
-        <td class="rb username"><%=link_to_user(user)%></td>
-        <% (@start_date..@end_date).each do |date| %>
-          <% if @vacations_by_user_id[user.id] && (vacation = @vacations_by_user_id[user.id].find{|v| v.include?(date) }) %>
-            <%= draw_vacation(vacation, date) -%>
-          <% else %>
-            <%- wday_td(date, 'wday') do -%>
-            <%- end -%>
+
+<table class="notable">
+  <caption>
+    График ночных дежурств на <%=month_name(@month)-%> <%=@year-%>
+  </caption>
+  <tr>
+    <td rowspan="2">
+      <%= link_to_prev_month %>
+    </td>
+    <td colspan="2">
+      <table id="cal" class="t1">
+        <thead>
+          <tr class="days" id="days-row">
+            <td class="rb"></td>
+            <% (@start_date..@end_date).each do |date| %>
+              <%- wday_td(date) do -%>
+                <%= date.day -%>
+              <%- end -%>
+            <% end %>
+          </tr>
+          <tr class="days bb">
+            <td class="rb bb"></td>
+            <% (@start_date..@end_date).each do |date| %>
+              <%- wday_td(date, 'bb') do -%>
+                <%= wday_shortname(date) -%>
+              <%- end -%>
+            <% end %>
+          </tr>
+        </thead>
+        <tbody id="cal_tbody">
+          <% @users.each do |user| %>
+            <tr class="user-row" id="tr-u-<%=user.id-%>">
+              <td class="rb username"><%=link_to_user(user)%></td>
+              <% (@start_date..@end_date).each do |date| %>
+                <%- if @vacations_by_user_id[user.id] && (vacation = @vacations_by_user_id[user.id].find{|v| v.include?(date) }) -%>
+                  <%= draw_vacation(vacation, date) -%>
+                <%- else -%>
+                  <%= wday_td(date, (@nights[date] == user.id ? 'wday selected' : 'wday')) -%>
+                <%- end -%>
+              <% end %>
+            </tr>
           <% end %>
-        <% end %>
-      </tr>
-    <% end %>
-  </tbody>
+        </tbody>
+      </table>
+    </td>
+    <td rowspan="2" style="padding-left: 1em">
+      <%= link_to_next_month %>
+    </td>
+  </tr>
+  <tr>
+    <td style="padding-left: 1.2em" align="right">
+      <span id="status-info" style="padding:2 4 2 4"></span>
+    </td>
+    <td align="right" width="110">
+      <%= button_to_function('Сохранить', 'save()', :class => 'noprint') unless params[:print] %>
+    </td>
+  </tr>
 </table>
 
-<ul class="tasks">
+<% unless params[:print] %>
+
+<ul class="actions">
   <li><%= link_to_function "&raquo; добавить отпуск" do |page|
             page.visual_effect :toggle_blind, :vacation_form, :duration => 0.2
           end %>
@@ -89,8 +144,24 @@
         <%= submit_tag 'Добавить', :name => nil %>
         <p class="clear"></p>
     <% end %>
-
+  
+  <li><%= link_to '&raquo; печать', :year => @year, :month => @month, :print => 1 %>
 </ul>
+
+
+<!-- hidden form for submitting params changes -->
+<% form_remote_tag( 
+    :html   => {:id => 'params_form', :style => 'display:none'}, 
+    :url    => { :action => 'save_param' },
+    :update => 'remote-form-result'
+) do %>
+  <%= hidden_field_tag 'year', @year %>
+  <%= hidden_field_tag 'month', @month %>
+  <%= text_field_tag 'order', nil, :id => 'param_order' %>
+  <%= text_field_tag 'nights', nil, :id => 'param_nights' %>
+  <div id="remote-form-result"></div>
+<% end %>
+<!-- end of hidden form -->
 
 <%= javascript_tag <<-EOJS
   Sortable.create("cal_tbody", {tag:"tr", ghosting:true, handle:"username"});
@@ -121,8 +192,53 @@
     for(var i=0; i<tbody_cl; i++){
       var tr = tbody.children[i];
       if( tr.rowIndex == ri ) continue;
-      tr.children[ci].removeClassName('selected');
+      if( tr.children[ci] ){
+        tr.children[ci].removeClassName('selected');
+      }
     }
   }
+
+  function td2uid(td){
+    return parseInt(td.parentNode.id.replace('tr-u-',''));
+  }
+
+  function td2day(td){
+    return parseInt($('days-row').cells[td.cellIndex].textContent);
+  }
+
+  function save(){
+    var order  = [];
+    $$('table#cal tr.user-row').each(function(tr){
+      order.push(tr.id.replace('tr-u-',''));
+    });
+    $('param_order').value = order;
+
+    var nights = [];
+    $$('table#cal td.wday.selected').each(function(td){
+      nights[ td2day(td) ] = td2uid(td);
+    });
+    $('param_nights').value = nights;
+
+    $('params_form').onsubmit();
+  }
+  
 EOJS
 %>
+<% end %>
+
+<%= javascript_tag <<-EOJS
+  Event.observe(window,'load',setnoprint);
+
+  function setnoprint(){
+    $$('tr.user-row').each(function(tr){
+      if( $$('tr#' + tr.id + ' td.selected').length > 0 ){
+        tr.removeClassName('noprint');
+      } else {
+        tr.addClassName('noprint');
+      }
+    });
+  }
+
+EOJS
+%>
+
