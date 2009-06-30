@@ -1,4 +1,6 @@
 class NightsController < ApplicationController
+  before_filter :check_access
+
   def index
     @year  = (params[:year] || Date.today.year).to_i
     @month = (params[:month] || Date.today.mon).to_i
@@ -20,9 +22,18 @@ class NightsController < ApplicationController
     @users += all_users.values
 
     @nights = Settings["nights.#{@year}.#{@month}"] || {}
+    if @readonly && @nights.any?
+      @users.delete_if{ |u| !@nights.values.include?(u.id) }
+    end
   end
 
   def add_vacation
+    if @readonly
+      flash[:error] = 'Нет доступа'
+      redirect_to '/nights'
+      return
+    end
+
     Vacation.create!(
       :user       => User.find(params[:user_id]),
       :start_date => params[:start_date],
@@ -33,6 +44,12 @@ class NightsController < ApplicationController
   end
 
   def save_param
+    if @readonly
+      flash[:error] = 'Нет доступа'
+      redirect_to '/nights'
+      return
+    end
+
     if params['order'] && params['nights'] && params['month'] && params['year']
       Settings['nights.order'] = params['order'].split(',').map(&:to_i)
 
@@ -58,5 +75,13 @@ class NightsController < ApplicationController
           :startcolor => '#ff0000'
       end
     end
+  end
+
+  private
+
+  def check_access
+    @readonly = true
+    @readonly = false if current_user && Settings['nights.managed_by'].to_a.include?(current_user.id)
+    true
   end
 end

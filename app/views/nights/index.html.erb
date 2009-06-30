@@ -123,12 +123,12 @@
       <span id="status-info" style="padding:2 4 2 4"></span>
     </td>
     <td align="right" width="110">
-      <%= button_to_function('Сохранить', 'save()', :class => 'noprint') unless params[:print] %>
+      <%= button_to_function('Сохранить', 'save()', :class => 'noprint') unless (params[:print] || @readonly) %>
     </td>
   </tr>
 </table>
 
-<% unless params[:print] %>
+<% unless params[:print] || @readonly %>
 
 <ul class="actions">
   <li><%= link_to_function "&raquo; добавить отпуск" do |page|
@@ -145,7 +145,7 @@
         <p class="clear"></p>
     <% end %>
   
-  <li><%= link_to '&raquo; печать', :year => @year, :month => @month, :print => 1 %>
+  <!--li<%= link_to '&raquo; печать', :year => @year, :month => @month, :print => 1 %>-->
 </ul>
 
 
