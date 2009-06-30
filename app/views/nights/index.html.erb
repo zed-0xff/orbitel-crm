@@ -32,12 +32,14 @@
   td.rb { border-right:  solid 2px black }
   td.bb, tr.bb { border-bottom: solid 2px black }
 
-  td.selected {
+  table#cal td.selected {
     background: url(/images/smiley-eek.png) no-repeat center;
   }
 
   tbody#cal_tbody td { cursor: pointer }
 </style>
+
+<%= calendar_date_select_includes %>
 
 <table id="cal" class="t1">
   <thead>
@@ -55,31 +57,36 @@
       <tr>
         <td class="rb username"><%=link_to_user(user)%></td>
         <% (@start_date..@end_date).each do |date| %>
-          <%- wday_td(date, 'wday') do -%>
-          <%- end -%>
+          <% if @vacations_by_user_id[user.id] && (vacation = @vacations_by_user_id[user.id].find{|v| v.include?(date) }) %>
+            <%= draw_vacation(vacation, date) -%>
+          <% else %>
+            <%- wday_td(date, 'wday') do -%>
+            <%- end -%>
+          <% end %>
         <% end %>
       </tr>
     <% end %>
   </tbody>
 </table>
 
-<table class="t1">
-  <tbody id="tb">
-    <tr><td>aaa<td>12983791
-    <tr><td>bbb<td>832947293
-    <tr><td>ccc<td>032948
-  </tbody>
-</table>
+<ul class="tasks">
+  <li><%= link_to_function "&raquo; добавить отпуск" do |page|
+            page.visual_effect :toggle_blind, :vacation_form, :duration => 0.2
+          end %>
+    <% form_tag( {:action => 'add_vacation'},
+        :id => 'vacation_form',
+        :style => 'display:none; margin: 5px 0 0 18px'
+       ) do %>
+        <%= select_tag 'user_id', options_for_select(@users.sort_by(&:name).map{ |u| [u.name,u.id] }) %>
+        <%= calendar_date_select_tag "start_date", nil, :size => 10 %>
+        <%= calendar_date_select_tag "end_date",   nil, :size => 10 %>
+        <%= submit_tag 'Добавить', :name => nil %>
+        <p class="clear"></p>
+    <% end %>
 
-<ol id="ttt2">
-<li>lllllll
-<li>mmmmmmm
-<li>nnnnnnn
-</ol>
+</ul>
 
 <%= javascript_tag <<-EOJS
-  Sortable.create("tb",{tag:"tr", ghosting:true });
-  Sortable.create("ttt2", {ghosting:true});
   Sortable.create("cal_tbody", {tag:"tr", ghosting:true, handle:"username"});
 
   Event.observe('cal','click',function(ev){

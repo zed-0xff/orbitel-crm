@@ -2,6 +2,7 @@ class User < ActiveRecord::Base
   include UserAuth
 
   has_many :ticket_history_entries
+  has_many :vacations
 
   before_validation :fix_email
 

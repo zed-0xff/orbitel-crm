@@ -20,4 +20,14 @@ module NightsHelper
 
     output_buffer.concat(buffer)
   end
+
+  def draw_vacation vacation, date
+    @drawed_vacations ||= {}
+    return '' if @drawed_vacations[vacation.id]
+    @drawed_vacations[vacation.id] = true
+    ndays = 
+      [vacation.end_date, Date.civil(date.year, date.mon, -1)].min -
+      [vacation.start_date, date].max
+    "<td class=\"vacation\" colspan=\"#{ndays}\">отпуск"
+  end
 end
