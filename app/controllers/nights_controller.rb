@@ -36,14 +36,16 @@ class NightsController < ApplicationController
     if params['order'] && params['nights'] && params['month'] && params['year']
       Settings['nights.order'] = params['order'].split(',').map(&:to_i)
 
-      year   = params['year'].to_i
-      month  = params['month'].to_i
-      nights = {}
-      params['nights'].split(',')[1..-1].each_with_index{ |uid,day|
-        next if uid.blank?
-        nights[ Date.civil(year, month, day+1) ] = uid.to_i;
-      }
-      Settings["nights.#{year}.#{month}"] = nights
+      unless params['nights'].blank?
+        year   = params['year'].to_i
+        month  = params['month'].to_i
+        nights = {}
+        params['nights'].split(',')[1..-1].each_with_index{ |uid,day|
+          next if uid.blank?
+          nights[ Date.civil(year, month, day+1) ] = uid.to_i;
+        }
+        Settings["nights.#{year}.#{month}"] = nights
+      end
 
       render :update do |page|
         page['status-info'].innerHTML = 'Сохранено'
