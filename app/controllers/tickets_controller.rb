@@ -84,7 +84,7 @@ class TicketsController < ApplicationController
 
   def close
     @ticket.change_status! Ticket::ST_CLOSED, 
-      :user => current_user, :assign => false
+      :user => current_user, :assign => false, :comment => params[:comment]
     flash[:notice] = "Заявка закрыта"
     redirect_to ticket_path(@ticket)
   end

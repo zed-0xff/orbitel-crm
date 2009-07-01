@@ -76,9 +76,10 @@ class Ticket < ActiveRecord::Base
         self.assignee = options[:user]
       end
       self.history << TicketHistoryEntry.new(
-        :user => options[:user],
+        :user       => options[:user],
         :old_status => self.status,
-        :new_status => new_status
+        :new_status => new_status,
+        :comment    => options[:comment]
       )
     end
     self.status = new_status
