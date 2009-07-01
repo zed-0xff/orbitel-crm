@@ -65,21 +65,28 @@ module TicketsHelper
   end
 
   def history_desc he, length = nil
-    desc = case [he.old_status, he.new_status]
+    d = case [he.old_status, he.new_status]
       when [nil, Ticket::ST_NEW]
-        "создал заявку"
+        ["создал заявку", "создала заявку"]
       when [Ticket::ST_NEW, Ticket::ST_ACCEPTED],
            [Ticket::ST_REOPENED, Ticket::ST_ACCEPTED]
-        "принял заявку в обработку"
+        ["принял заявку в обработку", "приняла заявку в обработку"]
       when [Ticket::ST_ACCEPTED, Ticket::ST_CLOSED]
-        "закрыл заявку"
+        ["закрыл заявку", "закрыла заявку"]
       when [Ticket::ST_CLOSED, Ticket::ST_REOPENED]
-        "переоткрыл заявку"
+        ["переоткрыл заявку", "переоткрыла заявку"]
       when [nil, nil]
         ""
       else
         "\"#{status_desc(he.old_status)}\" &rarr; \"#{status_desc(he.new_status)}\""
     end
+
+    desc = if d.is_a?(Array)
+      d[ he.user.male?? 0 : 1 ]
+    else
+      d
+    end
+
     if he.comment
       desc += "<br/>" unless desc.blank?
       desc += "<b>" 
