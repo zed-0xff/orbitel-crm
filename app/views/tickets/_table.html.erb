@@ -4,19 +4,23 @@
   <tr>
     <th>#</th>
     <th>Адрес</th>
+    <th>Абонент</th>
     <th>Описание</th>
-    <th>Статус</th>
+    <th>Статус / Исполнитель</th>
     <th>Дата создания</th>
-    <th>Автор</th>
   </tr>
   <% for ticket in @tickets do %>
     <tr class="clickable priority<%=ticket.priority-%>" url="<%=ticket_path(ticket)%>">
       <td><%= link_to ticket.id, ticket_path(ticket) %></td>
       <td><%= h ticket.address %></td>
+      <td><%= h truncate(ticket.contact_name,30) %></td>
       <td><%= link_to h(ticket.title), ticket_path(ticket) %></td>
-      <td style="text-align:center; font-weight:bold"><%= status_desc(ticket.status) %></td>
-      <td><%= ticket.created_at.strftime('%Y.%m.%d %H:%M') %></td>
-      <td><%= link_to_user ticket.created_by %></td>
+      <% if ticket.status == Ticket::ST_ACCEPTED %>
+        <td style="padding-left:5px"><%= ticket.assignee ? link_to_user(ticket.assignee) : nil %></td>
+      <% else %>
+        <td style="text-align:center; font-weight:bold"><%= status_desc(ticket.status) %></td>
+      <% end %>
+      <td style="white-space:pre"><%= ticket.created_at.strftime('%Y.%m.%d %H:%M') %></td>
     </tr>
   <% end %>
 </table>
