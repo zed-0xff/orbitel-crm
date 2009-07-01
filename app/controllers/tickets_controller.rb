@@ -32,6 +32,10 @@ class TicketsController < ApplicationController
   def update
   end
 
+  def show
+    @title = "Заявка №#{@ticket.id} - #{@ticket.title}"
+  end
+  
   def mine
     @title = 'My tickets'
     @tickets = Ticket.all :conditions => {:created_by_id => current_user}
@@ -45,7 +49,7 @@ class TicketsController < ApplicationController
   end
   
   def index
-    @title = 'Заявки'
+    @title = 'Текущие заявки'
     @tickets = Ticket.all(
       :conditions => ["status != ?", Ticket::ST_CLOSED],
       :order => "priority DESC, created_at"
