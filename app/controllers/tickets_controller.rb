@@ -59,6 +59,12 @@ class TicketsController < ApplicationController
     render 'list'
   end
 
+  def only_new
+    @title = 'Новые заявки'
+    @tickets = Ticket.all :conditions => { :status => [Ticket::ST_NEW, Ticket::ST_REOPENED] }
+    render 'list'
+  end
+
 ##########################################################
 
   def add_comment
