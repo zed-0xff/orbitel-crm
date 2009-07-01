@@ -95,6 +95,7 @@ table.history tr:first-child td.date {
 @media print {
 	.noprint, 
 	div.copyright,
+	div.menu,
 	#user-bar-action,
 	#user-bar-greeting,
 	#topmenu,
