@@ -6,7 +6,7 @@ function make_clickable_rows(){
 		var url = tr.getAttribute('url');
 		if(!url) return;
 		$A(tr.children).each(function(td){
-			if( td.tagName == 'TD' && td.children.length == 0 ){
+			if( td.tagName == 'TD' && td.innerHTML.indexOf('<a') == -1 ){
 				Event.observe(td,'click',function(el){
 					window.location = url;
 				});
