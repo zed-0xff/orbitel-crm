@@ -55,9 +55,10 @@ module UsersHelper
     content_text   = options.delete(:content_text)
     content_text ||= user.send(options.delete(:content_method))
     content_text = user.login if content_text.blank?
+    url = options.delete(:url) || '#'
 #    options[:title] ||= user.send(options.delete(:title_method))
 #    link_to h(content_text), user_path(user), options
-    link_to h(content_text), '#', options
+    link_to h(content_text), url, options
   end
 
   #
@@ -100,6 +101,10 @@ module UsersHelper
 
   def can_manages_for_select
     current_user.class::CAN_MANAGE.map{ |t| [t,t] }
+  end
+
+  def depts_for_select
+    [['== нет ==', nil]] + Dept.all.map{ |d| [d.name,d.id] }
   end
 
 end

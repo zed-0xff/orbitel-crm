@@ -1,0 +1,8 @@
+<% if current_user.can_manage?(:depts) %>
+  <div class="menu"> 
+    [
+    <%= link_to "Пользователи (#{User.count})", users_path %> |
+    <%= link_to "Отделы (#{Dept.count})", depts_path %>
+    ]
+  </div>
+<% end %>

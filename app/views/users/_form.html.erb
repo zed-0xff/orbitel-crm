@@ -4,14 +4,17 @@
   <p><%= f.label :type %><br/>
   <%= f.select :type, can_manages_for_select %></p>
 
+  <p><%= f.label :dept, 'Отдел' %><br/>
+  <%= f.select :dept_id, depts_for_select %></p>
+
   <p><%= f.label :login %><br/>
   <%= f.text_field :login %></p>
 
   <p><%= f.label :name %><br/>
   <%= f.text_field :name %></p>
 
-  <p><%= f.label :email %><br/>
-  <%= f.text_field :email, :autocomplete => 'off' %></p>
+  <!--p><%= f.label :email %><br/>
+  <%= f.text_field :email, :autocomplete => 'off' %></p-->
 
   <p><%= f.label :male, "Пол" %><br/>
   <%= f.select :male, [['Мужской',true], ['Женский',false], ['Неопределен O_o',nil]] %></p>

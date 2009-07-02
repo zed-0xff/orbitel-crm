@@ -3,14 +3,16 @@
   <tr>
     <th>id</th>
     <th>name</th>
-    <th>class</th>
+    <th>класс</th>
+    <th>отдел</th>
     <th></th>
   </tr>
   <% for user in @users do %>
     <tr>
       <td align="right"><%= user.id %></td>
-      <td><%= link_to_user(user) %></td>
+      <td><%= link_to_user(user, :url => edit_user_path(user)) %></td>
       <td><%= user.class %></td>
+      <td><%= user.dept.try(:name) %></td>
       <td>
         <%= link_to image_tag('edit.png'), edit_user_path(user) %>
       </td>

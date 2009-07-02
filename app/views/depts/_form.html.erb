@@ -1,0 +1,11 @@
+<% form_for @dept do |f| -%>
+  <%= f.error_messages %>
+
+  <p><%= f.label :name, 'Название' %><br/>
+  <%= f.text_field :name %></p>
+
+  <p><%= f.label :handle, 'Хэндл' %><br/>
+  <%= f.text_field :handle %></p>
+
+  <p><%= submit_tag %></p>
+<% end -%>

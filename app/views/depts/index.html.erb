@@ -1,0 +1,23 @@
+<h2>Отделы</h2>
+<table class="t1">
+  <tr>
+    <th>id</th>
+    <th>name</th>
+    <th>handle</th>
+    <th></th>
+  </tr>
+  <% for dept in @depts do %>
+    <tr>
+      <td align="right"><%= dept.id %></td>
+      <td><%= h dept.name %></td>
+      <td><%= h dept.handle %></td>
+      <td>
+        <%= link_to image_tag('edit.png'), edit_dept_path(dept) %>
+      </td>
+    </tr>
+  <% end %>
+</table>
+
+<p>
+  <%= link_to 'Create new', new_dept_path %>
+</p>

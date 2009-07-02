@@ -6,6 +6,8 @@ class User < ActiveRecord::Base
   has_many :ticket_history_entries
   has_many :vacations
 
+  belongs_to :dept
+
   before_validation :fix_email
 
   validates_presence_of     :type,     :if => Proc.new{ |u| u.class == User }
@@ -33,8 +35,10 @@ class User < ActiveRecord::Base
   end
 
   def can_manage? what
-    self.class.const_defined?('CAN_MANAGE') && 
-      self.class::CAN_MANAGE.include?(what.to_s.singularize.humanize)
+    self.is_a?(Admin) || (
+      self.class.const_defined?('CAN_MANAGE') && 
+        self.class::CAN_MANAGE.include?(what.to_s.singularize.humanize)
+    )
   end
 
   def type
