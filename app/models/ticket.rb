@@ -14,6 +14,10 @@ class Ticket < ActiveRecord::Base
 
   after_create :log_new_ticket
 
+  after_create  :update_cache
+  after_destroy :update_cache
+  after_update  :update_cache
+
   CONTACT_TYPE_UR  = 1
   CONTACT_TYPE_FIZ = 2
 
@@ -32,6 +36,9 @@ class Ticket < ActiveRecord::Base
   ST_REOPENED  = 15
 
   STATUSES = [0, 5, 10, 15]
+
+  COND_CURRENT = ["status != ?", Ticket::ST_CLOSED]
+  COND_NEW     = { :status => [Ticket::ST_NEW, Ticket::ST_REOPENED] }
 
   # create a house/street if needed, or find an existing by their attributes
   def initialize *args
@@ -94,5 +101,10 @@ class Ticket < ActiveRecord::Base
       :old_status => nil,
       :new_status => self.status
     )
+  end
+
+  def update_cache
+    Rails.cache.write 'tickets.count.current', Ticket.count(:conditions => COND_CURRENT)
+    Rails.cache.write 'tickets.count.new',     Ticket.count(:conditions => COND_NEW)
   end
 end

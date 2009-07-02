@@ -51,7 +51,7 @@ class TicketsController < ApplicationController
   def index
     @title = 'Текущие заявки'
     @tickets = Ticket.all(
-      :conditions => ["status != ?", Ticket::ST_CLOSED],
+      :conditions => Ticket::COND_CURRENT,
       :order => "priority DESC, created_at"
     )
     render 'list'
@@ -65,7 +65,7 @@ class TicketsController < ApplicationController
 
   def only_new
     @title = 'Новые заявки'
-    @tickets = Ticket.all :conditions => { :status => [Ticket::ST_NEW, Ticket::ST_REOPENED] }
+    @tickets = Ticket.all :conditions => Ticket::COND_NEW
     render 'list'
   end
 
