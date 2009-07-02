@@ -52,20 +52,26 @@ class TicketsController < ApplicationController
     @title = 'Текущие заявки'
     @tickets = Ticket.all(
       :conditions => Ticket::COND_CURRENT,
-      :order => "priority DESC, created_at"
+      :order => "priority DESC, created_at",
+      :include => [:house, :assignee, {:house => :street}]
     )
     render 'list'
   end
 
   def all
     @title = 'Все заявки'
-    @tickets = Ticket.all
+    @tickets = Ticket.all(
+      :include => [:house, :assignee, {:house => :street}]
+    )
     render 'list'
   end
 
   def only_new
     @title = 'Новые заявки'
-    @tickets = Ticket.all :conditions => Ticket::COND_NEW
+    @tickets = Ticket.all(
+      :conditions => Ticket::COND_NEW,
+      :include => [:house, :assignee, {:house => :street}]
+    )
     render 'list'
   end
 
