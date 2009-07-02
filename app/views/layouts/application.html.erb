@@ -1,7 +1,7 @@
 <html><head>
   <%= stylesheet_link_tag "style", :media => 'all' %>
   <%= javascript_include_tag :all %>
-  <title>Orbitel CRM <%= @title ? ":: #@title" : '' -%></title>
+  <title>Orbitel CRM <%= RAILS_ENV == 'production' ? '' : "[#{RAILS_ENV[0..2]}]" -%> <%= @title ? ":: #@title" : '' -%></title>
 </head><body>
 
 <%= render :partial => 'users/user_bar' %>
