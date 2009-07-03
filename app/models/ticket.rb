@@ -2,6 +2,7 @@ class Ticket < ActiveRecord::Base
   belongs_to :house
   belongs_to :created_by, :class_name => 'User'
   belongs_to :assignee,   :class_name => 'User'
+  belongs_to :dept
 
   has_many :ticket_history_entries, :order => 'created_at DESC'
   alias :history :ticket_history_entries
@@ -11,6 +12,14 @@ class Ticket < ActiveRecord::Base
   accepts_nested_attributes_for :house
 
   default_scope :order => 'created_at'
+
+  named_scope :for_user, lambda{ |user|
+    { :conditions => ["dept_id IS NULL OR dept_id = ? OR assignee_id = ?", user.dept, user] }
+  }
+
+  named_scope :for_dept, lambda{ |dept|
+    { :conditions => { :dept_id => dept }}
+  }
 
   after_create :log_new_ticket
 
@@ -91,6 +100,25 @@ class Ticket < ActiveRecord::Base
     end
     self.status = new_status
     self.save!
+  end
+
+  # target can be Dept or User
+  def redirect! target, options = {}
+    if target.is_a?(Dept)
+      self.dept = target
+      self.history << TicketHistoryEntry.new(
+        :user       => options[:user],
+        :comment    => "переадресовал заявку в отдел \"#{target.name}\""
+      )
+      # unassign ticket if current assignee is not from dept to which ticket is redirected
+      if self.assignee && self.assignee.dept != target
+        self.assignee = nil
+      end
+      self.save!
+    elsif target.is_a?(User)
+    else
+      raise "Invalid redirect target: #{target.inspect}"
+    end
   end
 
   private

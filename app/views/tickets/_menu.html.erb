@@ -1,10 +1,101 @@
+<style>
+  table.ticket-counts {
+    margin: 0 auto;
+  }
+  table.ticket-counts td {
+    font-size: 7pt;
+    font-family: tahoma;
+    text-align: right;
+    padding: 0;
+  }
+
+  div#toggler {
+    font-size: 7pt;
+    font-family: tahoma;
+  }
+
+  div.slim {
+    margin: 0;
+    padding: 0;
+  }
+
+  a.selected {
+    color: black;
+    font-weight: bold;
+  }
+
+  a.selected:hover {
+    text-decoration: none;
+    cursor: default;
+  }
+</style>
+
 <div class="menu"> 
-  [
-  <%= link_to "Текущие (#{Rails.cache.read('tickets.count.current')})", tickets_path %> |
-  <%= link_to "Новые (#{Rails.cache.read('tickets.count.new')})", only_new_tickets_path %> |
-<!--  <%= link_to 'Assigned to me', assigned_to_me_tickets_path %> |
-  <%= link_to 'My', mine_tickets_path %> |
--->
-  <%= link_to 'Все', all_tickets_path %>
-  ]
+  <%# table class="ticket-counts">
+    <tr>
+      <td>
+      <td>тек.
+      <td>нов.
+      <td>закр.
+    </tr>
+    <% Dept.all.each do |dept| % >
+      <tr>
+        <td style="text-align:left"><%= dept.name % >: 
+        <td><%= link_to_tickets nil, tickets_path, Ticket::COND_CURRENT, :dept => dept % >
+        <td><%= link_to_tickets nil, only_new_tickets_path, Ticket::COND_NEW, :dept => dept % >
+        <td><%= link_to_tickets nil, closed_tickets_path, {:status => Ticket::ST_CLOSED}, :dept => dept % >
+      </tr>
+    <% end % >
+    <tr>
+      <td style="text-align:left"><b>Все</b>: 
+      <td><%= link_to_tickets nil, tickets_path, Ticket::COND_CURRENT % >
+      <td><%= link_to_tickets nil, only_new_tickets_path, Ticket::COND_NEW % >
+      <td><%= link_to_tickets nil, closed_tickets_path, {:status => Ticket::ST_CLOSED} % >
+    </tr>
+  </table>
+  %>
+
+  <div id="toggler" class="slim">
+    <%= link_to_function '[мой отдел]', 'show_my_counts()', :id => 'my_toggler', 
+      :class => (!params[:all_depts] && 'selected') %>
+    <%= link_to_function '[все отделы]', 'show_all_counts()', :id => 'all_toggler',
+      :class => (params[:all_depts] && 'selected') %>
+  </div>
+
+  <div class="slim" id="my_counts" <%= 'style="display:none"' if params[:all_depts] %>>
+    [
+    <%= link_to_tickets "Текущие",  tickets_path, Ticket::COND_CURRENT %> |
+    <%= link_to_tickets "Новые",    only_new_tickets_path, Ticket::COND_NEW %> |
+    <%= link_to_tickets "Закрытые", closed_tickets_path, {:status => Ticket::ST_CLOSED} %> |
+    <%= link_to_tickets "Все",      all_tickets_path %>
+    ]
+  </div>
+
+  <div class="slim" id="all_counts" <%= 'style="display:none"' unless params[:all_depts] %>>
+    [
+    <%= link_to_tickets "Текущие",  tickets_path, Ticket::COND_CURRENT, :all_depts => true %> |
+    <%= link_to_tickets "Новые",    only_new_tickets_path, Ticket::COND_NEW, :all_depts => true %> |
+    <%= link_to_tickets "Закрытые", closed_tickets_path, {:status => Ticket::ST_CLOSED}, :all_depts => true %> |
+    <%= link_to_tickets "Все",      all_tickets_path, {}, :all_depts => true %>
+    ]
+  </div>
+
 </div>
+
+<%= javascript_tag <<-EOJS
+  function show_my_counts(){
+    $('my_counts').show();
+    $('all_counts').hide();
+    $('my_toggler').addClassName('selected');
+    $('all_toggler').removeClassName('selected');
+  }
+
+  function show_all_counts(){
+    $('all_counts').show();
+    $('my_counts').hide();
+    $('all_toggler').addClassName('selected');
+    $('my_toggler').removeClassName('selected');
+  }
+
+EOJS
+%>

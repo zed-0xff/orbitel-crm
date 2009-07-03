@@ -17,12 +17,14 @@ ActionController::Routing::Routes.draw do |map|
     :mine           => :get,
     :assigned_to_me => :get,
     :all            => :get,
-    :only_new       => :get
+    :only_new       => :get,
+    :closed         => :get
   }, :member => {
     :close       => :post,
     :reopen      => :post,
     :accept      => :post,
-    :add_comment => :post
+    :add_comment => :post,
+    :redirect    => :post
   }
 
   map.resource :session

@@ -47,31 +47,30 @@ class TicketsController < ApplicationController
     @tickets = Ticket.all :conditions => {:assignee_id => current_user}
     render 'list'
   end
+
+##########################################################
   
   def index
     @title = 'Текущие заявки'
-    @tickets = Ticket.all(
-      :conditions => Ticket::COND_CURRENT,
-      :order => "priority DESC, created_at",
-      :include => [:house, :assignee, {:house => :street}]
-    )
+    @tickets = prepare_tickets Ticket::COND_CURRENT, :order => "priority DESC, created_at"
     render 'list'
   end
 
   def all
     @title = 'Все заявки'
-    @tickets = Ticket.all(
-      :include => [:house, :assignee, {:house => :street}]
-    )
+    @tickets = prepare_tickets
     render 'list'
   end
 
   def only_new
     @title = 'Новые заявки'
-    @tickets = Ticket.all(
-      :conditions => Ticket::COND_NEW,
-      :include => [:house, :assignee, {:house => :street}]
-    )
+    @tickets = prepare_tickets Ticket::COND_NEW
+    render 'list'
+  end
+
+  def closed
+    @title = 'Закрытые заявки'
+    @tickets = prepare_tickets :status => Ticket::ST_CLOSED
     render 'list'
   end
 
@@ -86,6 +85,12 @@ class TicketsController < ApplicationController
       )
       flash[:notice] = "Комментарий добавлен"
     end
+    redirect_to ticket_path(@ticket)
+  end
+
+  def redirect
+    @ticket.redirect!( Dept.find(params[:dept_id]), :user => current_user )
+    flash[:notice] = "Заявка переадресована"
     redirect_to ticket_path(@ticket)
   end
 
@@ -127,4 +132,14 @@ class TicketsController < ApplicationController
     true
   end
 
+  def prepare_tickets conditions = nil, options = {}
+    r = if params[:all_depts]
+      Ticket
+    else
+      Ticket.for_user(current_user)
+    end
+    options[:conditions] ||= conditions
+    options[:include] = [:house, :assignee, {:house => :street}]
+    r.all options
+  end
 end

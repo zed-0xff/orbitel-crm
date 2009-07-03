@@ -100,4 +100,20 @@ module TicketsHelper
   def date_with_mark date
     date.to_s + (date == Date.today ? " (сегодня)" : '')
   end
+
+  def link_to_tickets title, path, conditions = {}, options = {}
+    count = 
+      if options[:all_depts]
+        path += "?all_depts=1"
+        Ticket.count :conditions => conditions
+      else
+        Ticket.for_user(current_user).count :conditions => conditions
+      end
+
+    if title.blank?
+      link_to "#{count}", path
+    else
+      link_to "#{title}(#{count})", path
+    end
+  end
 end

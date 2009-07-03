@@ -52,10 +52,19 @@
     </td>
   </tr>
 
+  <tr><td colspan="2"><hr width="90%"/></td></tr>
+
   <tr>
     <th>создатель</th>
     <td><%= link_to_user @ticket.created_by %></td>
   </tr>
+
+  <% if @ticket.dept %>
+    <tr>
+      <th>исп. отдел</th>
+      <td><%= @ticket.dept.name %></td>
+    </tr>
+  <% end %>
 
   <% if @ticket.assignee %>
     <tr>
@@ -104,6 +113,20 @@
     <li><%= link_to "&raquo; переоткрыть заявку", 
               reopen_ticket_path(@ticket), 
               :method => :post %>
+  <% end %>
+
+  <% if @ticket.status != Ticket::ST_CLOSED %>
+    <li><%= link_to_function "&raquo; переадресовать в другой отдел" do |page|
+              page.visual_effect :toggle_blind, :redirect_form, :duration => 0.15
+            end %>
+
+      <% form_tag( redirect_ticket_path(@ticket), 
+          :id => 'redirect_form', 
+          :style => 'display:none; margin: 5px 0 0 18px' 
+         ) do %>
+          <%= select_tag 'dept_id', options_for_select(depts_for_select(:exclude => @ticket.dept)) %>
+          <%= submit_tag 'Переадресовать', :name => nil %>
+      <% end %>
   <% end %>
 
   <li><%= link_to_function "&raquo; добавить комментарий" do |page|

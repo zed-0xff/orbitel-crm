@@ -103,8 +103,16 @@ module UsersHelper
     current_user.class::CAN_MANAGE.map{ |t| [t,t] }
   end
 
-  def depts_for_select
-    [['== нет ==', nil]] + Dept.all.map{ |d| [d.name,d.id] }
+  def depts_for_select options = {}
+    r = [['== нет ==', nil]] + Dept.all.map{ |d| [d.name,d.id] }
+    if options.key?(:exclude)
+      if options[:exclude]
+        r.delete_if{ |rr| rr[1] == options[:exclude].id }
+      else
+        r.delete_if{ |rr| rr[1] == options[:exclude] }
+      end
+    end
+    r
   end
 
 end

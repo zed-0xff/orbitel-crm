@@ -23,6 +23,14 @@
       </label><br/>
       <%= select_tag 'ticket[priority]', priorities_for_select(@ticket.priority) %>
     </div>
+
+    <div style="margin-top: 0.8em">
+      <label for="ticket_dept_id">
+        Целевой отдел заявки:
+      </label><br/>
+      <% @ticket.dept ||= Dept[:technicians] %>
+      <%= f.select 'dept_id', depts_for_select %>
+    </div>
   <% end %>
 
   <% field_set_tag 'Адрес подключения' do %>
