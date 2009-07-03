@@ -102,13 +102,23 @@ module TicketsHelper
   end
 
   def link_to_tickets title, path, conditions = {}, options = {}
-    count = 
-      if options[:all_depts]
-        path += "?all_depts=1"
-        Ticket.count :conditions => conditions
-      else
-        Ticket.for_user(current_user).count :conditions => conditions
-      end
+    @cached_counts ||= Rails.cache.read('ticket.counts') || {}
+    @cached_counts = @cached_counts.dup if @cached_counts.frozen?
+    cache_subkey = conditions.inspect.hash.to_s
+    if options[:all_depts]
+      path += "?all_depts=1"
+      cache_subkey += '.all_depts'
+      tickets_source = Ticket
+    else
+      cache_subkey += ".u#{current_user.id}"
+      tickets_source = Ticket.for_user(current_user)
+    end
+
+    unless (count = @cached_counts[cache_subkey])
+      count = tickets_source.count :conditions => conditions
+      @cached_counts[cache_subkey] = count
+      Rails.cache.write 'ticket.counts', @cached_counts.dup
+    end
 
     if title.blank?
       link_to "#{count}", path

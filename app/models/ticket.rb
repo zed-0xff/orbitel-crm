@@ -23,9 +23,9 @@ class Ticket < ActiveRecord::Base
 
   after_create :log_new_ticket
 
-  after_create  :update_cache
-  after_destroy :update_cache
-  after_update  :update_cache
+  after_create  :clear_cache
+  after_destroy :clear_cache
+  after_update  :clear_cache
 
   CONTACT_TYPE_UR  = 1
   CONTACT_TYPE_FIZ = 2
@@ -131,8 +131,7 @@ class Ticket < ActiveRecord::Base
     )
   end
 
-  def update_cache
-    Rails.cache.write 'tickets.count.current', Ticket.count(:conditions => COND_CURRENT)
-    Rails.cache.write 'tickets.count.new',     Ticket.count(:conditions => COND_NEW)
+  def clear_cache
+    Rails.cache.delete 'ticket.counts'
   end
 end
