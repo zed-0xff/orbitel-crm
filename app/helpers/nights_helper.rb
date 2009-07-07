@@ -2,9 +2,8 @@ module NightsHelper
   def wday_td date, klass='', &block
     buffer = ''
   
-    if [6,7].include?(date.cwday)
-      klass += " weekend"
-    end
+    klass += " weekend" if [6,7].include?(date.cwday)
+    klass += " today" if date == Date.today
 
     buffer << "<td class=\"#{klass}\">"
 
