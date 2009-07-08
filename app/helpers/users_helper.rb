@@ -100,7 +100,7 @@ module UsersHelper
   end
 
   def can_manages_for_select
-    current_user.class::CAN_MANAGE.map{ |t| [t,t] }
+    (current_user.class::CAN_MANAGE & User::SUBCLASSES).map{ |t| [t,t] }
   end
 
   def depts_for_select options = {}

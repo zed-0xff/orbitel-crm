@@ -1,7 +1,7 @@
 class User < ActiveRecord::Base
   include UserAuth
 
-  SUBCLASSES = %w'Manager Technician Admin SuperManager VirtualUser'
+  SUBCLASSES = %w'Manager Technician Admin SuperManager VirtualUser Director'
 
   has_many :ticket_history_entries
   has_many :vacations
