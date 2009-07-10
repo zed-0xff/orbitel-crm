@@ -1,0 +1,2 @@
+class Director < User
+end
