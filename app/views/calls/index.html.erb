@@ -1,0 +1,13 @@
+<h1>Calls</h1>
+
+<table class="t1">
+<% @calls.each do |call| %>
+  <tr>
+    <td><%= call.caller %>
+    <td><%= call.start_time.strftime("%Y-%m-%d %H:%M:%S")  %>
+    <td><%= call.end_time.try(:strftime,"%H:%M:%S")  %>
+    <td><%= distance_of_time_in_words(call.start_time, call.end_time, true) if call.end_time %>
+    <td><%= call.customer.try(:name) %>
+  </tr>
+<% end %>
+</table>
