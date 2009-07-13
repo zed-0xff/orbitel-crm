@@ -1,5 +1,5 @@
 class Radius::Call < ActiveRecord::Base
-  establish_connection "radius"
+  establish_connection "radius_#{RAILS_ENV}"
   set_table_name 'radacct'
   set_primary_key 'radacctid'
   default_scope :order => "acctstarttime, acctstoptime"
