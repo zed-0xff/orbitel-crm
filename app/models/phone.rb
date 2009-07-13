@@ -7,18 +7,27 @@ class Phone < ActiveRecord::Base
     # 8 495 543-33-44
   end
 
-  def self.from_array_or_string src
+  def self.from_string_or_array src
+    soa2numbers(src).map{ |num| Phone.new(:number => num) }
+  end
+
+  # string_or_array to numbers
+  def self.soa2numbers src
     numbers = []
-    src.to_a.each do |ph1|
-      ph1.to_s.strip.split(/[,;]/).each do |ph2|
-        numbers << canonicalize(ph2)
+    src = [src] unless src.is_a?(Array)
+    src.each do |ph1|
+      ph1.to_s.strip.split(/[,;а-яА-Я]/u).uniq.
+        delete_if{|n| n.blank?}.compact.
+        each do |ph2|
+          numbers << canonicalize(ph2)
       end
     end
-    numbers.uniq.compact.map{ |num| Phone.new(:number => num) }
+    numbers.uniq.compact
   end
 
   def self.canonicalize number
-    number = number.to_s.delete('-() ')
+    number = number.to_s.gsub(/[^0-9+]/,'')
+    return nil if number.blank?
     # 89097247755
     # 83522442255
     # 84955433344
