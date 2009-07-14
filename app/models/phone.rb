@@ -1,6 +1,12 @@
 class Phone < ActiveRecord::Base
   belongs_to :customer
 
+  validates_uniqueness_of :number
+
+  def validate
+    errors.add :number, "greater than 11 digits" if number.to_s.size > 11
+  end
+
   def humanize
     Phone.humanize number
   end
