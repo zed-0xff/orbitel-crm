@@ -54,4 +54,19 @@ describe Phone do
       end
     end
   end
+
+  describe "humanize()" do
+    examples = ActiveSupport::OrderedHash.new
+    examples[89125790778] = '8-912-579-0778'
+    examples[83522411089] = '41-10-89'
+    examples[411089]      = '41-10-89'
+    examples[83433781178] = '(343) 378-11-78'
+    examples[83512781178] = '(3512) 78-11-78'
+
+    examples.each do |k,v|
+      it "should process \"#{k}\"" do
+        Phone.humanize(k).should == v
+      end
+    end
+  end
 end
