@@ -92,6 +92,10 @@ table.history tr:first-child td.date {
 	clear:both;
 }
 
+.nobr {
+	white-space: pre;
+}
+
 @media print {
 	.noprint, 
 	div.copyright,
