@@ -21,6 +21,8 @@ class TicketsController < ApplicationController
     @ticket.created_by = current_user
     if @ticket.valid?
       @ticket.save!
+      redirect_to ticket_path(@ticket)
+      flash[:notice] = "Создана заявка № #{@ticket.id}"
     else
       render :new
     end
