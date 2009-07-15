@@ -2,7 +2,10 @@ class CreateCustomersAndPhones < ActiveRecord::Migration
   def self.up
     create_table :customers do |t|
       t.string   :name, :null => false
+
+      t.integer  :house_id
       t.string   :flat
+
       t.integer  :karma
 
       t.integer  :krus_user_id
@@ -12,6 +15,7 @@ class CreateCustomersAndPhones < ActiveRecord::Migration
     end
 
     add_index :customers, :krus_user_id
+    add_index :customers, :house_id
 
     create_table :phones do |t|
       t.belongs_to :customer

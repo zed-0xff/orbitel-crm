@@ -1,6 +1,7 @@
 class House < ActiveRecord::Base
   belongs_to :street
   has_many :tickets
+  has_many :customers
 
   accepts_nested_attributes_for :street
 
@@ -44,5 +45,24 @@ class House < ActiveRecord::Base
         number
       )
     end
+  end
+
+  def self.from_string addr
+#    puts "[.] #{addr}"
+    addr.sub! /[уУ][лЛ]\./,''
+    addr.sub! 'пр.',''
+    addr.sub! /6400\d\d/,'' # remove index/zip
+    addr.strip!
+    addr.sub!(/ {2,}/, ' ')
+    addr.sub! '. ','.'
+    addr.sub! 'г.Курган',''
+    addr.sub! /^[гГ]\./,''
+    addr.sub! /^[,;. ]+|[,;. ]+$/, ''
+#    puts "[.] #{addr}"
+    a = addr.split(',').map(&:strip)
+    if a.size == 1
+      a = addr.reverse.split(' ',2).reverse.map(&:reverse).map(&:strip)
+    end
+    find_or_initialize_by_street_and_number a[0], a[1]
   end
 end

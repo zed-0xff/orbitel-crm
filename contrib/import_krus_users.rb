@@ -20,8 +20,13 @@ krus_customers.each do |kc|
     c.krus_sync_date = Time.now
     c.name = kc[:name] if kc[:name]
     c.phones.add kc[:phones]
+    c.address = kc[:address] unless kc[:address].blank?
+    puts "[*] synching #{c.name.inspect}"
+    unless kc[:address].blank?
+      puts "\t#{kc[:address]}"
+      puts "\t#{c.house.street.name} - #{c.house.number} - #{c.flat}"
+    end
     c.save!
-    puts "[*] synched #{c.name.inspect}"
   else
     c = Customer.new(
       :krus_user_id   => kc[:id],

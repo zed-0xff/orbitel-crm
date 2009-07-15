@@ -1,6 +1,8 @@
 class Customer < ActiveRecord::Base
   before_save :cleanup_name
 
+  belongs_to :house
+
   has_many :phones, :dependent => :delete_all do
     def add phone
       phones = Phone.from_string_or_array(phone)
@@ -21,6 +23,18 @@ class Customer < ActiveRecord::Base
       end
     end
     super
+  end
+
+  def address= addr
+    a = addr.split /офис|оф\.|кв\.?|квартира|каб\.|кабинет/ui
+    if a.size == 1
+      a = addr.split '-'
+    end
+    if a.size > 2
+      a = [a[0..-2].join('-'), a[-1]]
+    end
+    self.house = House.from_string(a[0].strip)
+    self.flat = a[1].strip if a[1]
   end
 
   def self.find_by_phone phone_number
