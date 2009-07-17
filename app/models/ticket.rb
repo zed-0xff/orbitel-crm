@@ -49,29 +49,29 @@ class Ticket < ActiveRecord::Base
   COND_CURRENT = ["status != ?", Ticket::ST_CLOSED]
   COND_NEW     = { :status => [Ticket::ST_NEW, Ticket::ST_REOPENED] }
 
-  # create a house/street if needed, or find an existing by their attributes
+  # create a house if needed, or find an existing by its attributes
   def initialize *args
     if args.first.is_a?(Hash) && (house_attrs=(args.first[:house] || args.first[:house_attributes])).is_a?(Hash)
       street = if house_attrs[:street_id]
         Street.find house_attrs[:street_id]
       elsif house_attrs[:street]
-        Street.find_or_initialize_by_name house_attrs[:street]
+        Street.find_by_name house_attrs[:street]
       else
-        Street.new
+        nil
       end
 
-      house = if street.new_record?
-        House.new(
-          :number => house_attrs[:number],
-          :street => street
-        )
-      else
+      house = if street
         House.find_or_initialize_by_street_id_and_number(
           street.id,
           house_attrs[:number]
         )
+      else
+        House.new(
+          :number => house_attrs[:number]
+        )
       end
 
+      args[0] = args.first.dup
       args.first[:house] = house
       args.first.delete :house_attributes
     end

@@ -24,6 +24,14 @@ class TicketsController < ApplicationController
       redirect_to ticket_path(@ticket)
       flash[:notice] = "Создана заявка № #{@ticket.id}"
     else
+      if(
+        @ticket.errors.on(:house_street) && !@ticket.house.street &&
+        (!params[:ticket].try(:[], :house_attributes).try(:[], :street).blank?)
+      )
+        # dirty hack
+        s = @ticket.errors.on(:house_street)
+        s[0..-1] = ""
+      end
       render :new
     end
   end

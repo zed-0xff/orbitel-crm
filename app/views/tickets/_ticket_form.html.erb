@@ -37,14 +37,20 @@
     <% f.fields_for :house do |hf| %>
       <table>
       <tr>
-        <td> Улица: 
-        <td> <%= text_field_with_auto_complete :street, :name, { 
+        <td> Улица:
+        <td> 
+          <%= "<div class='fieldWithErrors'>" if @ticket.errors.on(:house_street) -%>
+          <%= text_field_with_auto_complete :street, :name, { 
             :size  => 20, 
             :name  => 'ticket[house_attributes][street]', 
-            :value => (@ticket.house && @ticket.house.street && @ticket.house.street.name)
+            :value => (
+              (@ticket.house && @ticket.house.street && @ticket.house.street.name) ||
+              ( params[:ticket].try(:[], :house_attributes).try(:[], :street) )
+            )
           }, 
           :url  => auto_complete_streets_path,
           :indicator => 'ai1' %>
+          <%= "</div>" if @ticket.errors.on(:house_street) -%>
         <td> <%= image_tag 'ajax.gif', :style => 'display:none', :id => 'ai1' %>
       <tr>
         <td> Дом: 
