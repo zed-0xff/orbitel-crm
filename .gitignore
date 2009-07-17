@@ -9,3 +9,4 @@ config/initializers/krus.rb
 config/deploy.rb
 db/schema.rb
 test
+krus_customers.yml

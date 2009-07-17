@@ -61,17 +61,16 @@ class House < ActiveRecord::Base
     end
   end
 
-  def self.find_or_initialize_by_street_and_number street_name, number
-    street = Street.find_or_initialize_by_name street_name
-    house = if street.new_record?
-      House.new(
-        :number => number,
-        :street => street
-      )
-    else
+  def self.find_or_initialize_by_street_and_number street, number
+    street = Street.smart_find(street) unless street.is_a?(Street)
+    house = if street
       House.find_or_initialize_by_street_id_and_number(
         street.id,
         number
+      )
+    else
+      House.new(
+        :number => number
       )
     end
   end
@@ -92,6 +91,17 @@ class House < ActiveRecord::Base
     if a.size == 1
       a = addr.reverse.split(' ',2).reverse.map(&:reverse).map(&:strip)
     end
-    find_or_initialize_by_street_and_number a[0], a[1]
+    num = a[1].to_s.mb_chars.downcase.to_s
+    num.gsub! /\(.*\)/, ''
+    num.gsub! /[()].*/, ''
+    num.strip!
+    num.sub! 'дом',''
+    num.sub! /^д/,''
+    num.gsub! /^[-,.;]|[-,.;]$/,''
+    num.strip!
+    num.sub! /^(\d+)[ -]([^\d])$/, '\1\2'
+    num = num.gsub('i','I').gsub('v','V') # римские цифры
+    num = nil if num.blank?
+    find_or_initialize_by_street_and_number a[0], num
   end
 end

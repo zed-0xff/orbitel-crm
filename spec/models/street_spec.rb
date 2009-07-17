@@ -64,4 +64,91 @@ describe Street do
       s.name.should == 'пролетарская'
     end
   end
+
+  describe "smart_find()" do
+    it "should find street by exact name" do
+      s = Street.create! :name => 'Ленина'
+      Street.smart_find('ленина').should == s
+    end
+
+    it "should find street prefixed with 'ул.'" do
+      s = Street.create! :name => 'Ленина'
+      Street.smart_find('ул.ленина').should == s
+      Street.smart_find('ул. ленина').should == s
+      Street.smart_find(' ул.  ленина ').should == s
+    end
+
+    it "should find street by partial name if only one match" do
+      s = Street.create! :name => 'проспект голикова'
+      Street.smart_find('голикова').should == s
+    end
+
+    it "should NOT find street by partial name if many matches" do
+      Street.create! :name => 'проспект голикова'
+      Street.create! :name => 'улица голикова'
+      Street.smart_find('голикова').should be_nil
+    end
+
+    it "should find by shortened name if only one match" do
+      s = Street.create! :name => 'карла маркса'
+      Street.smart_find('к.маркса').should == s
+      Street.smart_find('к. маркса').should == s
+      Street.smart_find('  к.   маркса  ').should == s
+      Street.smart_find('к-маркса').should == s
+    end
+
+    it "should find by shortened name if only one match #2" do
+      s = Street.create! :name => 'карла-маркса'
+      Street.smart_find('к.маркса').should == s
+      Street.smart_find('к. маркса').should == s
+      Street.smart_find('  к.   маркса  ').should == s
+      Street.smart_find('к-маркса').should == s
+      Street.smart_find('к.-маркса').should == s
+    end
+
+    it "should NOT find by shortened name if many matches" do
+      Street.create! :name => 'карла маркса'
+      Street.create! :name => 'коли маркса'
+      Street.smart_find('к.маркса').should be_nil
+      Street.smart_find('к. маркса').should be_nil
+      Street.smart_find('  к.   маркса  ').should be_nil
+      Street.smart_find('к-маркса').should be_nil
+    end
+
+    it "should NOT find by shortened name if many matches #2" do
+      Street.create! :name => 'карла-маркса'
+      Street.create! :name => 'коли маркса'
+      Street.smart_find('к.маркса').should be_nil
+      Street.smart_find('к. маркса').should be_nil
+      Street.smart_find('  к.   маркса  ').should be_nil
+      Street.smart_find('к-маркса').should be_nil
+    end
+
+    it "should find by shortened name if words are in reverse order" do
+      s = Street.create! :name => 'Машиностроителей проспект'
+      Street.smart_find('пр. Машиностроителей.').should == s
+    end
+
+    it "should match alias if only one match" do
+      s = Street.create! :name => 'Васильева'
+      s.add_alias 'С.Васильева'
+      s.save!
+      Street.smart_find('С.Васильева').should == s
+    end
+
+    it "should not match alias if many matches" do
+      s = Street.create! :name => 'Васильева'
+      s.add_alias 'С.Васильева'
+      s.save!
+      s = Street.create! :name => 'Васильева (dup)'
+      s.add_alias 'С.Васильева'
+      s.save!
+      Street.smart_find('С.Васильева').should be_nil
+    end
+
+    it "should find by words in reverse order" do
+      s = Street.create! :name => 'Больничная 7-я'
+      Street.smart_find('7-я Больничная' ).should == s
+    end
+  end
 end

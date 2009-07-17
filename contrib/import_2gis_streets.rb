@@ -1,4 +1,4 @@
-#!../script/runner
+#!./script/runner
 STDOUT.sync = true
 
 IGNORES = [

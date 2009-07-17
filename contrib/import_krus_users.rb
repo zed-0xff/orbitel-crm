@@ -5,26 +5,45 @@ require 'krus'
 
 puts "[.] customers in db BEFORE import: #{Customer.count}"
 
+stats = Hash.new(0)
 h = {}
 Customer.all(:conditions => 'krus_user_id IS NOT NULL').each do |customer|
   h[customer.krus_user_id] = customer
 end
 
 puts "[.] loading krus customers.."
-krus_customers = Krus.fetch_customers
+krus_customers = 
+  if File.exists?('krus_customers.yml')
+    YAML.load_file 'krus_customers.yml'
+  else
+    Krus.fetch_customers
+  end
+
+File.open 'krus_customers.yml','w' do |f|
+  f.write(krus_customers.to_yaml)
+end
 
 puts "[.] loaded #{krus_customers.size} krus customers"
 
 krus_customers.each do |kc|
+  stats[:total] += 1
   if c = h[kc[:id]]
-    c.krus_sync_date = Time.now
-    c.name = kc[:name] if kc[:name]
+    c.name = Customer.cleanup_name(kc[:name]) if kc[:name]
     c.phones.add kc[:phones]
     c.address = kc[:address] unless kc[:address].blank?
-    puts "[*] synching #{c.name.inspect}"
-    unless kc[:address].blank?
-      puts "\t#{kc[:address]}"
-      puts "\t#{c.house.street.name} - #{c.house.number} - #{c.flat}"
+    #unless kc[:address].blank?
+    #  puts "\t#{kc[:address]}"
+    #  puts "\t#{c.house.street.name} - #{c.house.number} - #{c.flat}"
+    #end
+    if c.house && c.house.invalid?
+      puts "[!] failed to parse #{kc[:address].inspect} (##{kc[:id]})"
+      c.house = nil
+      stats[:failed] += 1
+    end
+    if c.changed?
+      puts "[*] updating #{c.name.inspect}"
+      c.krus_sync_date = Time.now
+      stats[:updated] += 1
     end
     c.save!
   else
@@ -35,6 +54,12 @@ krus_customers.each do |kc|
 #      :address        => kc[:address],
       :phones         => kc[:phones]
     )
+    c.address = kc[:address] unless kc[:address].blank?
+    if c.house && c.house.invalid?
+      puts "[!] failed to parse #{kc[:address].inspect} (##{kc[:id]})"
+      c.house = nil
+      stats[:failed] += 1
+    end
     c.phones.delete_if do |ph|
       if !ph.valid?
         puts "[?] phone #{ph.number} is invalid"
@@ -48,6 +73,7 @@ krus_customers.each do |kc|
     end
     begin
       c.save!
+      stats[:new] += 1
     rescue
       puts "[!] error processing #{c.inspect}"
       raise
@@ -57,3 +83,4 @@ krus_customers.each do |kc|
 end
 
 puts "[.] customers in db AFTER  import: #{Customer.count}"
+puts "[s] #{stats.inspect}"
