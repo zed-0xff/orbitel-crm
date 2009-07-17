@@ -1,4 +1,11 @@
 --- 
+vendor/plugins/custom-err-msg: 
+  squashed: true
+  url: git://github.com/gumayunov/custom-err-msg.git
+  type: git
+  revision: c000ef147fa12cca335c96bc0dcec809d832308f
+  branch: master
+  remote: braid/vendor/plugins/custom-err-msg
 vendor/plugins/restful-authentication-i18n: 
   squashed: true
   url: git://github.com/dcrec1/restful-authentication-i18n.git
