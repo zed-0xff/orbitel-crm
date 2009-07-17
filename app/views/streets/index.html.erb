@@ -1,0 +1,14 @@
+<div style="margin-left: 1.2em; margin-bottom: 0.8em">
+  <% form_tag({}, :method => :get) do %>
+    <%= text_field_tag 'filter', params[:filter] %>
+    <%= submit_tag 'Фильтр', :name => nil %>
+  <% end %>
+</div>
+
+<table class='t1'>
+  <% @streets.each do |street| %>
+  <tr>
+    <td><%= h street.name %></td>
+  </tr>
+  <% end %>
+</table>

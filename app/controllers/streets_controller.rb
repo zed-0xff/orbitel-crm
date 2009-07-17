@@ -14,6 +14,14 @@ class StreetsController < ApplicationController
     render :inline => "<%= auto_complete_result @items, '#{method}' %>"
   end
 
+  def index
+    options = {:order => 'name'}
+    if !params[:filter].blank?
+      options[:conditions] = ["name like ?", "%#{params[:filter]}%"]
+    end
+    @streets = Street.find :all, options
+  end
+
   private
 
   def find_street h
