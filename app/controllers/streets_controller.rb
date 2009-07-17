@@ -10,6 +10,10 @@ class StreetsController < ApplicationController
       :limit => 10 }
 
     @items = Street.find(:all, find_options)
+    if @items.blank?
+      street = Street.smart_find(find_street(params))
+      @items << street if street
+    end
 
     render :inline => "<%= auto_complete_result @items, '#{method}' %>"
   end
