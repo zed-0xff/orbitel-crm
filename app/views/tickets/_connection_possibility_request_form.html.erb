@@ -6,14 +6,7 @@
       <table>
       <tr>
         <td> Улица: 
-        <td> <%= text_field_with_auto_complete :street, :name, { 
-            :size  => 20, 
-            :name  => 'ticket[house_attributes][street]', 
-            :value => (@ticket.house && @ticket.house.street && @ticket.house.street.name)
-          }, 
-          :url  => auto_complete_streets_path,
-          :indicator => 'ai1' %>
-        <td> <%= image_tag 'ajax.gif', :style => 'display:none', :id => 'ai1' %>
+        <td> <%= ajax_street_selector %>
       <tr>
         <td> Дом: 
         <td> <%= hf.text_field :number, :size => 5 %>

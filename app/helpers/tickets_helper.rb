@@ -126,4 +126,24 @@ module TicketsHelper
       link_to "#{title}(#{count})", path
     end
   end
+
+  def ajax_street_selector
+    r = ''
+    r+= "<div class='fieldWithErrors'>" if @ticket.errors.on(:house_street)
+    r+= text_field_with_auto_complete(:street, :name, 
+      {
+        :size  => 20,
+        :name  => 'ticket[house_attributes][street]',
+        :value => (
+          (@ticket.house && @ticket.house.street && @ticket.house.street.name) ||
+          ( params[:ticket].try(:[], :house_attributes).try(:[], :street) )
+        )
+      },
+      :url  => auto_complete_streets_path,
+      :indicator => 'ai1'
+    )
+    r+= "</div>" if @ticket.errors.on(:house_street)
+    r+= image_tag 'ajax.gif', :style => 'position:absolute; display:none',:id => 'ai1'
+    r
+  end
 end
