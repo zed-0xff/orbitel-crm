@@ -131,6 +131,10 @@ class DoubleGis
     send_cmd_f('e')
   end
 
+  def streets
+    Iconv.conv('utf-8','cp1251',send_cmd('s')).split(':')
+  end
+
   def clear_cache remove_file = false
     return false unless @cache
     @cache = {}
@@ -233,6 +237,8 @@ end
 
 if $0 == __FILE__
 
+  $KCODE = 'u'
+
   puts "[.] test"
   puts "[*] w/o cache:"
   gis = DoubleGis.new(:cache => false, :debug => true)
@@ -284,6 +290,8 @@ if $0 == __FILE__
 =end
   puts "[*] full extent = #{gis.full_extent.inspect}"
   puts "[*] full extent = #{gis.full_extent.map{|x| x/1.0.m}.inspect} (m)"
+
+  puts "[*] streets: #{gis.streets.inspect}"
 
 #  puts gis.geo2local(65.3466796875, 55.43701171875).inspect;
 #  puts gis.geo2local(65.32470703125, 55.43701171875).inspect;
