@@ -25,6 +25,14 @@ class Customer < ActiveRecord::Base
     super
   end
 
+  def address
+    if house
+      "#{house.street.try(:name)} #{house.number}" + (flat.blank? ? '' : "-#{flat}")
+    else
+      nil
+    end
+  end
+
   def address= addr
     a = addr
     if a['секц']
