@@ -1,5 +1,6 @@
 module CallsHelper
   def distance_of_time_in_images d
+    d = d.to_i
     title = 
       if d >= 60
         "%dm %02ds" % [d/60, d%60]
