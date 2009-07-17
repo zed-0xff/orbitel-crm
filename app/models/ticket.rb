@@ -7,7 +7,7 @@ class Ticket < ActiveRecord::Base
   has_many :ticket_history_entries, :order => 'created_at DESC'
   alias :history :ticket_history_entries
 
-  validates_associated :house
+  validates_associated :house, :message => '^Ошибки в адресе подключения'
 
   accepts_nested_attributes_for :house
 

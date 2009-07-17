@@ -5,7 +5,8 @@ class House < ActiveRecord::Base
 
   accepts_nested_attributes_for :street
 
-  validates_presence_of :number, :street
+  validates_presence_of :number, :message => '^Не указан номер дома'
+  validates_presence_of :street, :message => '^Не указана улица'
   validates_associated  :street
 
   validates_uniqueness_of :number, :scope => :street_id

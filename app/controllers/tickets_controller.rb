@@ -26,11 +26,11 @@ class TicketsController < ApplicationController
     else
       if(
         @ticket.errors.on(:house_street) && !@ticket.house.street &&
-        (!params[:ticket].try(:[], :house_attributes).try(:[], :street).blank?)
+        (!(st=params[:ticket].try(:[], :house_attributes).try(:[], :street)).blank?)
       )
         # dirty hack
         s = @ticket.errors.on(:house_street)
-        s[0..-1] = ""
+        s[0..-1] = "^Улицы \"#{st}\" не существует"
       end
       render :new
     end
