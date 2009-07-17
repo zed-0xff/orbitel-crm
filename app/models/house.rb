@@ -33,6 +33,34 @@ class House < ActiveRecord::Base
     super *args
   end
 
+  # carefully reassign any tickets from this house to other
+  # and then destroy this house.
+  # used for manual fixing of occasionally created duplicate houses/streets
+  def replace_with! other_house
+    if self.inet_status && !other_house.inet_status
+      other_house.inet_status = self.inet_status
+    end
+    if self.comment && !other_house.comment
+      other_house.comment = self.comment
+    end
+    self.tickets.each do |ticket|
+      ticket.house = other_house
+      ticket.save!
+    end
+    if Customer.table_exists?
+      self.customers.each do |customer|
+        customer.house = other_house
+        customer.save!
+      end
+    end
+    if self.tickets.reload.size == 0 && (!Customer.table_exists? || self.customers.reload.size == 0)
+      self.destroy
+      true
+    else
+      false
+    end
+  end
+
   def self.find_or_initialize_by_street_and_number street_name, number
     street = Street.find_or_initialize_by_name street_name
     house = if street.new_record?

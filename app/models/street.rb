@@ -20,6 +20,26 @@ class Street < ActiveRecord::Base
     self.name.strip!
   end
 
+  # carefully reassign any houses from this street to other,
+  # and then destroy this street.
+  # used for manual fixing of occasionally created duplicate streets.
+  def replace_with! other_street
+    self.houses.each do |house|
+      if other_house = House.find_by_street_id_and_number(other_street.id, house.number)
+        house.replace_with! other_house
+      else
+        house.street = other_street
+        house.save!
+      end
+    end
+    if self.houses.reload.size == 0
+      self.destroy
+      true
+    else
+      false
+    end
+  end
+
   def self.find_or_initialize_by_name name
     name.gsub!('ул.','')
     name.strip!
