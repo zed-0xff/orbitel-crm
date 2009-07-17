@@ -101,6 +101,7 @@ class House < ActiveRecord::Base
     num.strip!
     num.sub! /^(\d+)[ -]([^\d])$/, '\1\2'
     num = num.gsub('i','I').gsub('v','V') # римские цифры
+    num = nil unless num[/\d/] # number must contain at least one digit
     num = nil if num.blank?
     find_or_initialize_by_street_and_number a[0], num
   end

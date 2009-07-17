@@ -26,7 +26,12 @@ class Customer < ActiveRecord::Base
   end
 
   def address= addr
-    a = addr.split /офис|оф\.|кв\.?|квартира|каб\.|кабинет|комн?\.|комната/ui
+    a = addr
+    if a['секц']
+      a = [a[0..(a.index('секц')-1)], a[(a.index('секц'))..-1]]
+    else
+      a = addr.split /офис|оф\.|кв\.?|квартира|каб\.|кабинет|комн?\.|комната/ui
+    end
     if a.size == 1
       a = addr.split '-'
     end
