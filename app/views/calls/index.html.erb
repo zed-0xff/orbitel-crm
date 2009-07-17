@@ -7,7 +7,10 @@
     <td class="nobr"><%= call.start_time.strftime("%Y-%m-%d %H:%M:%S") -%></td>
     <td><%= call.end_time.try(:strftime,"%H:%M:%S") %></td>
     <td class="nobr"><%= distance_of_time_in_words(call.start_time, call.end_time, true) if call.end_time -%></td>
-    <td><%= call.customer.try(:name) %></td>
+    <td>
+      <%= image_tag 'balloon.png' if call.end_time.blank? -%>
+      <%= call.customer.try(:name) %>
+    </td>
   </tr>
 <% end %>
 </table>
