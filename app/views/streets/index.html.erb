@@ -5,9 +5,14 @@
   <% end %>
 </div>
 
-<table class='t1'>
+<table class='t1 sortable'>
+  <tr>
+    <th>id
+    <th>name
+  </tr>
   <% @streets.each do |street| %>
   <tr>
+    <td align="right"><%= street.id %></td>
     <td><%= h street.name %></td>
   </tr>
   <% end %>
