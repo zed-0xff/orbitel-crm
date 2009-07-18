@@ -27,8 +27,8 @@ class Radius::Call < ActiveRecord::Base
   end
 
   # creates ::Call records
-  def self.import_to_call_archive
-    last_time = Settings['radius.call.last_import'] || Time.now - 1.year
+  def self.export_to_call_archive
+    last_time = Settings['radius.call.last_export'] || Time.now - 1.year
     new_radius_calls = all(
       :conditions => [
         "acctstoptime IS NOT NULL AND (acctstoptime > ? OR acctstarttime > ?)",
@@ -53,7 +53,7 @@ class Radius::Call < ActiveRecord::Base
       end
     end
 
-    Settings['radius.call.last_import'] = new_radius_calls.map(&:end_time).max
+    Settings['radius.call.last_export'] = new_radius_calls.map(&:end_time).max
     new_calls
   end
 end
