@@ -1,0 +1,56 @@
+<h1><%= h @customer.name %></h1>
+
+<style>
+  table.calls td {
+    padding: 0 6px;
+  }
+
+  table.calls td.date {
+    padding-top: 5px;
+    font-weight: bold;
+  }
+
+  table.calls td.phone {
+    font-size: 7pt;
+    color: gray;
+    padding-left: 1em;
+  }
+</style>
+
+<h3>Данные абонента</h3>
+
+<table class="t1">
+  <tr>
+    <th>имя
+    <td><%= h @customer.name %>
+  </tr>
+  <tr>
+    <th>адрес
+    <td><%= h @customer.address %>
+  </tr>
+  <tr>
+    <th>телефоны
+    <td><%= @customer.phones.map(&:humanize).join("; ") %>
+  </tr>
+</table>
+
+<h3>Звонки (<%= @calls.size -%>)</h3>
+
+<% if @calls.blank? %>
+  нет звонков
+<% else %>
+  <table class="calls">
+    <% @calls.group_by{ |call| call.start_time.to_date }.each do |date,calls| %>
+      <tr>
+        <td colspan="10" class="date"><%= date_with_mark(date) %></td>
+      </tr>
+      <% calls.each do |call| %>
+        <tr>
+          <td class="nobr" style="padding-left:3em"><%= call.start_time.strftime("%H:%M:%S") -%></td>
+          <td><%= distance_of_time_in_images(call.duration) if call.duration -%></td>
+          <td class="phone"><%= Phone.humanize(call.phone_number) %></td>
+        </tr>
+      <% end %>
+    <% end %>
+  </table>
+<% end %>

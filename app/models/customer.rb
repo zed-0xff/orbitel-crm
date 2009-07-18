@@ -3,6 +3,8 @@ class Customer < ActiveRecord::Base
 
   belongs_to :house
 
+  has_many :calls
+
   has_many :phones, :dependent => :delete_all do
     def add phone
       phones = Phone.from_string_or_array(phone)

@@ -12,6 +12,10 @@ ActionController::Routing::Routes.draw do |map|
     :auto_complete => :post
   }
 
+  map.resources :customers, :collection => {
+    :auto_complete => :post
+  }
+
   map.resources :tickets, :collection => { 
     :new_request    => :get,
     :mine           => :get,

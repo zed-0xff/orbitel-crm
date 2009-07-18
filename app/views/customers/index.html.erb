@@ -1,0 +1,27 @@
+<h1>Customers</h1>
+
+<style>
+  table.customers a {
+    color: black;
+  }
+</style>
+
+<div style="margin-left: 1.2em; margin-bottom: 0.8em">
+  <% form_tag({}, :method => :get) do %>
+    <%= text_field_tag 'filter', params[:filter] %>
+    <%= submit_tag 'Фильтр', :name => nil %>
+  <% end %>
+</div>
+
+<%= will_paginate @customers %>
+
+<table class="t1 customers">
+  <% @customers.each do |customer| %>
+    <tr>
+      <td><%= link_to customer.name, customer_path(customer) %>
+      <td><%= h customer.address %>
+    </tr>
+  <% end %>
+</table>
+
+<%= will_paginate @customers %>

@@ -96,11 +96,6 @@ module TicketsHelper
     desc
   end
 
-  # date with '(today)' mark if date is today
-  def date_with_mark date
-    date.to_s + (date == Date.today ? " (сегодня)" : '')
-  end
-
   def link_to_tickets title, path, conditions = {}, options = {}
     @cached_counts ||= Rails.cache.read('ticket.counts') || {}
     @cached_counts = @cached_counts.dup if @cached_counts.frozen?
