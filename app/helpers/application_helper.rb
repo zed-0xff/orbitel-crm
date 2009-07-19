@@ -10,6 +10,7 @@ module ApplicationHelper
     house = obj.is_a?(House) ? obj : obj.house
     return nil unless house
     title = obj.address.to_s.sub(/-[^-]+$/,'<span style="color:#b8b8b8">\0</span>')
+    title.sub! ' проспект','' # local hack
     klass = 'house'
     house_size = Rails.cache.read "house.#{house.id}.size"
     unless house_size
