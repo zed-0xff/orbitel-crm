@@ -15,7 +15,8 @@ class CustomersController < ApplicationController
       :order      => 'name',
       :page       => params[:page],
       :per_page   => 50,
-      :conditions => conditions
+      :conditions => conditions,
+      :include    => {:house => :street}
     )
   end
 
