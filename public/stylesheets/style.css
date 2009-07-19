@@ -306,6 +306,18 @@ a.user {
 	white-space: pre;
 }
 
+a.house {
+	white-space: pre;
+	color: black;
+	background: url(/images/house.png) no-repeat -1px 1px;
+	padding-left: 18px;
+}
+
+a.house1 { background: url(/images/home-small.png)   no-repeat -1px 2px }
+a.house2 { background: url(/images/house.png)        no-repeat -1px 2px }
+a.house3 { background: url(/images/building-medium.png) no-repeat -1px 3px }
+a.house4 { background: url(/images/building-old.png) no-repeat -1px 1px }
+
 a.admin             { background-image: url(/images/user-white.png) }
 a.admin.female      { background-image: url(/images/user-white-female.png) }
 a.technician        { background-image: url(/images/user-black.png) }

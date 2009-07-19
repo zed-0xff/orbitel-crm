@@ -23,8 +23,11 @@ class Radius::Call < ActiveRecord::Base
   # from 'caller' (source number) field now
   # because destination number is always our support phone number
   def customer
-    caller ? Customer.find_by_phone(caller) : nil
+    return @customer if defined?(@customer)
+    @customer = (caller ? Customer.find_by_phone(caller) : nil)
   end
+
+  attr_writer :customer
 
   # creates ::Call records
   def self.export_to_call_archive
