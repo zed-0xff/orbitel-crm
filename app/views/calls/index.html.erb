@@ -12,10 +12,10 @@
     <td align="right" class="nobr"><%= Phone.humanize(call.caller) %></td>
     <td class="nobr"><%= call.start_time.strftime("%Y-%m-%d %H:%M:%S") -%></td>
     <td>
-      <%= distance_of_time_in_images(call.end_time - call.start_time) if call.end_time -%>
+      <%= image_tag 'balloon.png' if call.end_time.blank? -%>
+      <%= distance_of_time_in_images(call.duration) if call.duration -%>
     <td><%= call.customer.try(:address).to_s.sub(/-[^-]+$/,'<span class="flat">\0</span>') %>
     <td>
-      <%= image_tag 'balloon.png' if call.end_time.blank? -%>
       <%= call.customer.try(:name) %>
     </td>
   </tr>
