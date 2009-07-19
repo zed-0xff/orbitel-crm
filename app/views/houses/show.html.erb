@@ -1,11 +1,39 @@
-<h2>Houses :: show</h2>
+<h2>Дом: <%= @house.address -%></h2>
+
+<h3>Данные дома</h3>
 <table class="t1">
-  <% @house.attributes.sort.each do |k,v| %>
+
+  <tr>
+    <th>адрес</th>
+    <td><%= link_to_address_of @house -%></td>
+  </tr>
+
+  <tr>
+    <th>vlan</th>
+    <td><%= @house.vlan -%></td>
+  </tr>
+
+  <tr>
+    <th>интернет</th>
+    <%= status_tag @house, :inet, 'td' %>
+  </tr>
+
+  <% unless @house.comment.blank? %>
     <tr>
-      <th><%= h(k) -%></th>
-      <td><%= h(v) -%></td>
+      <th>примечания</th>
+      <td><%= @house.comment.gsub "\n", "<br/>" -%></td>
     </tr>
   <% end %>
 </table>
+
+<h3>Абоненты (<%= @house.customers.size -%>)</h3>
+<table class="t1">
+  <% @house.customers.each do |customer| %>
+    <tr><td><%= link_to customer.name, customer_path(customer) %></td></tr>
+  <% end %>
+</table>
+
+<h3>Текущие заявки (<%= @tickets.size -%>)</h3>
+<%= render 'tickets/table' %>
 
 <%= link_to "&laquo;&laquo; Back", :back %>

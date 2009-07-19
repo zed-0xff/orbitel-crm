@@ -1,4 +1,6 @@
 class HousesController < ApplicationController
+  helper :tickets
+
   before_filter :prepare_house
   
   def index
@@ -22,6 +24,12 @@ class HousesController < ApplicationController
     else
       @houses = House.paginate :page => params[:page], :order => "created_at DESC"
     end
+  end
+
+  def show
+    @tickets = @house.tickets(
+      :conditions => Ticket::COND_CURRENT
+    )
   end
 
   def check

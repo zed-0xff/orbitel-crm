@@ -13,7 +13,7 @@
         <td><%= history_desc(entry, 70) %>
         <% next if entry.ticket.blank? %>
         <td><%= link_to( "№#{entry.ticket_id}: #{truncate(entry.ticket.title, :length => 40)}", ticket_path(entry.ticket_id)) %>
-        <td><%= h(entry.ticket.address) %>
+        <td><%= link_to_address_of entry.ticket %>
       </tr>
     <% end %>
   <% end %>

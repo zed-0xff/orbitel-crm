@@ -9,7 +9,7 @@
 
   <tr>
     <th>адрес</th>
-    <td><b><%=h @ticket.address %></b></td>
+    <td><b><%= link_to_address_of @ticket %></b></td>
   </tr>
 
   <% unless @ticket.contact_name.blank? %>
@@ -38,7 +38,7 @@
   <tr>
     <th>статус заявки</th>
     <td>
-      <b><%= status_desc(@ticket.status) %></b>
+      <b><%= ticket_status_desc(@ticket.status) %></b>
     </td>
   </tr>
 

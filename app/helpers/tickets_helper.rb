@@ -49,7 +49,7 @@ module TicketsHelper
     end
   end
 
-  def status_desc st
+  def ticket_status_desc st
     case st
       when Ticket::ST_NEW, nil
         "новая"
@@ -78,7 +78,7 @@ module TicketsHelper
       when [nil, nil]
         ""
       else
-        "\"#{status_desc(he.old_status)}\" &rarr; \"#{status_desc(he.new_status)}\""
+        "\"#{ticket_status_desc(he.old_status)}\" &rarr; \"#{ticket_status_desc(he.new_status)}\""
     end
 
     desc = if d.is_a?(Array)

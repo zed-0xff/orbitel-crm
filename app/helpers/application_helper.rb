@@ -28,7 +28,7 @@ module ApplicationHelper
         klass += ' house4'
     end
     link_to(title, house_path(house), :class => klass) +
-      (obj.respond_to?(:flat) ? "<span style=\"color:#b8b8b8\">-#{obj.flat}</span>" : '')
+      ((obj.respond_to?(:flat) && !obj.flat.blank?) ? "<span style=\"color:#b8b8b8\">-#{obj.flat}</span>" : '')
   end
   alias :link_to_address :link_to_address_of
 end
