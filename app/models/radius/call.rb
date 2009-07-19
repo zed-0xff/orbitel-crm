@@ -16,6 +16,10 @@ class Radius::Call < ActiveRecord::Base
     self.acctstoptime
   end
 
+  def ended?
+    self.acctstoptime != nil
+  end
+
   def duration
     self.acctsessiontime
   end

@@ -33,6 +33,10 @@ class House < ActiveRecord::Base
     super *args
   end
 
+  def address
+    "#{self.street.try(:name) || '?'} #{self.number || '?'}"
+  end
+
   # carefully reassign any tickets from this house to other
   # and then destroy this house.
   # used for manual fixing of occasionally created duplicate houses/streets

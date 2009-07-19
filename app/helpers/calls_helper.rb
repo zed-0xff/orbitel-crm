@@ -1,5 +1,12 @@
 module CallsHelper
-  def distance_of_time_in_images d
+  def distance_of_time_in_images call
+    d = 
+      if call.respond_to?(:duration)
+        call.duration
+      else
+        call
+      end
+
     d = d.to_i
     title = 
       if d >= 60
@@ -7,6 +14,10 @@ module CallsHelper
       else
         "#{d}s"
       end
+
+    if call.respond_to?(:ended?) && !call.ended?
+      return image_tag('balloon.png', :title => title) * ([5,(call.duration+60).to_i].min/60)
+    end
 
     if d<=20
       image_tag 'clock-quarter.png', :title => title

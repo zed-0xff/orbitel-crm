@@ -11,9 +11,7 @@
   <tr>
     <td align="right" class="nobr"><%= Phone.humanize(call.caller) %></td>
     <td class="nobr"><%= call.start_time.strftime("%Y-%m-%d %H:%M:%S") -%></td>
-    <td>
-      <%= image_tag 'balloon.png' if call.end_time.blank? -%>
-      <%= distance_of_time_in_images(call.duration) if call.duration -%>
+    <td><%= distance_of_time_in_images(call) %>
     <td><%= link_to_address_of(call.customer) %>
     <td>
       <%= call.customer.try(:name) %>

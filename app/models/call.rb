@@ -5,4 +5,8 @@ class Call < ActiveRecord::Base
 
   # avoid duplicate entries on wrong sync
   validates_uniqueness_of :phone_number, :scope => [:start_time, :duration]
+
+  def ended?
+    true
+  end
 end

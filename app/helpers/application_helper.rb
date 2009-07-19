@@ -9,7 +9,7 @@ module ApplicationHelper
     return nil unless obj
     house = obj.is_a?(House) ? obj : obj.house
     return nil unless house
-    title = obj.address.to_s.sub(/-[^-]+$/,'<span style="color:#b8b8b8">\0</span>')
+    title = house.address
     title.sub! ' проспект','' # local hack
     klass = 'house'
     house_size = Rails.cache.read "house.#{house.id}.size"
@@ -27,7 +27,8 @@ module ApplicationHelper
       else
         klass += ' house4'
     end
-    link_to title, house_path(house), :class => klass
+    link_to(title, house_path(house), :class => klass) +
+      (obj.respond_to?(:flat) ? "<span style=\"color:#b8b8b8\">-#{obj.flat}</span>" : '')
   end
   alias :link_to_address :link_to_address_of
 end
