@@ -31,4 +31,9 @@ module ApplicationHelper
       ((obj.respond_to?(:flat) && !obj.flat.blank?) ? "<span style=\"color:#b8b8b8\">-#{obj.flat}</span>" : '')
   end
   alias :link_to_address :link_to_address_of
+
+  def link_to_customer customer
+    return nil unless customer
+    link_to customer.name, customer_path(customer), :class => 'customer'
+  end
 end

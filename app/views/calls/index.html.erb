@@ -13,9 +13,7 @@
     <td class="nobr"><%= call.start_time.strftime("%Y-%m-%d %H:%M:%S") -%></td>
     <td><%= distance_of_time_in_images(call) %>
     <td><%= link_to_address_of(call.customer) %>
-    <td>
-      <%= call.customer.try(:name) %>
-    </td>
+    <td><%= link_to_customer call.customer %></td>
   </tr>
 <% end %>
 </table>
