@@ -1,7 +1,8 @@
 module CustomersHelper
   TRAF_TYPES = {
     :in_sat   => 'входящий',
-    :inet_out => 'исходящий'
+    :inet_out => 'исходящий',
+    :local    => 'локальный'
   }
 
   def traf_type type
