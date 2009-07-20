@@ -2,16 +2,14 @@
 
 <table class="t1">
   <tr>
-    <th>Улица</th>
-    <th>Дом</th>
+    <th>Адрес</th>
     <th>Интернет</th>
     <th>Создан</th>
     <th></th>
   </tr>
   <% for house in @houses %> 
     <tr>
-      <td><%= link_to h(house.street.name), house_path(house) %></td>
-      <td align="right"><%= link_to h(house.number), house_path(house) %></td>
+      <td><%= link_to_address_of house %></td>
       <%= status_tag house, :inet, :td %>
       <td style="font-size: 7pt; color:gray"><%= time_ago_in_words house.created_at %> ago</td>
       <td>
