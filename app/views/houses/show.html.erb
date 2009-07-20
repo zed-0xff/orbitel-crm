@@ -34,6 +34,11 @@
 </table>
 
 <h3>Текущие заявки (<%= @tickets.size -%>)</h3>
-<%= render 'tickets/table' %>
+<% if @tickets.any? %>
+  <%= render 'tickets/table' %>
+<% else %>
+  Нет заявок.
+<% end %>
 
+<br/><br/>
 <%= link_to "&laquo;&laquo; Back", :back %>
