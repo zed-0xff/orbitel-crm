@@ -28,8 +28,11 @@
 
 <h3>Абоненты (<%= @house.customers.size -%>)</h3>
 <table class="t1">
-  <% @house.customers.each do |customer| %>
-    <tr><td><%= link_to customer.name, customer_path(customer) %></td></tr>
+  <% @house.customers.sort_by{|c| c.flat.to_i}.each do |customer| %>
+    <tr>
+      <td><%= h customer.address %></td>
+      <td><%= link_to customer.name, customer_path(customer) %></td>
+    </tr>
   <% end %>
 </table>
 
