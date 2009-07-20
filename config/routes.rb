@@ -14,6 +14,8 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :customers, :collection => {
     :auto_complete => :post
+  }, :member => {
+    :billing_info  => :post
   }
 
   map.resources :tickets, :collection => { 

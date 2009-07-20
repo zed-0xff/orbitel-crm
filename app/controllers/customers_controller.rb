@@ -25,6 +25,24 @@ class CustomersController < ApplicationController
     @calls = @customer.calls
   end
 
+  KRUS_MAP = {
+    :bal       => 'баланс',
+    :bal_red   => nil,
+    :tarif     => 'тариф',
+    :tarif_red => nil,
+    :name      => 'имя',
+    :lic_schet => 'лиц.счет'
+  }
+
+  def billing_info
+    @info = info = Krus.user_info(@customer.krus_user_id)
+    if v = @info[:traf_report]
+      v.delete(:in_sat_day) if v[:in_sat] == v[:in_sat_day]
+      v.delete :user_id
+    end
+    render :layout => false
+  end
+
   private
 
   def prepare_customer

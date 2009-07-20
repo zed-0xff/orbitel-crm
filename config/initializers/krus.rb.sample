@@ -1,1 +1,4 @@
-Krus.customers_url = 'http://some.krus.host/report/users.yaml'
+ActionController::Dispatcher.to_prepare(:krus)
+  Krus.customers_url = 'http://some.krus.host/report/users.yaml'
+  Krus.user_info_url = 'http://some.krus.host/user_info/UID.yaml'
+end
