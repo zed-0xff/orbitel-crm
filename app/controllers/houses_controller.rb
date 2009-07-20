@@ -27,8 +27,9 @@ class HousesController < ApplicationController
   end
 
   def show
-    @tickets = @house.tickets(
-      :conditions => Ticket::COND_CURRENT
+    @tickets = @house.tickets.all(
+      :conditions => Ticket::COND_CURRENT,
+      :order      => 'created_at DESC'
     )
   end
 
