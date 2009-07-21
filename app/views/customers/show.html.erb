@@ -20,6 +20,10 @@
     border: 0;
     padding: 0 5px 0 0;
   }
+
+  h3 {
+    margin-bottom: 5px;
+  }
 </style>
 
 <h3>Данные абонента</h3>
@@ -39,14 +43,15 @@
   </tr>
 </table>
 
-<h3>Данные биллинга</h3>
-  <%= link_to_remote "xxx", 
+<h3>Данные биллинга
+  <%= link_to_remote image_tag('arrow-circle-double.png', :alt => 'reload'), 
     :url       => billing_info_customer_path(@customer),
     :update    => 'billing_info',
     :loading   => "$('billing_indicator').show()",
     :complete  => "$('billing_indicator').hide()"
   %>
   <%= image_tag 'ajax.gif', :style => 'display:none', :id => 'billing_indicator' %>
+</h3>
 <div id="billing_info">
 </div>
 
