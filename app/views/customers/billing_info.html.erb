@@ -1,6 +1,12 @@
 <style>
   .green { color:green }
   .red   { color:red }
+
+  .tarif-change-date {
+    color: #b8b8b8;
+    font-size: 6pt;
+    margin-left: 1em;
+  }
 </style>
 
 <table class="t1">
@@ -8,6 +14,9 @@
   <tr> <th>адрес    <td colspan=2><%= @info[:address] %>
   <tr> <th>лиц.счет <td colspan=2><%= @info[:lic_schet] %>
   <tr> <th>тариф    <td colspan=2><%= @info[:tarif] %>
+    <span class="tarif-change-date">
+    (с <%= @info[:tarif_change_date] %>)
+    </span>
   <tr> <th>баланс   
     <%= @info[:bal_red] ? '<td colspan=2 class="red">' : '<td colspan=2 class="green">' %>
     <%= @info[:bal] %>
