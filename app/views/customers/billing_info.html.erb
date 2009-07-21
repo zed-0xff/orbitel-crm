@@ -1,3 +1,5 @@
+<% cache("customers/#{@customer.id}/billing_info") do %>
+<!-- TIMESTAMP:<%= Time.now.to_i -%> -->
 <style>
   .green { color:green }
   .red   { color:red }
@@ -40,3 +42,4 @@
     }.join("<tr>") %>
   <% end %>
 </table>
+<% end %>

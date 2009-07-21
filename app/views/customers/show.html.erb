@@ -52,8 +52,7 @@
   %>
   <%= image_tag 'ajax.gif', :style => 'display:none', :id => 'billing_indicator' %>
 </h3>
-<div id="billing_info">
-</div>
+<div id="billing_info"><%= @binfo %></div>
 
 <h3>Звонки (<%= @calls.size -%>)</h3>
 

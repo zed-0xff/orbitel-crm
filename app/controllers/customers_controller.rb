@@ -3,6 +3,8 @@ class CustomersController < ApplicationController
 
   before_filter :prepare_customer
 
+  BILLING_INFO_CACHE_PERIOD = 4.hours
+
   def index
     conditions =
       if params[:filter].blank?
@@ -23,6 +25,11 @@ class CustomersController < ApplicationController
   def show
     @title = @customer.name
     @calls = @customer.calls
+    @binfo = read_fragment("customers/#{@customer.id}/billing_info")
+    if @binfo && @binfo =~ /- TIMESTAMP:(\d+) -/ && ($1.to_i-Time.now.to_i).abs > BILLING_INFO_CACHE_PERIOD
+      expire_fragment("customers/#{@customer.id}/billing_info")
+      @binfo = nil
+    end
   end
 
   KRUS_MAP = {
@@ -35,7 +42,8 @@ class CustomersController < ApplicationController
   }
 
   def billing_info
-    @info = info = Krus.user_info(@customer.krus_user_id)
+    expire_fragment("customers/#{@customer.id}/billing_info")
+    @info = Krus.user_info(@customer.krus_user_id)
     if v = @info[:traf_report]
       v.delete(:in_sat_day) if v[:in_sat] == v[:in_sat_day]
       v.delete :user_id
