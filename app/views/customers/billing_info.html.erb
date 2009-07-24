@@ -44,7 +44,7 @@
   <tr> <th rowspan="<%= [@info[:traf_report].size,1].max -%>">трафик
   <% if @info[:traf_report] && @info[:traf_report].any? %>
     <%= @info[:traf_report].map{ |type,amount| 
-      "<td>#{traf_type(type)}<td>#{traf_amount(type)}</td>"
+      "<td>#{traf_type(type)}<td align=right>#{traf_amount(type)}</td>"
     }.join("<tr>") %>
   <% else %>
     <td colspan=2> нет

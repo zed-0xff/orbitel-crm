@@ -10,10 +10,9 @@ module CustomersHelper
   end
 
   def traf_amount type
-    r  = "<div class='traf-amount'>"
-    r += number_to_human_size(@info[:traf_report][type]).rjust(10)
-    r += "</div>"
+    r = number_to_human_size(@info[:traf_report][type])
     if @info[:bandwidth] && [:inet_out, :in_sat].include?(type)
+      r = "<div class='traf-amount'>#{r}</div>"
       # max traffic amount from start of month to current day
       max_amount = @info[:bandwidth] * 1024 / 8 * 3600 * 24 * Date.today.day
       percent    = 100 * @info[:traf_report][type] / max_amount
