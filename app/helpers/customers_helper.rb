@@ -11,13 +11,15 @@ module CustomersHelper
 
   def traf_amount type
     r = number_to_human_size(@info[:traf_report][type])
-    if @info[:bandwidth] && [:inet_out, :in_sat].include?(type)
+    if @info[:bandwidth]
       r = "<div class='traf-amount'>#{r}</div>"
-      # max traffic amount from start of month to current day
-      max_amount = @info[:bandwidth] * 1024 / 8 * 3600 * 24 * Date.today.day
-      percent    = 100 * @info[:traf_report][type] / max_amount
-      klass      = 'traf-amount-percent' + ((percent >= 100) ? ' red' : '')
-      r += "<div title='Процент от максимально возможного на текущую дату' class='#{klass}'>(%2d%%)</div>" % percent
+      if [:inet_out, :in_sat].include?(type)
+        # max traffic amount from start of month to current day
+        max_amount = @info[:bandwidth] * 1024 / 8 * 3600 * 24 * Date.today.day
+        percent    = 100 * @info[:traf_report][type] / max_amount
+        klass      = 'traf-amount-percent' + ((percent >= 100) ? ' red' : '')
+        r += "<div title='Процент от максимально возможного на текущую дату' class='#{klass}'>(%2d%%)</div>" % percent
+      end
     end
     r
   end
