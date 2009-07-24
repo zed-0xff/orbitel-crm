@@ -1,14 +1,29 @@
 <% cache("customers/#{@customer.id}/billing_info") do %>
 <!-- TIMESTAMP:<%= Time.now.to_i -%> -->
 <style>
-  .green { color:green }
-  .red   { color:red }
-
-  .tarif-change-date {
+  .tarif-change-date, .traf-amount-percent {
     color: #b8b8b8;
     font-size: 6pt;
     margin-left: 1em;
   }
+
+  .traf-amount {
+    text-align:right;
+    width: 6em;
+    float: left;
+    margin: 0;
+  }
+
+  .traf-amount-percent {
+    display: block;
+    width: 4em;
+    float: right;
+    text-align: right;
+    margin: 0;
+  }
+
+  .green { color:green }
+  .red   { color:red } /* !! must be BELOW .traf-amount-percent section !! */
 </style>
 
 <table class="t1">
@@ -19,6 +34,8 @@
     <span class="tarif-change-date">
     (с <%= @info[:tarif_change_date] %>)
     </span>
+  <tr> <th>скорость <td colspan=2><%= @info[:bandwidth].blank? ? "без ограничений" : "#{@info[:bandwidth]} Кбит" %>
+
   <tr> <th>баланс   
     <%= @info[:bal_red] ? '<td colspan=2 class="red">' : '<td colspan=2 class="green">' %>
     <%= @info[:bal] %>
@@ -27,7 +44,7 @@
   <tr> <th rowspan="<%= [@info[:traf_report].size,1].max -%>">трафик
   <% if @info[:traf_report] && @info[:traf_report].any? %>
     <%= @info[:traf_report].map{ |type,amount| 
-      "<td>#{traf_type(type)}<td align=right>#{number_to_human_size(amount)}"
+      "<td>#{traf_type(type)}<td>#{traf_amount(type)}</td>"
     }.join("<tr>") %>
   <% else %>
     <td colspan=2> нет
