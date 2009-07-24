@@ -20,3 +20,10 @@ task :console, :roles => :app do
     channel.send_data(input = $stdin.gets) if data =~ /^(>|\?)>/
   end
 end
+
+namespace :krus do
+  desc "import KRUS users"
+  task :import_users, :roles => :app do
+    run "cd #{current_path} && RAILS_ENV=production ./contrib/import_krus_users.rb"
+  end
+end
