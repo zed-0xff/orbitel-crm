@@ -87,7 +87,7 @@ class House < ActiveRecord::Base
     addr.strip!
     addr.sub!(/ {2,}/, ' ')
     addr.sub! '. ','.'
-    addr.sub! 'г.Курган',''
+    addr.sub! /г[. ]Курган/,''
     addr.sub! /^[гГ]\./,''
     addr.sub! /^[,;. ]+|[,;. ]+$/, ''
 #    puts "[.] #{addr}"
