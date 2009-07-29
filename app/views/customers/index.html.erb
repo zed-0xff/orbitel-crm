@@ -19,7 +19,7 @@
   <% @customers.each do |customer| %>
     <tr>
       <td><%= link_to customer.name, customer_path(customer) %>
-      <td><%= h customer.address %>
+      <td><%= link_to_address_of customer %>
     </tr>
   <% end %>
 </table>

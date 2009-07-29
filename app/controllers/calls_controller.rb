@@ -1,5 +1,7 @@
 class CallsController < ApplicationController
   def index
+    @title = 'Звонки'
+
     @calls = Radius::Call.all(
       :order => 'acctstarttime DESC, acctstoptime DESC', 
       :limit => (params[:limit] || 50)
