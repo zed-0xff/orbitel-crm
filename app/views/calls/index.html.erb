@@ -4,6 +4,10 @@
   span.flat {
     color: #b8b8b8;
   }
+  img.fff {
+    float: right;
+    cursor: pointer;
+  }
 </style>
 
 <table class="t1">
@@ -11,9 +15,43 @@
   <tr>
     <td align="right" class="nobr"><%= Phone.humanize(call.caller) %></td>
     <td class="nobr"><%= call.start_time.strftime("%Y-%m-%d %H:%M:%S") -%></td>
-    <td><%= distance_of_time_in_images(call) %>
-    <td><%= link_to_address_of(call.customer) %>
-    <td><%= link_to_customer call.customer %></td>
+    <td><%= distance_of_time_in_images(call) %></td>
+    <td><%= link_to_address_of(call.customer) %></td>
+    <td id="ph<%=call.id-%>">
+      <%- if call.customer -%>
+        <%= link_to_customer call.customer %>
+      <%- else -%>
+        <%= image_tag('textfield_add.png', 
+          :class => 'fff',
+          :title => 'Сопоставить абонента', 
+          :alt   => '',
+          :onclick => "fff(#{call.id})")
+        %>
+      <%- end -%>
+    </td>
   </tr>
 <% end %>
 </table>
+
+<%= javascript_tag <<-EOJS
+  function fff(id){
+    new Ajax.Updater(
+      'ph'+id, 
+      '/calls/find_customer_form?call_id='+id, 
+      {
+        asynchronous:true, 
+        evalScripts:true, 
+        onComplete:function(request){
+          $('f'+id).activate();
+          new Ajax.Autocompleter(
+            'f'+id, 
+            'customer_name_auto_complete_'+id,
+            '/customers/auto_complete', 
+            {indicator:'ai'+id}
+          )
+        } 
+      }
+    );
+  }
+EOJS
+%>

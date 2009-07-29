@@ -3,7 +3,24 @@ class CustomersController < ApplicationController
 
   before_filter :prepare_customer
 
+  skip_before_filter :verify_authenticity_token, :only => [:auto_complete]
+
   BILLING_INFO_CACHE_PERIOD = 4.hours
+
+  def auto_complete
+    method = 'name'
+
+    find_options = {
+      :conditions => [ "LOWER(#{method}) LIKE ?", '%' + find_customer(params).downcase + '%' ],
+      :order => "#{method} ASC",
+      :limit => 10 }
+
+    @items = Customer.find(:all, find_options)
+
+    render :text => '<ul class="customers-autocomplete">' + 
+      @items.map{|item| "<li><div class='name'>#{item.name}</div><div class='addr'>(#{item.address})</div>" }.join + 
+      '</ul>'
+  end
 
   def index
     conditions =
@@ -56,5 +73,14 @@ class CustomersController < ApplicationController
   def prepare_customer
     @customer = Customer.find(params[:id].to_i) if params[:id]
     true
+  end
+
+  def find_customer h
+    return h[:customer] if h[:customer] && h[:customer].is_a?(String)
+    h.values.each do |v|
+      r = v.is_a?(Hash) && find_customer(v)
+      return r if r
+    end
+    nil
   end
 end

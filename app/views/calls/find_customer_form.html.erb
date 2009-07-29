@@ -1,0 +1,15 @@
+<%#= text_field_with_auto_complete :customer, :name, {
+          :size => 40,
+          :name => 'customer',
+          :id  => "f#{params[:call_id]}"
+        },
+        :url => auto_complete_customers_path,
+        :indicator => 'ai1' %>
+<%= auto_complete_stylesheet -%>
+
+<%- form_tag({:action => 'assign_phone_number'}, {:style => 'margin:0; padding:0'}) do -%>
+  <%= hidden_field_tag 'call_id', params[:call_id] -%>
+  <input id="f<%=params[:call_id]-%>" name="customer" size="40" type="text" style="padding:0" /><div class="auto_complete" id="customer_name_auto_complete_<%=params[:call_id]-%>"></div>
+  <%= image_tag 'ajax.gif', :style => 'display:none', :id => "ai#{params[:call_id]}" -%>
+  <%= image_submit_tag 'disk-black.png', :style => 'position:relative; top:2px', :title => 'Сохранить' -%>
+<%- end -%>

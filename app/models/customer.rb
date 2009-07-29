@@ -56,6 +56,18 @@ class Customer < ActiveRecord::Base
     Phone.find_by_number(Phone.canonicalize(phone_number)).try(:customer)
   end
 
+  def self.find_by_name_and_address nameaddr
+    if nameaddr =~ /^(.+)\(([^()]+)\)$/
+      name = $1.strip
+      addr = $2.strip
+      Customer.all(:conditions => {:name => name}).each do |c|
+        return c if c.address == addr
+      end
+    end
+    # last chanse
+    return Customer.find_by_name(nameaddr)
+  end
+
   def self.cleanup_name name
     name.strip!
     name.gsub!(/ {2,}/,' ')
