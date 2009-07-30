@@ -23,4 +23,28 @@ module CustomersHelper
     end
     r
   end
+
+  def prev_customer_link
+    customer_link "&larr;", "<", true
+  end
+
+  def next_customer_link
+    customer_link "&rarr;", ">"
+  end
+
+  private
+
+  def customer_link text, cmp, desc = false
+    raise "Invalid cmp!" if cmp.size != 1
+
+    cust = Customer.first(
+      :conditions => ["id #{cmp} ?", @customer.id],
+      :order => ( desc ? "id DESC" : "id" )
+    )
+    if cust
+      link_to text, customer_path(cust)
+    else
+      "<span style=\"color:gray\">#{text}</span>"
+    end
+  end
 end
