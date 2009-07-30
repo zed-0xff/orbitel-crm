@@ -23,6 +23,8 @@ class CustomersController < ApplicationController
   end
 
   def index
+    @title = 'Абоненты'
+    
     conditions =
       if params[:filter].blank?
         nil

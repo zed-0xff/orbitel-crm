@@ -4,6 +4,7 @@ class HousesController < ApplicationController
   before_filter :prepare_house
   
   def index
+    @title = 'Дома'
     if params[:street] || params[:number]
       conditions = ["TRUE"]
       unless params[:street].blank?

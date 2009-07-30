@@ -14,11 +14,14 @@
   ]
 
   <div id="additional_settings" style="display:none">
-    <%- if current_user.can_manage_users? -%>
-      | <%= link_to "#{image_tag('users.png')}Пользователи", users_path -%> 
+    <%- if current_user.can_manage? :customers -%>
+      | <%= link_to "#{image_tag('customer.png')}Абоненты", customers_path -%> 
     <%- end -%>
     <%- if current_user.can_manage? :houses -%>
       | <%= link_to "#{image_tag('house.png')}Дома", houses_path -%> 
+    <%- end -%>
+    <%- if current_user.can_manage_users? -%>
+      | <%= link_to "#{image_tag('users.png')}Пользователи CRM", users_path -%> 
     <%- end -%>
     |
   </div>
