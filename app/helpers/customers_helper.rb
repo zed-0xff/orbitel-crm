@@ -25,26 +25,55 @@ module CustomersHelper
   end
 
   def prev_customer_link
-    customer_link "&larr;", "<", true
+    customer_link :prev
   end
 
   def next_customer_link
-    customer_link "&rarr;", ">"
+    customer_link :next
   end
 
   private
 
-  def customer_link text, cmp, desc = false
-    raise "Invalid cmp!" if cmp.size != 1
+  def customer_link dir
+    case dir
+      when :prev
+        cmp  = '<'
+        text = '&larr;'
+      when :next
+        cmp  = '>'
+        text = '&rarr;'
+      else
+        raise "Invalid direction: #{dir.inspect}"
+    end
 
-    cust = Customer.first(
-      :conditions => ["id #{cmp} ?", @customer.id],
-      :order => ( desc ? "id DESC" : "id" )
-    )
+    cust = 
+      if params[:from] == 'house'
+        cust_from_house dir
+      else
+        Customer.first(
+          :conditions => ["id #{cmp} ?", @customer.id],
+          :order => ( dir == :prev ? "id DESC" : "id" )
+        )
+      end
+
     if cust
-      link_to text, customer_path(cust)
+      opts = {}
+      opts[:from] = params[:from] if params[:from]
+      link_to text, customer_path(cust, opts)
     else
       "<span style=\"color:gray\">#{text}</span>"
+    end
+  end
+
+  def cust_from_house dir
+    return nil unless @customer.house # customer have no house?
+    @customers_for_link ||= @customer.house.customers.sort_by{|c| c.flat.to_i}
+    idx = @customers_for_link.index(@customer)
+    return nil unless idx # customer moved to another house?
+    if dir == :prev
+      idx == 0 ? nil : @customers_for_link[idx-1]
+    else # dir = :next
+      idx == (@customers_for_link.size-1) ? nil : @customers_for_link[idx+1]
     end
   end
 end

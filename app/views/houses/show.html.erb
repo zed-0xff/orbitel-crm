@@ -31,7 +31,7 @@
   <% @house.customers.sort_by{|c| c.flat.to_i}.each do |customer| %>
     <tr>
       <td><%= h customer.address %></td>
-      <td><%= link_to customer.name, customer_path(customer) %></td>
+      <td><%= link_to customer.name, customer_path(customer, :from => :house) %></td>
     </tr>
   <% end %>
 </table>
