@@ -3,15 +3,24 @@
   <%= link_to "#{image_tag('rainbow.png')}Главная", '/' -%>
 
   | <%= link_to "#{image_tag('notebooks.png')}Заявки", tickets_path -%> 
-
-  <%- if current_user.can_manage_users? -%>
-    | <%= link_to "#{image_tag('users.png')}Пользователи", users_path -%> 
-  <%- end -%>
-  <%- if current_user.can_manage? :houses -%>
-    | <%= link_to "#{image_tag('house.png')}Дома", houses_path -%> 
-  <%- end -%>
   | <%= link_to "#{image_tag('moon.png')}Ночные дежурства", '/nights' -%> 
+  <span id="add_settings_toggler">
+    | <%= link_to_function "#{image_tag('gear.png', :title => 'Настройки')}" do |page|
+        #page[:additional_settings].toggle
+        page.visual_effect :toggle_blind, :additional_settings, :duration => 0.2
+      end -%> 
+  </span>
   ]
+
+  <div id="additional_settings" style="display:none">
+    <%- if current_user.can_manage_users? -%>
+      | <%= link_to "#{image_tag('users.png')}Пользователи", users_path -%> 
+    <%- end -%>
+    <%- if current_user.can_manage? :houses -%>
+      | <%= link_to "#{image_tag('house.png')}Дома", houses_path -%> 
+    <%- end -%>
+    |
+  </div>
 </div>
 
 <%= render :partial => "#{controller_name}/menu" if File.exists?("#{RAILS_ROOT}/app/views/#{controller_name}/_menu.html.erb") %>
