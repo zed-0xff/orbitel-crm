@@ -161,6 +161,14 @@ div#topmenu, div.menu {
   text-align: center;
 }
 
+div#topmenu a img {
+	margin-right: 4px;
+	position: relative;
+	top: 3px;
+	height: 16px;
+	width: 16px;
+}
+
 /*
 -------------------------
  TABLES
