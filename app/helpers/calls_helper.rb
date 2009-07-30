@@ -19,7 +19,9 @@ module CallsHelper
       return image_tag('balloon.png', :title => title) * [1,([5,(call.duration+60).to_i].min/60)].max
     end
 
-    if d<=20
+    if d==0
+      image_tag 'exclamation.png', :title => "Неотвеченный звонок (#{title})"
+    elsif d<=20
       image_tag 'clock-quarter.png', :title => title
     elsif d<=40
       image_tag 'clock-half.png', :title => title
