@@ -1,0 +1,17 @@
+<% cache("customers/#{@customer.id}/router_info") do %>
+<!-- TIMESTAMP:<%= Time.now.to_i -%> -->
+<style>
+  .green { color:green }
+  .red   { color:red }
+</style>
+
+<table class="t1">
+  <%- @info.each do |ip,info| -%>
+    <tr class="<%= info['status'].to_i == 0 ? 'red' : 'green' -%>">
+      <td><%= ip -%></td>
+      <td><%= info['interface'] -%></td>
+      <td><%= info['status'].to_i == 0 ? 'Выключен' : 'Включен' -%></td>
+    </tr>
+  <%- end -%>
+</table>
+<% end %>

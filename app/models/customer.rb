@@ -52,6 +52,38 @@ class Customer < ActiveRecord::Base
     self.flat = a[1].strip if a[1]
   end
 
+  def billing_info
+    return nil unless self.krus_user_id
+    r = Krus.user_info(self.krus_user_id)
+    if r && r[:status] && r[:status].is_a?(Hash)
+      Rails.cache.write(
+        "customer.#{self.id}.ips", 
+        r[:status].keys.sort_by{ |ip| ip.split('.').map(&:to_i) },
+        :expires_in => 8.hours
+      )
+    end
+    r
+  end
+
+  def router_info
+    ips = self.ips
+    return nil unless ips
+    h = ActiveSupport::OrderedHash.new
+    ips.each do |ip|
+      h[ip] = Router.ip_info(ip)
+    end
+    h
+  end
+
+  def ips
+    ips = Rails.cache.read "customer.#{self.id}.ips"
+    unless ips
+      billing_info
+      ips = Rails.cache.read "customer.#{self.id}.ips"
+    end
+    ips
+  end
+
   def self.find_by_phone phone_number
     Phone.find_by_number(Phone.canonicalize(phone_number)).try(:customer)
   end

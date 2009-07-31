@@ -6,6 +6,7 @@ class CustomersController < ApplicationController
   skip_before_filter :verify_authenticity_token, :only => [:auto_complete]
 
   BILLING_INFO_CACHE_PERIOD = 4.hours
+  ROUTER_INFO_CACHE_PERIOD  = 5.minutes
 
   def auto_complete
     method = 'name'
@@ -44,10 +45,17 @@ class CustomersController < ApplicationController
   def show
     @title = @customer.name
     @calls = @customer.calls
+
     @binfo = read_fragment("customers/#{@customer.id}/billing_info")
     if @binfo && @binfo =~ /- TIMESTAMP:(\d+) -/ && ($1.to_i-Time.now.to_i).abs > BILLING_INFO_CACHE_PERIOD
       expire_fragment("customers/#{@customer.id}/billing_info")
       @binfo = nil
+    end
+
+    @rinfo = read_fragment("customers/#{@customer.id}/router_info")
+    if @rinfo && @rinfo =~ /- TIMESTAMP:(\d+) -/ && ($1.to_i-Time.now.to_i).abs > ROUTER_INFO_CACHE_PERIOD
+      expire_fragment("customers/#{@customer.id}/router_info")
+      @rinfo = nil
     end
   end
 
@@ -62,11 +70,17 @@ class CustomersController < ApplicationController
 
   def billing_info
     expire_fragment("customers/#{@customer.id}/billing_info")
-    @info = Krus.user_info(@customer.krus_user_id)
+    @info = @customer.billing_info
     if v = @info[:traf_report]
       v.delete(:in_sat_day) if v[:in_sat] == v[:in_sat_day]
       v.delete :user_id
     end
+    render :layout => false
+  end
+
+  def router_info
+    expire_fragment("customers/#{@customer.id}/router_info")
+    @info = @customer.router_info
     render :layout => false
   end
 
