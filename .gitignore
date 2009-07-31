@@ -6,6 +6,7 @@ config/database.yml
 config/house_coords.yml
 config/initializers/double_gis.rb
 config/initializers/krus.rb
+config/initializers/router.rb
 config/deploy.rb
 db/schema.rb
 test
