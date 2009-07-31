@@ -9,7 +9,7 @@ set :user, 'rails'
 server "my.crm.server", :app, :web, :db, :primary => true
 
 necessary_shared_configs = %w'database.yml mongrel_cluster.yml'
-optional_shared_configs = %w'house_coords.yml'
+optional_shared_configs = %w'house_coords.yml initializers/double_gis.rb initializers/krus.rb initializers/router.rb'
 
 namespace :deploy do
   task :symlink_shared_configs do
