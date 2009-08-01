@@ -21,7 +21,11 @@ class Radius::Call < ActiveRecord::Base
   end
 
   def duration
-    self.acctsessiontime
+    if self.ended? || self.acctsessiontime.to_i > 0
+      self.acctsessiontime
+    else
+      [0, Time.now - self.acctstarttime].max
+    end
   end
 
   # from 'caller' (source number) field now

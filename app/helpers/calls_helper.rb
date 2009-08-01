@@ -16,7 +16,10 @@ module CallsHelper
       end
 
     if call.respond_to?(:ended?) && !call.ended?
-      return image_tag('balloon.png', :title => title) * [1,([5,(call.duration+60).to_i].min/60)].max
+      nminutes = call.duration / 60
+      nminutes = 1 if nminutes < 1
+      nminutes = 5 if nminutes > 5
+      return image_tag('balloon.png', :title => title) * nminutes.to_i
     end
 
     if d==0
