@@ -21,6 +21,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :tickets, :collection => { 
     :new_request    => :get,
+    :new_tariff_change => :get,
     :mine           => :get,
     :assigned_to_me => :get,
     :all            => :get,

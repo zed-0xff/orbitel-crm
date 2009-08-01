@@ -13,6 +13,12 @@ class TicketsController < ApplicationController
     @ticket.house = House.new
   end
 
+  def new_tariff_change
+    @ticket = TariffChange.new
+    @ticket.house = House.new
+    render :new
+  end
+
   def create
     ticket_type = params[:ticket].delete(:type)
     klass  = ticket_type.blank? ? Ticket : Kernel.const_get(ticket_type)
