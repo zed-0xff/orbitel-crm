@@ -36,6 +36,7 @@ namespace :setup do
       yaml = YAML.load_file "#{RAILS_ROOT}/spec/fixtures/default_admin.yml"
       admin = Admin.create! yaml['admin']
       logger.info "Created admin with id=#{admin.id}"
+      Settings['nights.managed_by'] = [admin.id]
     end
   end
 
