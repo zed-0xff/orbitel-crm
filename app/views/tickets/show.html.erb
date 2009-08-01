@@ -150,7 +150,7 @@
       <td colspan="10" class="date"><%= date_with_mark(date) %></td>
     </tr>
     <% entries.each do |entry| %>
-      <tr>
+      <tr valign="top">
         <td style="padding-left:12px">
           <%= entry.created_at.strftime('%H:%M') %>
         </td>

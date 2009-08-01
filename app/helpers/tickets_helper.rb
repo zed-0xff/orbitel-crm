@@ -90,7 +90,7 @@ module TicketsHelper
     if he.comment
       desc += "<br/>" unless desc.blank?
       desc += "<b>" 
-      desc += h(length ? truncate(he.comment, length) : he.comment)
+      desc += h(length ? truncate(he.comment, length) : he.comment).gsub("\n","<br/>")
       desc += "</b>"
     end
     desc
