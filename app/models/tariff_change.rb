@@ -8,4 +8,9 @@ class TariffChange < Ticket
   def set_dept
     self.dept = Dept[:admins]
   end
+
+  # temporary
+  def tariff
+    nil
+  end
 end
