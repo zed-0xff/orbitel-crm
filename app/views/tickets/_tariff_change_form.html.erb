@@ -1,60 +1,53 @@
-<% form_for @ticket do |f| %>
+<style>
+  label {
+    display: block;
+    margin-top: 1em;
+  }
+
+  legend + label {
+    margin-top: 0;
+  }
+</style>
+
+<% form_for @ticket, :builder => LabellingFormBuilder do |f| %>
   <%= f.error_messages %>
   <%= f.hidden_field :type %>
 
-  <% field_set_tag 'Описание проблемы' do %>
-    <div>
-      <label for="ticket_customer">
-        Абонент:
-      </label><br/>
-      <%= text_field_with_auto_complete :customer, :name, {
-          :size => 40,
-          :name => 'ticket[customer]',
-        },
-        :url => auto_complete_customers_path,
-        :indicator => 'ai2' %>
-      <%= image_tag 'ajax.gif', :style => 'display:none', :id => "ai2" -%>
-    </div>
+  <div style="float:left">
+    <% field_set_tag 'Абонент' do %>
+      <%= ajax_customer_selector :label => 'Быстрый поиск:' %>
 
-    <div style="margin-top: 0.8em">
-      <label for="ticket_notes">
-        Примечания и дополнительная информация, если нужно:
-      </label><br/>
-      <%= f.text_area :notes, :rows => 3, :style => 'width: 280px' %>
-    </div>
-
-  <% end %>
-
-  <% field_set_tag 'Адрес подключения' do %>
-    <% f.fields_for :house do |hf| %>
-      <table>
-      <tr>
-        <td> Улица:
-        <td> <%= ajax_street_selector %>
-      <tr>
-        <td> Дом: 
-        <td> <%= hf.text_field :number, :size => 5 %>
-      <tr>
-        <td> <span class="small">Квартира<br/>(Офис)</span>: 
-        <td> <%= f.text_field :flat, :size => 5 %>
-      </table>
+      <%= f.text_area :notes, :rows => 3, :style => 'width: 280px', 
+        :label => 'Примечания и дополнительная информация, если нужно:' %>
     <% end %>
-  <% end %>
+  </div>
 
-  <% field_set_tag 'Контактные данные' do %>
-    <div>
-      <label for="ticket_contact_name">
-        ФИО клиента / название организации:
-      </label><br/>
-      <%= f.text_field :contact_name, :style => 'width:280px' %>
-    </div>
-    <div>
-      <label for="ticket_contact_info">
-        Телефон и/или другие контактные данные:
-      </label><br/>
-      <%= f.text_area :contact_info, :rows => 3, :style => 'width:280px' %>
-    </div>
-  <% end %>
+  <div style="float:left; margin-left:1em">
+    <% field_set_tag 'Контактные данные' do %>
+      <%= f.text_field :contact_name, :style => 'width:280px', 
+        :label => 'ФИО клиента / название организации:' %>
+      <%= f.text_area  :contact_info, :rows => 3, :style => 'width:280px', 
+        :label => 'Телефон и/или другие контактные данные:' %>
+    <% end %>
+
+    <% field_set_tag 'Адрес подключения' do %>
+      <% f.fields_for :house do |hf| %>
+        <table>
+        <tr>
+          <td> Улица:
+          <td> <%= ajax_street_selector %>
+        <tr>
+          <td> Дом: 
+          <td> <%= hf.text_field :number, :size => 5 %>
+        <tr>
+          <td> <span class="small">Квартира<br/>(Офис)</span>: 
+          <td> <%= f.text_field :flat, :size => 5 %>
+        </table>
+      <% end %>
+    <% end %>
+  </div>
+
+  <div style="clear:both">&nbsp;</span>
 
   <br/>
   <%= submit_tag 'Далее &gt;&gt;' %> или <%= link_to 'отмена','/' %>.

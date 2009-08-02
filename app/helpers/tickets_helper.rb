@@ -141,4 +141,18 @@ module TicketsHelper
     r+= image_tag 'ajax.gif', :style => 'position:absolute; display:none',:id => 'ai1'
     r
   end
+
+  def ajax_customer_selector options={}
+    r = ''
+    r+= label(:customer, :name, options[:label]) if options[:label]
+    r+= text_field_with_auto_complete(:customer, :name, {
+          :size => 40,
+          :name => 'ticket[customer]',
+        },
+        :url => auto_complete_customers_path,
+        :indicator => 'ai2'
+    )
+    r+= image_tag 'ajax.gif', :style => 'position:absolute; display:none',:id => 'ai2'
+    r
+  end
 end
