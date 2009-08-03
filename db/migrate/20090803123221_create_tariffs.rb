@@ -8,6 +8,8 @@ class CreateTariffs < ActiveRecord::Migration
 
       t.timestamps
     end
+
+    add_index :tariffs, :name
   end
 
   def self.down
