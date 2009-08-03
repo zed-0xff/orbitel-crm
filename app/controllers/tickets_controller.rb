@@ -16,14 +16,18 @@ class TicketsController < ApplicationController
   def new_tariff_change
     @ticket = TariffChange.new
     @ticket.house = House.new
+    @ticket.date  = Date.today
     render :new
   end
 
   def create
     ticket_type = params[:ticket].delete(:type)
     klass  = ticket_type.blank? ? Ticket : Kernel.const_get(ticket_type)
-    logger.info params[:ticket].inspect
-    @ticket = klass.new( params[:ticket] )
+    h1 = params[:ticket] || {}
+    h2 = params[klass.to_s.underscore] || {}
+    ticket_attrs= h1.merge(h2)
+    logger.info ticket_attrs.inspect
+    @ticket = klass.new( ticket_attrs )
     @ticket.created_by = current_user
     if @ticket.valid?
       @ticket.save!
@@ -32,7 +36,7 @@ class TicketsController < ApplicationController
     else
       if(
         @ticket.errors.on(:house_street) && !@ticket.house.street &&
-        (!(st=params[:ticket].try(:[], :house_attributes).try(:[], :street)).blank?)
+        (!(st=ticket_attrs.try(:[], :house_attributes).try(:[], :street)).blank?)
       )
         # dirty hack
         s = @ticket.errors.on(:house_street)

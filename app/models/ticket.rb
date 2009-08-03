@@ -3,6 +3,7 @@ class Ticket < ActiveRecord::Base
   belongs_to :created_by, :class_name => 'User'
   belongs_to :assignee,   :class_name => 'User'
   belongs_to :dept
+  belongs_to :customer
 
   has_many :ticket_history_entries, :order => 'created_at DESC'
   alias :history :ticket_history_entries

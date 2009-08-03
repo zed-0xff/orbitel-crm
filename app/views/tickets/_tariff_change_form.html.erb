@@ -72,15 +72,16 @@
   </div>
   </div>
 
-  <div style="float:left; margin-left: 1em">
-    <% field_set_tag 'Параметры заявки' do %>
-      <%= f.select :tariff, ['Тариф 1','Тариф 2'], :label => 'Тариф' %>
+  <div style="float:left; margin-left: 0.7em">
+    <% field_set_tag 'Параметры смены тарифа' do %>
+      <%= f.select :tariff, ['Тариф 1','Тариф 2'], :label => 'Тариф:' %>
 
-      <%= f.label :date, 'Дата' %>
-      <%= calendar_date_select @ticket.class.to_s.underscore, :date %>
+      <%= f.label :date, 'Дата начала действия нового тарифа:' %>
+      <%= calendar_date_select_tag "#{@ticket.class.to_s.underscore}[date]", @ticket.date,
+        :id => "#{@ticket.class.to_s.underscore}_date", :size => 10 %>
 
       <%= f.text_area :notes, :rows => 2, :style => 'width: 280px', 
-        :label => 'Примечания и дополнительная информация, если нужно:' %>
+        :label => 'Примечания и дополнительная информация:' %>
     <% end %>
   </div>
 

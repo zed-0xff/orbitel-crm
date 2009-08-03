@@ -4,6 +4,7 @@ class Customer < ActiveRecord::Base
   belongs_to :house
 
   has_many :calls
+  has_many :tickets
 
   has_many :phones, :dependent => :delete_all do
     def add phone
