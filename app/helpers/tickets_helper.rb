@@ -155,4 +155,14 @@ module TicketsHelper
     r+= image_tag 'ajax.gif', :style => 'position:absolute; display:none',:id => 'ai2'
     r
   end
+
+  def ur_tariffs_for_select
+    @tariffs_for_select ||= Tariff.all #:conditions => [ "avail_ur = ? OR avail_fiz = ?", true, true ]
+    @tariffs_for_select.find_all(&:avail_ur).map{ |t| [t.name, t.id] }
+  end
+
+  def fiz_tariffs_for_select
+    @tariffs_for_select ||= Tariff.all #:conditions => [ "avail_ur = ? OR avail_fiz = ?", true, true ]
+    @tariffs_for_select.find_all(&:avail_fiz).map{ |t| [t.name, t.id] }
+  end
 end

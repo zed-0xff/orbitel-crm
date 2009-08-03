@@ -74,7 +74,9 @@
 
   <div style="float:left; margin-left: 0.7em">
     <% field_set_tag 'Параметры смены тарифа' do %>
-      <%= f.select :tariff, ['Тариф 1','Тариф 2'], :label => 'Тариф:' %>
+      <%= f.label :tariff, 'Тариф:' %>
+      <%= f.select :tariff, fiz_tariffs_for_select %>
+      <%= f.select :tariff,  ur_tariffs_for_select %>
 
       <%= f.label :date, 'Дата начала действия нового тарифа:' %>
       <%= calendar_date_select_tag "#{@ticket.class.to_s.underscore}[date]", @ticket.date,
