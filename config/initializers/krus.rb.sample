@@ -1,4 +1,4 @@
 ActionController::Dispatcher.to_prepare(:krus)
-  Krus.customers_url = 'http://some.krus.host/report/users.yaml'
-  Krus.user_info_url = 'http://some.krus.host/user_info/UID.yaml'
+  Krus.host = 'some.krus.host'
+  krus.port = 80
 end
