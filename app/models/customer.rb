@@ -40,7 +40,7 @@ class Customer < ActiveRecord::Base
     if a['секц']
       a = [a[0..(a.index('секц')-1)], a[(a.index('секц'))..-1]]
     else
-      a = addr.split /офис|оф\.|кв\.?|квартира|каб\.|кабинет|комн?\.|комната/ui
+      a = addr.split /офис|оф\.| оф | кв |кв\.?|квартира| каб |каб\.|кабинет|комн?\.|комната/ui
     end
     if a.size == 1
       a = addr.split '-'
