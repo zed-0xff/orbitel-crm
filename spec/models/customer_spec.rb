@@ -18,6 +18,7 @@ describe Customer do
     examples['г. Курган, ул. Станционная, 64а-309'] = %w'Станционная 64а 309'
     examples['1 мая 21 кв.197']           = ['1 мая', 21, 197]
     examples['640000, г.Курган, ул.Пичугина, 38'] = %w'Пичугина 38'
+    examples['640652, г.Курган, ул. Куйбышева, 87'] = %w'Куйбышева 87'
 
     examples.each do |k,v|
       it "should parse #{k.to_s.inspect}" do

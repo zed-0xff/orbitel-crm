@@ -83,7 +83,7 @@ class House < ActiveRecord::Base
 #    puts "[.] #{addr}"
     addr.sub! /[уУ][лЛ]\./,''
     addr.sub! 'пр.',''
-    addr.sub! /6400\d\d/,'' # remove index/zip
+    addr.sub! /640\d\d\d/,'' # remove index/zip
     addr.strip!
     addr.sub!(/ {2,}/, ' ')
     addr.sub! '. ','.'
