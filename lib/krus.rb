@@ -5,6 +5,10 @@ class Krus
     fetch_yaml_url "report/users.yaml?no_zombies=1"
   end
 
+  def self.fetch_tariffs
+    fetch_yaml_url "tarifs.yaml"
+  end
+
   def self.user_info uid
     fetch_yaml_url "user_info/#{uid}.yaml"
   end
