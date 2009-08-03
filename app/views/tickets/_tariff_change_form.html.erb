@@ -9,6 +9,17 @@
   legend + label {
     margin-top: 0;
   }
+
+  div.small {
+    color: gray;
+    position: relative;
+    top: -10px;
+    text-align: right;
+  }
+
+  div.small + label {
+    margin-top: -6px;
+  }
 </style>
 
 <% form_for @ticket, :builder => LabellingFormBuilder do |f| %>
@@ -16,24 +27,30 @@
   <%= f.hidden_field :type %>
 
   <div style="float:left">
+  <div id="cust_select_div">
     <% field_set_tag 'Абонент' do %>
+      <div class="small">
+        Абонент не найден? - 
+        <%= link_to_function "Показать форму ручного ввода" do |page|
+              page.visual_effect :toggle_blind, :cust_select_div, :duration => 0.15
+              page.visual_effect :toggle_blind, :cust_address_div, :duration => 0.15
+            end %>
+      </div>
       <%= ajax_customer_selector :label => 'Быстрый поиск:' %>
-      
-      <%= f.select :tariff, ['Тариф 1','Тариф 2'], :label => 'Тариф' %>
-
-      <%= f.label :date, 'Дата' %>
-      <%= calendar_date_select @ticket.class.to_s.underscore, :date %>
-
-      <%= f.text_area :notes, :rows => 3, :style => 'width: 280px', 
-        :label => 'Примечания и дополнительная информация, если нужно:' %>
     <% end %>
   </div>
 
-  <div style="float:left; margin-left:1em">
+  <div style="display:none" id="cust_address_div">
     <% field_set_tag 'Контактные данные' do %>
+      <div class="small">
+        <%= link_to_function "Показать форму быстрого поиска" do |page|
+              page.visual_effect :toggle_blind, :cust_select_div, :duration => 0.15
+              page.visual_effect :toggle_blind, :cust_address_div, :duration => 0.15
+            end %>
+      </div>
       <%= f.text_field :contact_name, :style => 'width:280px', 
         :label => 'ФИО клиента / название организации:' %>
-      <%= f.text_area  :contact_info, :rows => 3, :style => 'width:280px', 
+      <%= f.text_area  :contact_info, :rows => 2, :style => 'width:280px', 
         :label => 'Телефон и/или другие контактные данные:' %>
     <% end %>
 
@@ -51,6 +68,19 @@
           <td> <%= f.text_field :flat, :size => 5 %>
         </table>
       <% end %>
+    <% end %>
+  </div>
+  </div>
+
+  <div style="float:left; margin-left: 1em">
+    <% field_set_tag 'Параметры заявки' do %>
+      <%= f.select :tariff, ['Тариф 1','Тариф 2'], :label => 'Тариф' %>
+
+      <%= f.label :date, 'Дата' %>
+      <%= calendar_date_select @ticket.class.to_s.underscore, :date %>
+
+      <%= f.text_area :notes, :rows => 2, :style => 'width: 280px', 
+        :label => 'Примечания и дополнительная информация, если нужно:' %>
     <% end %>
   </div>
 
