@@ -26,4 +26,9 @@ namespace :krus do
   task :import_users, :roles => :app do
     run "cd #{current_path} && RAILS_ENV=production ./contrib/import_krus_users.rb"
   end
+
+  desc "import KRUS tariffs"
+  task :import_tariffs, :roles => :app do
+    run "cd #{current_path} && RAILS_ENV=production ./contrib/import_krus_tariffs.rb"
+  end
 end
