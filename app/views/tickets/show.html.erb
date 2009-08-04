@@ -15,7 +15,7 @@
   <% unless @ticket.contact_name.blank? %>
     <tr>
       <th>абонент</th>
-      <td><b><%=h @ticket.contact_name %></b></td>
+      <td><b><%= @ticket.customer ? link_to_customer(@ticket.customer) : h(@ticket.contact_name) %></b></td>
     </tr>
   <% end %>
 
