@@ -12,16 +12,16 @@ Customer.all(:conditions => 'krus_user_id IS NOT NULL').each do |customer|
 end
 
 puts "[.] loading krus customers.."
-krus_customers = 
-  if File.exists?('krus_customers.yml')
-    YAML.load_file 'krus_customers.yml'
-  else
-    Krus.fetch_customers
-  end
-
-File.open 'krus_customers.yml','w' do |f|
-  f.write(krus_customers.to_yaml)
-end
+krus_customers = Krus.fetch_customers
+#  if File.exists?('krus_customers.yml')
+#    YAML.load_file 'krus_customers.yml'
+#  else
+#    Krus.fetch_customers
+#  end
+#
+#File.open 'krus_customers.yml','w' do |f|
+#  f.write(krus_customers.to_yaml)
+#end
 
 puts "[.] loaded #{krus_customers.size} krus customers"
 
