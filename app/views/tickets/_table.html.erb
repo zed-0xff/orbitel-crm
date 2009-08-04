@@ -24,8 +24,8 @@
     <tr class="clickable priority<%=ticket.priority-%>" url="<%=ticket_path(ticket)%>">
       <td><%= link_to ticket.id, ticket_path(ticket) %></td>
       <td>
-        <div class="address"><%= h(ticket.address.sub('проспект','')) %></div>
-        <div class="name"><%= h truncate(ticket.contact_name.sub(/\(.+/,''), :length => 40) %></div>
+        <div class="address"><%= h(ticket.address.to_s.sub('проспект','')) %></div>
+        <div class="name"><%= h truncate(ticket.contact_name.to_s.sub(/\(.+/,''), :length => 40) %></div>
       </td>
       <td><%= link_to h(ticket.title), ticket_path(ticket) %></td>
       <% if ticket.status == Ticket::ST_ACCEPTED %>

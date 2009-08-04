@@ -11,6 +11,8 @@ class TicketsController < ApplicationController
   def new
     @ticket = Ticket.new
     @ticket.house = House.new
+
+    @ticket.title = params[:title] if params[:title] && !@ticket.title
   end
 
   def new_tariff_change

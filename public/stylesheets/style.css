@@ -265,6 +265,20 @@ ul.actions li {
 	margin-bottom: 0.2em;
 }
 
+/* 2nd level actions */
+ul.actions ul {
+	margin-top: 0.2em;
+}
+
+ul.actions ul li {
+	font-size: 12pt;
+	font-weight: bold;
+}
+
+ul.actions div {
+	font-weight: normal;
+}
+
 /*
 -------------------------
  default fieldset

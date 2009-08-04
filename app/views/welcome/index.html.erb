@@ -8,11 +8,15 @@
                 check_houses_path %>
       <li><%= link_to "&raquo; Создать запрос на возможность подключения", 
                 new_request_tickets_path %>
-      <li>&raquo; Создать заявку на подключение
-      <li><%= link_to "&raquo; Создать другую заявку", new_ticket_path %>
-        <div class="small" style="margin-left:2em">
-          (например о потерях на линии или другой неисправности)
-        </div>
+      <li>&raquo; Создать заявку:
+      <ul>
+        <li><%= link_to 'Нет интернета', new_ticket_path(:title => "нет интернета") %>
+        <li><%= link_to "Смена ТП", new_tariff_change_tickets_path %>
+        <li><%= link_to "Другое..", new_ticket_path %>
+          <div class="small" style="margin-left:1em; display:inline">
+            (потери на линии и другие неисправности)
+          </div>
+      </ul>
     </ul>
   </div>
 

@@ -47,7 +47,7 @@
   <%= f.error_messages %>
 
   <%= hidden_field_tag 'ticket[type]', @ticket.class.to_s %>
-  <%= hidden_field_tag :quick_customer, params[:quick_customer] %>
+  <%= hidden_field_tag :quick_customer, params[:quick_customer] || 1 %>
   <%= hidden_field_tag :tariff_type, params[:tariff_type] %>
 
   <div style="float:left">
