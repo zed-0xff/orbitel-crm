@@ -85,6 +85,10 @@
     </tr>
   <% end %>
 
+  <% if File.exists?("#{RAILS_ROOT}/app/views/tickets/_#{@ticket.class.to_s.underscore}_rows.html.erb") %>
+    <%= render "#{@ticket.class.to_s.underscore}_rows" %>
+  <% end %>
+
 </table>
 
 <ul class="actions">
