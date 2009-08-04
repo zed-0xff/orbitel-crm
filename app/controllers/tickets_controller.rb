@@ -25,15 +25,44 @@ class TicketsController < ApplicationController
     klass  = ticket_type.blank? ? Ticket : Kernel.const_get(ticket_type)
     h1 = params[:ticket] || {}
     h2 = params[klass.to_s.underscore] || {}
-    ticket_attrs= h1.merge(h2)
-    logger.info ticket_attrs.inspect
+    ticket_attrs = h1.deep_merge(h2)
+
+    customer_name_addr = ticket_attrs.delete :customer
+
+    if params[:quick_customer].to_i == 1
+      if params[:ticket] && params[:ticket][:house_attributes]
+        params[:ticket][:house_attributes].delete(:street)
+      end
+      ticket_attrs.delete 'flat'
+      ticket_attrs.delete 'house_attributes'
+      ticket_attrs.delete 'contact_name'
+      ticket_attrs.delete 'contact_info'
+      # customer quick-selected
+      if !customer_name_addr.blank?
+        ticket_attrs[:customer] = Customer.find_by_name_and_address(customer_name_addr)
+      end
+    else
+      params[:ticket].try :delete, :customer
+      params[klass.to_s.underscore].try :delete, :customer
+    end
+
+    # logger.info ticket_attrs.inspect
+
     @ticket = klass.new( ticket_attrs )
+
     @ticket.created_by = current_user
     if @ticket.valid?
       @ticket.save!
       redirect_to ticket_path(@ticket)
       flash[:notice] = "Создана заявка № #{@ticket.id}"
     else
+      if params[:quick_customer].to_i == 1
+        @ticket.house = House.new
+        if !customer_name_addr.blank? && !@ticket.customer
+          @ticket.errors.add :customer, "^Абонент \"#{customer_name_addr}\" не найден"
+        end
+      end
+
       if(
         @ticket.errors.on(:house_street) && !@ticket.house.street &&
         (!(st=ticket_attrs.try(:[], :house_attributes).try(:[], :street)).blank?)
@@ -42,6 +71,7 @@ class TicketsController < ApplicationController
         s = @ticket.errors.on(:house_street)
         s[0..-1] = "^Улицы \"#{st}\" не существует"
       end
+
       render :new
     end
   end

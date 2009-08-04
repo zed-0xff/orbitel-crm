@@ -1,8 +1,29 @@
 class TariffChange < Ticket
   before_create :set_dept
 
-  validates_presence_of :date
-  validates_inclusion_of :date, :in => (Time.now-1.month)..(Time.now+1.month)
+  validates_presence_of :date,   :message => '^Дата не указана'
+  validates_presence_of :tariff, :message => '^Тариф не выбран'
+  validates_presence_of :contact_name, :message => "^Абонент не указан"
+
+  def validate
+    if self.date
+      if self.date < (Date.today-1.month)
+        self.errors.add :date, "^Дата не может быть раньше одного месяца от текущей" 
+      end
+      if self.date > (Date.today+1.month)
+        self.errors.add :date, "^Дата не может быть позже одного месяца от текущей" 
+      end
+    end
+  end
+
+  def before_validation
+    if self.customer && !self.contact_name && !self.house
+      self.contact_name = self.customer.name
+      self.contact_info = self.customer.phones.map(&:humanize).join(', ') if self.customer.phones
+      self.house        = self.customer.house
+      self.flat         = self.customer.flat
+    end
+  end
 
   def title
     "смена ТП"
@@ -12,8 +33,15 @@ class TariffChange < Ticket
     self.dept = Dept[:admins]
   end
 
-  # temporary
   def tariff
-    nil
+    if self.custom_info.to_s =~ /^\d+$/
+      custom_info.to_i
+    else
+      custom_info
+    end
+  end
+
+  def tariff= value
+    self.custom_info = value.to_s
   end
 end

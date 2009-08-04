@@ -128,7 +128,7 @@ module TicketsHelper
     r+= text_field_with_auto_complete(:street, :name, 
       {
         :size  => 20,
-        :name  => 'ticket[house_attributes][street]',
+        :name  => "#{@ticket.class.to_s.underscore}[house_attributes][street]",
         :value => (
           (@ticket.house && @ticket.house.street && @ticket.house.street.name) ||
           ( params[:ticket].try(:[], :house_attributes).try(:[], :street) )
@@ -144,25 +144,32 @@ module TicketsHelper
 
   def ajax_customer_selector options={}
     r = ''
+    if @ticket && @ticket.errors.on(:customer)
+      r += '<div class="fieldWithErrors">'
+    end
     r+= label(:customer, :name, options[:label]) if options[:label]
     r+= text_field_with_auto_complete(:customer, :name, {
           :size => 40,
           :name => 'ticket[customer]',
+          :value => params[:ticket].try(:[], :customer)
         },
         :url => auto_complete_customers_path,
         :indicator => 'ai2'
     )
     r+= image_tag 'ajax.gif', :style => 'position:absolute; display:none',:id => 'ai2'
+    if @ticket && @ticket.errors.on(:customer)
+      r += '</div>'
+    end
     r
   end
 
   def ur_tariffs_for_select
     @tariffs_for_select ||= Tariff.all #:conditions => [ "avail_ur = ? OR avail_fiz = ?", true, true ]
-    @tariffs_for_select.find_all(&:avail_ur).map{ |t| [t.name, t.id] }
+    [['= Тариф не выбран =',nil]] + @tariffs_for_select.find_all(&:avail_ur).map{ |t| [t.name, t.id] }
   end
 
   def fiz_tariffs_for_select
     @tariffs_for_select ||= Tariff.all #:conditions => [ "avail_ur = ? OR avail_fiz = ?", true, true ]
-    @tariffs_for_select.find_all(&:avail_fiz).map{ |t| [t.name, t.id] }
+    [['= Тариф не выбран =',nil]] + @tariffs_for_select.find_all(&:avail_fiz).map{ |t| [t.name, t.id] }
   end
 end

@@ -9,6 +9,7 @@ class Ticket < ActiveRecord::Base
   alias :history :ticket_history_entries
 
   validates_associated :house, :message => '^Ошибки в адресе подключения'
+  validates_presence_of :title, :message => '^Не указана суть проблемы'
 
   accepts_nested_attributes_for :house
 

@@ -6,7 +6,7 @@
     margin-top: 1em;
   }
 
-  legend + label {
+  legend + label, div.fieldWithErrors label {
     margin-top: 0;
   }
 
@@ -20,33 +20,53 @@
   div.small + label {
     margin-top: -6px;
   }
+
+  div.tarifs {
+    position: absolute;
+    font-size: 7pt;
+    margin-left: 8em;
+    margin-top: 1px;
+  }
+
+  div.tarifs a {
+    margin-left: 5px;
+  }
+
+  div.fieldWithErrors {
+    background-color: inherit;
+    display: block;
+    padding: 0;
+  }
+
+  div.fieldWithErrors input, div.fieldWithErrors select {
+    border: solid 2px red;
+  }
 </style>
 
 <% form_for @ticket, :builder => LabellingFormBuilder do |f| %>
   <%= f.error_messages %>
-  <%= f.hidden_field :type %>
+
+  <%= hidden_field_tag 'ticket[type]', @ticket.class.to_s %>
+  <%= hidden_field_tag :quick_customer, params[:quick_customer] %>
+  <%= hidden_field_tag :tariff_type, params[:tariff_type] %>
 
   <div style="float:left">
   <div id="cust_select_div">
     <% field_set_tag 'Абонент' do %>
       <div class="small">
         Абонент не найден? - 
-        <%= link_to_function "Показать форму ручного ввода" do |page|
-              page.visual_effect :toggle_blind, :cust_select_div, :duration => 0.15
-              page.visual_effect :toggle_blind, :cust_address_div, :duration => 0.15
-            end %>
+        <%= link_to_function "Показать форму ручного ввода", 'show_customer_manual()' %>
       </div>
+      <%= '<div class="fieldWithErrors">' if !@ticket.errors.on(:customer) && @ticket.errors.on(:contact_name) %>
       <%= ajax_customer_selector :label => 'Быстрый поиск:' %>
+      <%= '</div>' if !@ticket.errors.on(:customer) && @ticket.errors.on(:contact_name) %>
     <% end %>
   </div>
 
   <div style="display:none" id="cust_address_div">
     <% field_set_tag 'Контактные данные' do %>
       <div class="small">
-        <%= link_to_function "Показать форму быстрого поиска" do |page|
-              page.visual_effect :toggle_blind, :cust_select_div, :duration => 0.15
-              page.visual_effect :toggle_blind, :cust_address_div, :duration => 0.15
-            end %>
+        <%= link_to_function "Показать форму быстрого поиска", 'show_customer_finder()' %>
       </div>
       <%= f.text_field :contact_name, :style => 'width:280px', 
         :label => 'ФИО клиента / название организации:' %>
@@ -74,22 +94,71 @@
 
   <div style="float:left; margin-left: 0.7em">
     <% field_set_tag 'Параметры смены тарифа' do %>
-      <%= f.label :tariff, 'Тариф:' %>
-      <%= f.select :tariff, fiz_tariffs_for_select %>
-      <%= f.select :tariff,  ur_tariffs_for_select %>
+      <div class="tarifs">
+        <%= link_to_function '[ФЛ]', 'switch_tariff_type("fiz")' %>
+        <%= link_to_function '[ЮЛ]', 'switch_tariff_type("ur")' %>
+        <%= link_to_function '[...]','switch_tariff_type("custom")' %>
+      </div>
+      <%= f.label :tariff, 'Тариф:', :style => 'margin-top:0' %>
+      <div class="clear"></div>
+      <%= f.select :tariff, fiz_tariffs_for_select, {}, :id => 'tarifs_fiz' %>
+      <%= f.select :tariff,  ur_tariffs_for_select, {}, :id => 'tarifs_ur', :name => '', :style => 'display:none' %>
+      <%= f.text_field :tariff, :id => 'tarifs_custom', :name => '', :style => 'display:none' %>
 
       <%= f.label :date, 'Дата начала действия нового тарифа:' %>
-      <%= calendar_date_select_tag "#{@ticket.class.to_s.underscore}[date]", @ticket.date,
-        :id => "#{@ticket.class.to_s.underscore}_date", :size => 10 %>
+      <%= '<div class="fieldWithErrors">' if @ticket.errors.on(:date) %>
+        <%= calendar_date_select_tag "#{@ticket.class.to_s.underscore}[date]", @ticket.date,
+          :id => "#{@ticket.class.to_s.underscore}_date", :size => 10 %>
+      <%= '</div>' if @ticket.errors.on(:date) %>
 
       <%= f.text_area :notes, :rows => 2, :style => 'width: 280px', 
         :label => 'Примечания и дополнительная информация:' %>
     <% end %>
   </div>
 
-  <div style="clear:both">&nbsp;</span>
+  <div class="clear"></div>
 
   <br/>
   <%= submit_tag 'Далее &gt;&gt;' %> или <%= link_to 'отмена','/' %>.
 
 <% end %>
+
+<%= javascript_tag <<-EOJS
+  function show_customer_manual(){
+    #{update_page do |page|
+        page.visual_effect :toggle_blind, :cust_select_div, :duration => 0.15
+        page.visual_effect :toggle_blind, :cust_address_div, :duration => 0.15
+        page['quick_customer'].value = 0
+      end}
+  }
+
+  function show_customer_finder(){
+    #{update_page do |page|
+        page.visual_effect :toggle_blind, :cust_select_div, :duration => 0.15
+        page.visual_effect :toggle_blind, :cust_address_div, :duration => 0.15
+        page['quick_customer'].value = 1
+      end}
+  }
+
+  function switch_tariff_type(switch_to, do_clean){
+    var el;
+    ['ur', 'fiz', 'custom'].each(function(t){
+      el = $('tarifs_'+t);
+      if( do_clean != false ) el.value = '';
+      if( t == switch_to ){
+              el.show();
+              el.name = 'tariff_change[tariff]'
+      } else {
+              el.hide();
+              el.name = '';
+      }
+    });
+    el = $('tarifs_'+switch_to);
+    $('tariff_type').value = switch_to;
+    el.focus();
+  }
+
+  #{ "switch_tariff_type('#{params[:tariff_type]}',false);" unless params[:tariff_type].blank? }
+  #{ "$('cust_select_div').hide(); $('cust_address_div').show();" if params.key?(:quick_customer) && params[:quick_customer].to_i == 0 }
+EOJS
+%>
