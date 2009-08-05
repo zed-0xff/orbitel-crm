@@ -1,84 +1,29 @@
-<% form_for @ticket do |f| %>
+<% form_for @ticket, :builder => LabellingFormBuilder do |f| %>
   <%= f.error_messages %>
   <%= f.hidden_field :type %>
 
-  <% field_set_tag 'Описание проблемы' do %>
-    <div>
-      <label for="ticket_title">
-        Кратко суть проблемы, например "потери на линии":
-      </label><br/>
-      <%= f.text_field :title, :style => 'width: 280px' %>
-    </div>
+  <div style="float:left">
+    <%= render 'customer_selector', :f => f %>
+  </div>
 
-    <div style="margin-top: 0.8em">
-      <label for="ticket_notes">
-        Примечания и дополнительная информация, если нужно:
-      </label><br/>
-      <%= f.text_area :notes, :rows => 3, :style => 'width: 280px' %>
-    </div>
+  <div style="float:left; margin-left: 0.7em">
+    <% field_set_tag 'Описание проблемы' do %>
+      <%= f.text_field :title, :style => 'width: 280px', 
+        :label => 'Кратко суть проблемы, например "потери на линии":' %>
 
-    <div style="margin-top: 0.8em">
-      <label for="ticket_priority">
-        Приоритет задачи:
-      </label><br/>
+      <%= f.text_area :notes, :rows => 3, :style => 'width: 280px',
+        :label => 'Примечания и дополнительная информация, если нужно:' %>
+
+      <%= f.label :priority, "Приоритет задачи:" %>
       <%= select_tag 'ticket[priority]', priorities_for_select(@ticket.priority) %>
-    </div>
 
-    <div style="margin-top: 0.8em">
-      <label for="ticket_dept_id">
-        Целевой отдел заявки:
-      </label><br/>
       <% @ticket.dept ||= Dept[:technicians] %>
-      <%= f.select 'dept_id', depts_for_select %>
-    </div>
-  <% end %>
-
-  <% field_set_tag 'Адрес подключения' do %>
-    <% f.fields_for :house do |hf| %>
-      <table>
-      <tr>
-        <td> Улица:
-        <td> <%= ajax_street_selector %>
-      <tr>
-        <td> Дом: 
-        <td> <%= hf.text_field :number, :size => 5 %>
-      <tr>
-        <td> <span class="small">Квартира<br/>(Офис)</span>: 
-        <td> <%= f.text_field :flat, :size => 5 %>
-      </table>
+      <%= f.select 'dept_id', depts_for_select, :label => 'Целевой отдел заявки:' %>
     <% end %>
-  <% end %>
+  </div>
 
-  <% field_set_tag 'Контактные данные' do %>
-    <div>
-      <label for="ticket_contact_name">
-        ФИО клиента / название организации:
-      </label><br/>
-      <%= f.text_field :contact_name, :style => 'width:280px' %>
-    </div>
-    <div>
-      <label for="ticket_contact_info">
-        Телефон и/или другие контактные данные:
-      </label><br/>
-      <%= f.text_area :contact_info, :rows => 3, :style => 'width:280px' %>
-    </div>
-  <% end %>
+  <div class="clear"></div>
 
-  <br/>
   <%= submit_tag 'Далее &gt;&gt;' %> или <%= link_to 'отмена','/' %>.
 
 <% end %>
-
-<%= javascript_tag <<-EOJS
-  function update_contact_type(){
-    if( $F('ticket_contact_type') == #{Ticket::CONTACT_TYPE_FIZ} ){
-      $('contact_name_label').innerHTML = "ФИО клиента:";
-    } else {
-      $('contact_name_label').innerHTML = "Название<br/>предприятия:";
-    }
-  }
-
-  Event.observe('ticket_contact_type', 'change', update_contact_type);
-EOJS
-
-%>

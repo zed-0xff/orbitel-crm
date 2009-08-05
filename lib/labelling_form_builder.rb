@@ -4,7 +4,7 @@ class LabellingFormBuilder
   end
 
   def method_missing mname, *args, &block
-    if args.first.is_a?(Symbol) && arg=args.find{ |arg| arg.is_a?(Hash) && arg.key?(:label) }
+    if [Symbol, String].include?(args.first.class) && arg=args.find{ |arg| arg.is_a?(Hash) && arg.key?(:label) }
       @builder.label(args.first, arg.delete(:label))
     else
       ''

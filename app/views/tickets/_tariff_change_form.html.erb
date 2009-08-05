@@ -1,26 +1,6 @@
 <%= calendar_date_select_includes %>
 
 <style>
-  label {
-    display: block;
-    margin-top: 1em;
-  }
-
-  legend + label, div.fieldWithErrors label {
-    margin-top: 0;
-  }
-
-  div.small {
-    color: gray;
-    position: relative;
-    top: -10px;
-    text-align: right;
-  }
-
-  div.small + label {
-    margin-top: -6px;
-  }
-
   div.tarifs {
     position: absolute;
     font-size: 7pt;
@@ -31,65 +11,16 @@
   div.tarifs a {
     margin-left: 5px;
   }
-
-  div.fieldWithErrors {
-    background-color: inherit;
-    display: block;
-    padding: 0;
-  }
-
-  div.fieldWithErrors input, div.fieldWithErrors select {
-    border: solid 2px red;
-  }
 </style>
 
 <% form_for @ticket, :builder => LabellingFormBuilder do |f| %>
   <%= f.error_messages %>
 
   <%= hidden_field_tag 'ticket[type]', @ticket.class.to_s %>
-  <%= hidden_field_tag :quick_customer, params[:quick_customer] || 1 %>
   <%= hidden_field_tag :tariff_type, params[:tariff_type] %>
 
   <div style="float:left">
-  <div id="cust_select_div">
-    <% field_set_tag 'Абонент' do %>
-      <div class="small">
-        Абонент не найден? - 
-        <%= link_to_function "Показать форму ручного ввода", 'show_customer_manual()' %>
-      </div>
-      <%= '<div class="fieldWithErrors">' if !@ticket.errors.on(:customer) && @ticket.errors.on(:contact_name) %>
-      <%= ajax_customer_selector :label => 'Быстрый поиск:' %>
-      <%= '</div>' if !@ticket.errors.on(:customer) && @ticket.errors.on(:contact_name) %>
-    <% end %>
-  </div>
-
-  <div style="display:none" id="cust_address_div">
-    <% field_set_tag 'Контактные данные' do %>
-      <div class="small">
-        <%= link_to_function "Показать форму быстрого поиска", 'show_customer_finder()' %>
-      </div>
-      <%= f.text_field :contact_name, :style => 'width:280px', 
-        :label => 'ФИО клиента / название организации:' %>
-      <%= f.text_area  :contact_info, :rows => 2, :style => 'width:280px', 
-        :label => 'Телефон и/или другие контактные данные:' %>
-    <% end %>
-
-    <% field_set_tag 'Адрес подключения' do %>
-      <% f.fields_for :house do |hf| %>
-        <table>
-        <tr>
-          <td> Улица:
-          <td> <%= ajax_street_selector %>
-        <tr>
-          <td> Дом: 
-          <td> <%= hf.text_field :number, :size => 5 %>
-        <tr>
-          <td> <span class="small">Квартира<br/>(Офис)</span>: 
-          <td> <%= f.text_field :flat, :size => 5 %>
-        </table>
-      <% end %>
-    <% end %>
-  </div>
+    <%= render 'customer_selector', :f => f %>
   </div>
 
   <div style="float:left; margin-left: 0.7em">
@@ -118,28 +49,11 @@
 
   <div class="clear"></div>
 
-  <br/>
   <%= submit_tag 'Далее &gt;&gt;' %> или <%= link_to 'отмена','/' %>.
 
 <% end %>
 
 <%= javascript_tag <<-EOJS
-  function show_customer_manual(){
-    #{update_page do |page|
-        page.visual_effect :toggle_blind, :cust_select_div, :duration => 0.15
-        page.visual_effect :toggle_blind, :cust_address_div, :duration => 0.15
-        page['quick_customer'].value = 0
-      end}
-  }
-
-  function show_customer_finder(){
-    #{update_page do |page|
-        page.visual_effect :toggle_blind, :cust_select_div, :duration => 0.15
-        page.visual_effect :toggle_blind, :cust_address_div, :duration => 0.15
-        page['quick_customer'].value = 1
-      end}
-  }
-
   function switch_tariff_type(switch_to, do_clean){
     var el;
     ['ur', 'fiz', 'custom'].each(function(t){
@@ -159,6 +73,5 @@
   }
 
   #{ "switch_tariff_type('#{params[:tariff_type]}',false);" unless params[:tariff_type].blank? }
-  #{ "$('cust_select_div').hide(); $('cust_address_div').show();" if params.key?(:quick_customer) && params[:quick_customer].to_i == 0 }
 EOJS
 %>

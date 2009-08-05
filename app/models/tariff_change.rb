@@ -16,15 +16,6 @@ class TariffChange < Ticket
     end
   end
 
-  def before_validation
-    if self.customer && !self.contact_name && !self.house
-      self.contact_name = self.customer.name
-      self.contact_info = self.customer.phones.map(&:humanize).join(', ') if self.customer.phones
-      self.house        = self.customer.house
-      self.flat         = self.customer.flat
-    end
-  end
-
   def title
     "смена ТП"
   end

@@ -8,8 +8,18 @@ class Ticket < ActiveRecord::Base
   has_many :ticket_history_entries, :order => 'created_at DESC'
   alias :history :ticket_history_entries
 
-  validates_associated :house, :message => '^Ошибки в адресе подключения'
+  validates_associated  :house, :message => '^Ошибки в адресе подключения'
+  validates_presence_of :house, :message => '^Абонент не указан', :if => Proc.new{ |t| t.class == Ticket }
   validates_presence_of :title, :message => '^Не указана суть проблемы'
+
+  def before_validation
+    if self.customer && !self.contact_name && !self.house
+      self.contact_name = self.customer.name
+      self.contact_info = self.customer.phones.map(&:humanize).join(', ') if self.customer.phones
+      self.house        = self.customer.house
+      self.flat         = self.customer.flat
+    end
+  end
 
   accepts_nested_attributes_for :house
 

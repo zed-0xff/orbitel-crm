@@ -1,0 +1,101 @@
+<style>
+  label {
+    display: block;
+    margin-top: 1em;
+  }
+
+  legend + label, div.fieldWithErrors label {
+    margin-top: 0;
+  }
+
+  div.rsmall {
+    color: gray;
+    position: relative;
+    top: -10px;
+    text-align: right;
+    font-size: 7pt;
+  }
+
+  div.rsmall + label {
+    margin-top: -6px;
+  }
+
+  div.fieldWithErrors {
+    background-color: inherit;
+    display: block;
+    padding: 0;
+  }
+
+  div.fieldWithErrors input, div.fieldWithErrors select {
+    border: solid 2px red;
+  }
+
+</style>
+
+<%= hidden_field_tag :quick_customer, params[:quick_customer] || 1 %>
+
+<div id="cust_select_div">
+  <% field_set_tag 'Абонент' do %>
+    <div class="rsmall">
+      Абонент не найден? -
+      <%= link_to_function "Показать форму ручного ввода", 'show_customer_manual()' %>
+    </div>
+    <% if !@ticket.errors.on(:customer) && ( @ticket.errors.on(:contact_name) || @ticket.errors.on(:house) ) %>
+      <div class="fieldWithErrors">
+        <%= ajax_customer_selector :label => 'Быстрый поиск:' %>
+      </div>
+    <% else %>
+      <%= ajax_customer_selector :label => 'Быстрый поиск:' %>
+    <% end %>
+  <% end %>
+</div>
+
+<div style="display:none" id="cust_address_div">
+  <% field_set_tag 'Контактные данные' do %>
+    <div class="rsmall">
+      <%= link_to_function "Показать форму быстрого поиска", 'show_customer_finder()' %>
+    </div>
+    <%= f.text_field :contact_name, :style => 'width:280px',
+      :label => 'ФИО клиента / название организации:' %>
+    <%= f.text_area  :contact_info, :rows => 2, :style => 'width:280px',
+      :label => 'Телефон и/или другие контактные данные:' %>
+  <% end %>
+
+  <% field_set_tag 'Адрес подключения' do %>
+    <% f.fields_for :house do |hf| %>
+      <table>
+      <tr>
+        <td> Улица:
+        <td> <%= ajax_street_selector %>
+      <tr>
+        <td> Дом:
+        <td> <%= hf.text_field :number, :size => 5 %>
+      <tr>
+        <td> <span class="small">Квартира<br/>(Офис)</span>:
+        <td> <%= f.text_field :flat, :size => 5 %>
+      </table>
+    <% end %>
+  <% end %>
+</div>
+
+<%= javascript_tag <<-EOJS
+  function show_customer_manual(){
+    #{update_page do |page|
+        page.visual_effect :toggle_blind, :cust_select_div, :duration => 0.15
+        page.visual_effect :toggle_blind, :cust_address_div, :duration => 0.15
+        page['quick_customer'].value = 0
+      end}
+  }
+
+  function show_customer_finder(){
+    #{update_page do |page|
+        page.visual_effect :toggle_blind, :cust_select_div, :duration => 0.15
+        page.visual_effect :toggle_blind, :cust_address_div, :duration => 0.15
+        page['quick_customer'].value = 1
+      end}
+  }
+
+  #{ "$('cust_select_div').hide(); $('cust_address_div').show();" if params.key?(:quick_customer) && params[:quick_customer].to_i == 0 }
+
+EOJS
+%>
