@@ -1,10 +1,10 @@
 <%= javascript_include_tag 'sorttable' %>
 
 <style>
-  div.address {
+  table.tickets div.address {
     font-weight: bold;
   }
-  div.name {
+  table.tickets div.name {
     font-size: 8pt;
     font-family: Tahoma;
     margin-left: 3.5em;
@@ -12,10 +12,12 @@
   }
 </style>
 
-<table class="t1 sortable">
+<table class="tickets t1 sortable">
   <tr>
     <th>#</th>
-    <th>Адрес / Абонент</th>
+    <% unless controller.controller_name == 'customers' && @customer %>
+      <th>Адрес / Абонент</th>
+    <% end %>
     <th>Описание</th>
     <th>Статус / Исполнитель</th>
     <th>Дата создания</th>
@@ -23,10 +25,12 @@
   <% for ticket in @tickets do %>
     <tr class="clickable priority<%=ticket.priority-%>" url="<%=ticket_path(ticket)%>">
       <td><%= link_to ticket.id, ticket_path(ticket) %></td>
-      <td>
-        <div class="address"><%= h(ticket.address.to_s.sub('проспект','')) %></div>
-        <div class="name"><%= h truncate(ticket.contact_name.to_s.sub(/\(.+/,''), :length => 40) %></div>
-      </td>
+      <% unless controller.controller_name == 'customers' && @customer %>
+        <td>
+          <div class="address"><%= h(ticket.address.to_s.sub('проспект','')) %></div>
+          <div class="name"><%= h truncate(ticket.contact_name.to_s.sub(/\(.+/,''), :length => 40) %></div>
+        </td>
+      <% end %>
       <td><%= link_to h(ticket.title), ticket_path(ticket) %></td>
       <% if ticket.status == Ticket::ST_ACCEPTED %>
         <td style="padding-left:5px"><%= ticket.assignee ? link_to_user(ticket.assignee) : nil %></td>

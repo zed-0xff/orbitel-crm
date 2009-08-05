@@ -1,5 +1,5 @@
 class CustomersController < ApplicationController
-  helper :calls
+  helper :calls, :tickets
 
   before_filter :prepare_customer
 
@@ -43,8 +43,12 @@ class CustomersController < ApplicationController
   end
 
   def show
-    @title = @customer.name
-    @calls = @customer.calls
+    @title   = @customer.name
+    @calls   = @customer.calls
+    @tickets = @customer.tickets.all(
+      :conditions => Ticket::COND_CURRENT,
+      :order      => "created_at DESC"
+    )
 
     @binfo = read_fragment("customers/#{@customer.id}/billing_info")
     if @binfo && @binfo =~ /- TIMESTAMP:(\d+) -/ && ($1.to_i-Time.now.to_i).abs > BILLING_INFO_CACHE_PERIOD
