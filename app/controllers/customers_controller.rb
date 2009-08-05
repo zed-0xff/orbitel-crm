@@ -63,6 +63,31 @@ class CustomersController < ApplicationController
     end
   end
 
+  # show all customer tickets partial
+  def all_tickets
+    @tickets = @customer.tickets.all(
+      :order      => "created_at DESC"
+    )
+    render :partial => 'tickets', :locals => {
+      :title       => 'Все заявки',
+      :link_title  => '[текущие]',
+      :link_action => 'cur_tickets'
+    }
+  end
+
+  # show current customer tickets partial
+  def cur_tickets
+    @tickets = @customer.tickets.all(
+      :conditions => Ticket::COND_CURRENT,
+      :order      => "created_at DESC"
+    )
+    render :partial => 'tickets', :locals => {
+      :title       => 'Текущие заявки',
+      :link_title  => '[все]',
+      :link_action => 'all_tickets'
+    }
+  end
+
   KRUS_MAP = {
     :bal       => 'баланс',
     :bal_red   => nil,

@@ -1,0 +1,18 @@
+<h3>
+  <%= title %> (<%= @tickets.blank?? 0 : @tickets.size -%>)
+  <%= link_to_remote link_title, {
+      :update => 'tickets_place', 
+      :url => {:action => link_action, :id => @customer},
+      :loading   => "$('tickets_indicator').show()",
+      :complete  => "$('tickets_indicator').hide()"
+    }, :class => 'tickets_toggler' %>
+
+  <%= image_tag 'ajax.gif', :style => 'margin-left:1em; display:none', :id => 'tickets_indicator' %>
+</h3>
+
+<% if @tickets.blank? %>
+  нет заявок
+<% else %>
+  <%= render 'tickets/table' %>
+<% end %>
+
