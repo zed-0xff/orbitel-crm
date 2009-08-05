@@ -95,7 +95,10 @@
       end}
   }
 
-  #{ "$('cust_select_div').hide(); $('cust_address_div').show();" if params.key?(:quick_customer) && params[:quick_customer].to_i == 0 }
+  #{ (params.key?(:quick_customer) && params[:quick_customer].to_i == 0) ? 
+    "$('cust_select_div').hide(); $('cust_address_div').show();" :
+    "$('customer_name').focus();"
+  }
 
 EOJS
 %>
