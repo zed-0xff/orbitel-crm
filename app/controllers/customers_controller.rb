@@ -65,6 +65,7 @@ class CustomersController < ApplicationController
 
   # show all customer tickets partial
   def all_tickets
+    t0 = Time.now
     @tickets = @customer.tickets.all(
       :order      => "created_at DESC"
     )
@@ -73,10 +74,13 @@ class CustomersController < ApplicationController
       :link_title  => '[текущие]',
       :link_action => 'cur_tickets'
     }
+    # very fast response breaks ajax indicators, so this hack
+    sleep(0.05) if (Time.now - t0) < 0.05
   end
 
   # show current customer tickets partial
   def cur_tickets
+    t0 = Time.now
     @tickets = @customer.tickets.all(
       :conditions => Ticket::COND_CURRENT,
       :order      => "created_at DESC"
@@ -86,6 +90,8 @@ class CustomersController < ApplicationController
       :link_title  => '[все]',
       :link_action => 'all_tickets'
     }
+    # very fast response breaks ajax indicators, so this hack
+    sleep(0.05) if (Time.now - t0) < 0.05
   end
 
   KRUS_MAP = {
