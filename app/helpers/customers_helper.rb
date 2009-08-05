@@ -59,7 +59,7 @@ module CustomersHelper
     if cust
       opts = {}
       opts[:from] = params[:from] if params[:from]
-      link_to text, customer_path(cust, opts)
+      link_to "<b>ctrl</b>#{text}", customer_path(cust, opts), :id => "#{dir}-link"
     else
       "<span style=\"color:gray\">#{text}</span>"
     end

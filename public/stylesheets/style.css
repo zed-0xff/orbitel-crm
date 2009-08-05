@@ -403,3 +403,25 @@ div.pagination {
 div.pagination + table.t1 {
 	margin-bottom: 5px;
 }
+
+/* 
+ * prev-next arrow links 
+ */
+
+a#next-link, a#prev-link {
+	text-decoration: none;
+}
+
+a#next-link b, a#prev-link b {
+	font-weight: normal;
+	display: block;
+	font-size: 6pt;
+	font-family: Tahoma;
+	color: lightgrey;
+	line-height: 0;
+}
+
+a#next-link {
+	text-align: right;
+	display: block;
+}

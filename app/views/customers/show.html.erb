@@ -25,7 +25,7 @@
 
   div.rarr, div.larr {
     position: relative;
-    top: 0.7em;
+    top: 0.9em;
   }
   div.rarr { float:right }
   div.larr { float:left  }
@@ -124,3 +124,19 @@
     :link_action => 'all_tickets'
   %>
 </td></tr></table>
+
+<%= javascript_tag <<-EOJS
+  // handle Ctrl+Left & Ctrl+Right keys
+  Event.observe(window, 'keydown', function(ev){
+    if( ev.ctrlKey ){
+      var link;
+      if( ev.keyCode == 0x25 ) 
+        link = $('prev-link');
+      else if( ev.keyCode == 0x27 ) 
+        link = $('next-link');
+
+      if( link && link.href ) document.location = link.href;
+    }
+  });
+EOJS
+%>

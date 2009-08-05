@@ -24,7 +24,7 @@
   </tr>
   <% for ticket in @tickets do %>
     <tr class="clickable priority<%=ticket.priority-%>" url="<%=ticket_path(ticket)%>">
-      <td><%= link_to ticket.id, ticket_path(ticket) %></td>
+      <td align="right"><%= link_to ticket.id, ticket_path(ticket) %></td>
       <% unless controller.controller_name == 'customers' && @customer %>
         <td>
           <div class="address"><%= h(ticket.address.to_s.sub('проспект','')) %></div>
