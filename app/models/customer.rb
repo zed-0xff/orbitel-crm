@@ -54,8 +54,8 @@ class Customer < ActiveRecord::Base
   end
 
   def billing_info
-    return nil unless self.krus_user_id
-    r = Krus.user_info(self.krus_user_id)
+    return nil unless self.external_id
+    r = Krus.user_info(self.external_id)
     if r && r[:status] && r[:status].is_a?(Hash)
       Rails.cache.write(
         "customer.#{self.id}.ips", 

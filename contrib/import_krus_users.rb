@@ -7,8 +7,8 @@ puts "[.] customers in db BEFORE import: #{Customer.count}"
 
 stats = Hash.new(0)
 h = {}
-Customer.all(:conditions => 'krus_user_id IS NOT NULL').each do |customer|
-  h[customer.krus_user_id] = customer
+Customer.all(:conditions => 'external_id IS NOT NULL').each do |customer|
+  h[customer.external_id] = customer
 end
 
 puts "[.] loading krus customers.."
@@ -48,7 +48,7 @@ krus_customers.each do |kc|
     c.save!
   else
     c = Customer.new(
-      :krus_user_id   => kc[:id],
+      :external_id   => kc[:id],
       :krus_sync_date => Time.now,
       :name           => kc[:name],
 #      :address        => kc[:address],
