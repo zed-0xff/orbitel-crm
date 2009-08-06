@@ -10,9 +10,13 @@
   }
 </style>
 
-<table class="t1">
-  <%= render :partial => 'call', :collection => @calls %>
-</table>
+<% if @calls.blank? %>
+  Нет звонков.
+<% else %>
+  <table class="t1">
+    <%= render :partial => 'call', :collection => @calls %>
+  </table>
+<% end %>
 
 <%= javascript_tag <<-EOJS
   var active_calls = #{ @calls.find_all{ |call| !call.ended? }.map(&:id).to_json };

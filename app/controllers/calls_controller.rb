@@ -4,10 +4,16 @@ class CallsController < ApplicationController
   def index
     @title = 'Звонки'
 
-    @calls = Radius::Call.all(
-      :order => 'acctstarttime DESC, acctstoptime DESC', 
-      :limit => (params[:limit] || 50)
-    )
+    if Radius::Call.configured?
+      @calls = Radius::Call.all(
+        :order => 'acctstarttime DESC, acctstoptime DESC', 
+        :limit => (params[:limit] || 50)
+      )
+    else
+      @calls = []
+      flash.now[:error] = "Ошибка доступа к БД Radius Accounting: \"#{Radius::Call.error_description}\""
+    end
+
     if @calls.any?
       h = {}
       @calls.each do |call|

@@ -1,5 +1,6 @@
 class Radius::Call < ActiveRecord::Base
-  establish_connection "radius_#{RAILS_ENV}"
+  establish_connection "radius_#{RAILS_ENV}" if configurations["radius_#{RAILS_ENV}"]
+
   set_table_name 'radacct'
   set_primary_key 'radacctid'
   default_scope :order => "acctstarttime, acctstoptime"
@@ -66,5 +67,16 @@ class Radius::Call < ActiveRecord::Base
 
     Settings['radius.call.last_export'] = new_radius_calls.map(&:end_time).max
     new_calls
+  end
+
+  cattr_reader :error_description
+
+  def self.configured?
+    return true if self.table_exists?
+    @@error_description = "Таблица \"#{table_name}\" не существует"
+    false
+  rescue
+    @@error_description = $!.to_s
+    false
   end
 end
