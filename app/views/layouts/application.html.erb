@@ -5,7 +5,7 @@
 </head><body>
 
 <%= render :partial => 'users/user_bar' %>
-<%= render :partial => 'shared/menu' if logged_in? %>
+<%= logged_in? ? render('shared/menu') : '<div>&nbsp;</div>' %>
 
 <% if flash && flash[:error] %>
   <div class="error"><%= h flash[:error] %></div>

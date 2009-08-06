@@ -1,14 +1,14 @@
 <% if logged_in? -%>
+  <div id="user-bar-action">(<%= link_to "Log out", logout_path, { :title => "Log out" } %>)</div>
   <div id="user-bar-greeting">
     Logged in as <b><%= h current_user.login %></b>
     (<%= current_user.class.to_s %>).
   </div>
-  <div id="user-bar-action">(<%= link_to "Log out", logout_path, { :title => "Log out" } %>)</div>
 <% else -%>
-  <div id="user-bar-greeting">
-    <%= link_to_login_with_IP "Not logged in", :style => 'border: none;' %>
-  </div>
   <div id="user-bar-action">
     <%= link_to "Log in",  login_path,  { :title => "Log in" } %>
+  </div>
+  <div id="user-bar-greeting">
+    Not logged in.
   </div>
 <% end -%>

@@ -25,13 +25,17 @@ div.copyright {
 	text-align: right;
 }
 
-div#user-bar-greeting {
-	width: 50%;
-	float: left;
+div#user-bar-greeting, div#user-bar-action {
+	color: gray;
+	position: absolute;
+	top: 0;
+	font-size: 8pt;
+	padding: 1px;
 }
 
 div#user-bar-action {
 	text-align:right;
+	right: 1px;
 }
 
 div.content {
@@ -157,8 +161,8 @@ table.history tr:first-child td.date {
 */
 
 div#topmenu, div.menu {
-  margin: 10px 10px;
-  text-align: center;
+	margin: 10px 10px;
+	text-align: center;
 }
 
 div#topmenu a img {
@@ -168,6 +172,11 @@ div#topmenu a img {
 	height: 16px;
 	width: 16px;
 }
+
+div#topmenu {
+	margin: 0 5em 5px 5em;
+}
+
 
 /*
 -------------------------
