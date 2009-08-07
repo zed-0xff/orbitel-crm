@@ -18,7 +18,7 @@
 <table class="t1 customers">
   <% @customers.each do |customer| %>
     <tr>
-      <td><%= link_to customer.name, customer_path(customer) %>
+      <td><%= link_to_customer customer %>
       <td><%= link_to_address_of customer %>
     </tr>
   <% end %>

@@ -35,9 +35,9 @@ class Ticket < ActiveRecord::Base
 
   after_create :log_new_ticket
 
-  after_create  :clear_cache
-  after_destroy :clear_cache
-  after_update  :clear_cache
+  after_create  :update_caches
+  after_destroy :update_caches
+  after_update  :update_caches
 
   CONTACT_TYPE_UR  = 1
   CONTACT_TYPE_FIZ = 2
@@ -143,7 +143,12 @@ class Ticket < ActiveRecord::Base
     )
   end
 
-  def clear_cache
+  def update_caches
     Rails.cache.delete 'ticket.counts'
+    if self.customer_id
+      # customer status icons
+      # see app/helpers/application_helper.rb : link_to_customer & customer_link_class
+      Rails.cache.delete "customer.#{self.customer_id}.status-icon"
+    end
   end
 end

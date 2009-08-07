@@ -349,8 +349,18 @@ a.house2 { background: url(/images/house.png)        no-repeat -1px 2px }
 a.house3 { background: url(/images/building-medium.png) no-repeat -1px 3px }
 a.house4 { background: url(/images/building-old.png) no-repeat -1px 1px }
 
-a.customer {
+a.customer, a.customer-y, a.customer-r {
 	color: black;
+	padding-left: 18px;
+	background: url(/images/customer.png) no-repeat left 1px;
+}
+
+a.customer-y {
+	background: url(/images/customer-yellow.png) no-repeat left 1px;
+}
+
+a.customer-r {
+	background: url(/images/customer-red.png) no-repeat left 1px;
 }
 
 a.admin             { background-image: url(/images/user-white.png) }
