@@ -39,6 +39,11 @@
     <th>статус заявки</th>
     <td>
       <b><%= ticket_status_desc(@ticket.status) %></b>
+      <% if @ticket.closed? && @ticket.closed_at %>
+        <small style="font-size: 7pt; color:gray; margin-left: 1em">
+          <%= @ticket.closed_at.strftime('%Y.%m.%d') %>
+        </small>
+      <% end %>
     </td>
   </tr>
 

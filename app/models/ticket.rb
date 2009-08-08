@@ -110,7 +110,8 @@ class Ticket < ActiveRecord::Base
         :comment    => options[:comment]
       )
     end
-    self.status = new_status
+    self.closed_at = Time.now if new_status == ST_CLOSED && !self.closed?
+    self.status    = new_status
     self.save!
   end
 
@@ -131,6 +132,10 @@ class Ticket < ActiveRecord::Base
     else
       raise "Invalid redirect target: #{target.inspect}"
     end
+  end
+
+  def closed?
+    self.status == ST_CLOSED
   end
 
   private
