@@ -36,6 +36,11 @@ class Customer < ActiveRecord::Base
     end
   end
 
+  def name_with_address
+    a = self.address
+    "#{self.name}" + (a ? " (#{a})" : '')
+  end
+
   def address= addr
     a = addr
     if a['секц']

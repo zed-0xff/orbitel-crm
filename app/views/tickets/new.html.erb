@@ -1,2 +1,4 @@
 <h1>Новая заявка</h1>
 <%= render(@ticket.class.to_s.underscore + '_form') %>
+
+<%= javascript_tag("$('#@focus').focus();") if defined?(@focus) && @focus %>

@@ -13,6 +13,11 @@ class TicketsController < ApplicationController
     @ticket.house = House.new
 
     @ticket.title = params[:title] if params[:title] && !@ticket.title
+    if !params[:ticket] && params[:customer_id]
+      c = Customer.find_by_id(params[:customer_id].to_i)
+      params[:ticket] = { :customer => c.name_with_address }
+      @focus = 'ticket_title'
+    end
   end
 
   def new_tariff_change

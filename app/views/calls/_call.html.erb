@@ -6,13 +6,17 @@
     <td id="ph<%=call.id-%>">
       <%- if call.customer -%>
         <%= link_to_customer call.customer %>
+        <%= link_to( '', new_ticket_path(:customer_id => call.customer),
+              :class => 'r',
+              :title => 'Создать заявку'
+        ) if call.start_time > 15.minutes.ago %>
       <%- else -%>
         <%= image_tag('textfield.png',
-          :class => 'fff',
-          :title => 'Сопоставить абонента',
-          :alt   => '',
-          :onclick => "fff(#{call.id})")
-        %>
+              :class => 'fff',
+              :title => 'Сопоставить абонента',
+              :alt   => '',
+              :onclick => "fff(#{call.id})"
+        ) %>
       <%- end -%>
     </td>
   </tr>
