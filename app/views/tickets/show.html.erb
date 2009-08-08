@@ -118,7 +118,7 @@
     <li><%= link_to "&raquo; просто закрыть", 
               close_ticket_path(@ticket), 
               :method => :post %>
-  <% elsif @ticket.status == Ticket::ST_CLOSED %>
+  <% elsif @ticket.closed? && @ticket.closed_at && (@ticket.closed_at > 7.days.ago) %>
     <li><%= link_to "&raquo; переоткрыть заявку", 
               reopen_ticket_path(@ticket), 
               :method => :post %>
