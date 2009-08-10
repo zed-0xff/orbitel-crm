@@ -56,8 +56,8 @@ module ApplicationHelper
   #
   # this method MUST be cached for best performance
   def customer_link_class customer
-    ticket = customer.tickets.first(
-      :conditions => Ticket::COND_CURRENT,
+    ticket = customer.tickets.current.first(
+      :conditions => [ "type != ?", "TariffChange" ],
       :order => "priority DESC"
     )
     return true unless ticket

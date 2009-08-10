@@ -61,6 +61,8 @@ class Ticket < ActiveRecord::Base
   COND_CURRENT = ["status != ?", Ticket::ST_CLOSED]
   COND_NEW     = { :status => [Ticket::ST_NEW, Ticket::ST_REOPENED] }
 
+  named_scope :current, { :conditions => COND_CURRENT }
+
   # create a house if needed, or find an existing by its attributes
   def initialize *args
     if args.first.is_a?(Hash) && (house_attrs=(args.first[:house] || args.first[:house_attributes])).is_a?(Hash)
