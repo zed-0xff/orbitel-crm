@@ -136,6 +136,18 @@
           <%= select_tag 'dept_id', options_for_select(depts_for_select(:exclude => @ticket.dept)) %>
           <%= submit_tag 'Переадресовать', :name => nil %>
       <% end %>
+
+    <li><%= link_to_function "&raquo; изменить приоритет" do |page|
+              page.visual_effect :toggle_blind, :priority_form, :duration => 0.15
+            end %>
+
+      <% form_tag( {:action => 'change_priority', :id => @ticket }, 
+          :id => 'priority_form', 
+          :style => 'display:none; margin: 5px 0 0 18px' 
+         ) do %>
+          <%= select_tag 'priority', priorities_for_select(@ticket.priority) %>
+          <%= submit_tag 'Изменить', :name => nil %>
+      <% end %>
   <% end %>
 
   <li><%= link_to_function "&raquo; добавить комментарий" do |page|

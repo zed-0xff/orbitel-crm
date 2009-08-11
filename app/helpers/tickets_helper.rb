@@ -7,20 +7,7 @@ module TicketsHelper
   end
 
   def priority_desc pr
-    case pr
-      when Ticket::PRIORITY_HIGHEST
-        "Наивысший"
-      when Ticket::PRIORITY_HIGH
-        "Высокий"
-      when Ticket::PRIORITY_NORMAL
-        "Нормальный"
-      when Ticket::PRIORITY_LOW
-        "Низкий"
-      when Ticket::PRIORITY_LOWEST
-        "Низший"
-      else
-        "?? #{pr} ??"
-    end
+    Ticket.priority_desc(pr)
   end
 
   def priority_style pr

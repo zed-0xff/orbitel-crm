@@ -151,6 +151,16 @@ class TicketsController < ApplicationController
     redirect_to ticket_path(@ticket)
   end
 
+  def change_priority
+    if params[:priority]
+      @ticket.change_priority!( params[:priority].to_i, :user => current_user )
+      flash[:notice] = "Приоритет изменен"
+    else
+      flash[:notice] = "Ошибка изменения приоритета"
+    end
+    redirect_to ticket_path(@ticket)
+  end
+
 ##########################################################
 
   def accept

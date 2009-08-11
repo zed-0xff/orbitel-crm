@@ -136,8 +136,35 @@ class Ticket < ActiveRecord::Base
     end
   end
 
+  def change_priority! new_prio, options = {}
+    return false if self.priority == new_prio
+    self.priority = new_prio
+    self.history << TicketHistoryEntry.new(
+      :user       => options[:user],
+      :comment    => "изменил приоритет заявки на \"#{Ticket.priority_desc(new_prio)}\""
+    )
+    self.save!
+  end
+
   def closed?
     self.status == ST_CLOSED
+  end
+
+  def self.priority_desc pr
+    case pr
+      when Ticket::PRIORITY_HIGHEST
+        "Наивысший"
+      when Ticket::PRIORITY_HIGH
+        "Высокий"
+      when Ticket::PRIORITY_NORMAL
+        "Нормальный"
+      when Ticket::PRIORITY_LOW
+        "Низкий"
+      when Ticket::PRIORITY_LOWEST
+        "Низший"
+      else
+        "?? #{pr} ??"
+    end
   end
 
   private
