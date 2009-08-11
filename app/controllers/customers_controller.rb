@@ -5,6 +5,8 @@ class CustomersController < ApplicationController
 
   skip_before_filter :verify_authenticity_token, :only => [:auto_complete]
 
+  verify :method => :post, :only => %w'billing_toggle_inet'
+
   BILLING_INFO_CACHE_PERIOD = 4.hours
   ROUTER_INFO_CACHE_PERIOD  = 5.minutes
 
@@ -105,12 +107,17 @@ class CustomersController < ApplicationController
 
   def billing_info
     expire_fragment("customers/#{@customer.id}/billing_info")
-    @info = @customer.billing_info
+    @info ||= @customer.billing_info
     if v = @info[:traf_report]
       v.delete(:in_sat_day) if v[:in_sat] == v[:in_sat_day]
       v.delete :user_id
     end
-    render :layout => false
+    render :action => 'billing_info', :layout => false
+  end
+
+  def billing_toggle_inet
+    @info = @customer.billing_toggle_inet(params[:state] == 'on')
+    billing_info
   end
 
   def router_info

@@ -43,7 +43,21 @@
     font-size: 7pt;
     margin-left: 1em;
   }
+
+  h3 img {
+    height: 16px;
+    width: 16px;
+    position: relative;
+    top: 2px;
+  }
+
+  img#billing-func {
+    cursor: pointer;
+  }
 </style>
+
+<%= javascript_include_tag 'proto.menu.0.6.js' %>
+<%= stylesheet_link_tag 'proto.menu.0.6.css' %>
 
 <div class="larr"><%= prev_customer_link -%></div>
 <div class="rarr"><%= next_customer_link -%></div>
@@ -75,6 +89,8 @@
 <table class="tlayout" width="100%"><tr valign="top"><td style="min-width:40%">
 
   <h3>Данные биллинга
+    <%= image_tag('icon_expand.gif', :alt => 'Дополнительные функции', :id => 'billing-func') %>
+
     <%= link_to_remote image_tag('arrow-circle-double.png', :alt => 'reload'), 
       :url       => billing_info_customer_path(@customer),
       :update    => 'billing_info',
@@ -90,10 +106,14 @@
 
   <h3>Данные роутера
     <%= link_to_remote image_tag('arrow-circle-double.png', :alt => 'reload'), 
-      :url       => router_info_customer_path(@customer),
-      :update    => 'router_info',
-      :loading   => "$('router_indicator').show()",
-      :complete  => "$('router_indicator').hide()"
+      {
+        :url       => router_info_customer_path(@customer),
+        :update    => 'router_info',
+        :loading   => "$('router_indicator').show()",
+        :complete  => "$('router_indicator').hide()"
+      }, {
+        :id => 'router-info-link'
+      }
     %>
     <%= image_tag 'ajax.gif', :style => 'display:none', :id => 'router_indicator' %>
   </h3>
@@ -143,6 +163,44 @@
 
       if( link && link.href ) document.location = link.href;
     }
+  });
+
+  // pop-up menu on billing advanced functions
+
+  var myMenuItems = [
+    {
+      name: 'Включить Интернет',
+      className: 'inet-on',
+      callback: function() {
+        #{ remote_function(
+            :url       => { :action => 'billing_toggle_inet', :id => @customer, :state => 'on' },
+            :update    => 'billing_info',
+            :loading   => "$('billing_indicator').show()",
+            :complete  => "$('billing_indicator').hide(); $('router-info-link').onclick()"
+        )}
+      }
+    },{
+      name: 'Выключить Интернет',
+      className: 'inet-off',
+      callback: function() {
+        #{ remote_function(
+            :url       => { :action => 'billing_toggle_inet', :id => @customer, :state => 'off' },
+            :update    => 'billing_info',
+            :loading   => "$('billing_indicator').show()",
+            :complete  => "$('billing_indicator').hide(); $('router-info-link').onclick()"
+        )}
+      }
+    }
+  ];
+
+  var m = new Proto.Menu({
+    selector:  '#billing-func',
+    className: 'jsmenu desktop zzz',
+    menuItems: myMenuItems
+  });
+
+  Event.observe('billing-func', 'click', function(ev){
+    m.show(ev);
   });
 EOJS
 %>
