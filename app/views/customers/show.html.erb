@@ -64,6 +64,12 @@
     <th>телефоны
     <td><%= @customer.phones.map(&:humanize).join("; ") %>
   </tr>
+  <% if current_user.is_a?(Admin) && @customer.external_id %>
+    <tr style="color:gray">
+      <th>external_id</th>
+      <td><%= @customer.external_id %>
+    </tr>
+  <% end %>
 </table>
 
 <table class="tlayout" width="100%"><tr valign="top"><td style="min-width:40%">
