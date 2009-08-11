@@ -21,6 +21,10 @@ class Radius::Call < ActiveRecord::Base
     self.acctstoptime != nil
   end
 
+  def answered?
+    self.ended? && self.acctsessiontime.to_i > 0
+  end
+
   def duration
     if self.ended? || self.acctsessiontime.to_i > 0
       self.acctsessiontime
