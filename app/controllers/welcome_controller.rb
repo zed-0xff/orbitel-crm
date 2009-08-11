@@ -5,7 +5,7 @@ class WelcomeController < ApplicationController
 #    if current_user.is_a?(Admin) || current_user.is_a?(Technician)
       @history = TicketHistoryEntry.paginate(
         :page     => params[:page],
-        :per_page => 20,
+        :per_page => params[:per_page] || 30,
         :order    => "created_at DESC"
       )
 #    end
