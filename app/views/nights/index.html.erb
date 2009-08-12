@@ -219,35 +219,6 @@
     }
   }
 
-  function recountWorkCounts(){
-    var counts = {};
-    var c;
-
-    // initialize counts
-    $$('tr.user-row').each(function(tr){
-      counts[ tr2uid(tr) ] = 0;
-    });
-
-    // count each user selected days
-    $$('td.selected').each(function(td){
-      counts[ td2uid(td) ]++;
-    });
-
-    // output results
-    $$('tr.user-row').each(function(tr){
-      c = counts[ tr2uid(tr) ];
-      tr.lastElementChild.innerHTML = "<b class='dayscount'>" + (c > 0 ? c : '') + "</b>";
-    });
-  }
-
-  function td2uid(td){
-    return parseInt(td.parentNode.id.replace('tr-u-',''));
-  }
-
-  function tr2uid(tr){
-    return parseInt(tr.id.replace('tr-u-',''));
-  }
-
   function td2day(td){
     return parseInt($('days-row').cells[td.cellIndex].textContent);
   }
@@ -275,6 +246,37 @@ EOJS
 <%= javascript_tag <<-EOJS
   Event.observe(window,'load',setnoprint);
   Event.observe(window,'load',recountWorkCounts);
+
+  function td2uid(td){
+    return parseInt(td.parentNode.id.replace('tr-u-',''));
+  }
+
+  function tr2uid(tr){
+    return parseInt(tr.id.replace('tr-u-',''));
+  }
+
+
+  function recountWorkCounts(){
+    var counts = {};
+    var c;
+
+    // initialize counts
+    $$('tr.user-row').each(function(tr){
+      counts[ tr2uid(tr) ] = 0;
+    });
+
+    // count each user selected days
+    $$('td.selected').each(function(td){
+      counts[ td2uid(td) ]++;
+    });
+
+    // output results
+    $$('tr.user-row').each(function(tr){
+      c = counts[ tr2uid(tr) ];
+      tr.lastElementChild.innerHTML = "<b class='dayscount'>" + (c > 0 ? c : '') + "</b>";
+    });
+  }
+
 
   function setnoprint(){
     $$('tr.user-row').each(function(tr){
