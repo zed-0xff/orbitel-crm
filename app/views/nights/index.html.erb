@@ -53,6 +53,18 @@
   table.notable caption {
     font-weight: bold;
   }
+
+  b.dayscount {
+    display: block;
+    text-align: right;
+    position: relative;
+    left: 2em;
+    top: 1px;
+    font-weight: normal;
+    color: lightgrey;
+    font-size: 7pt;
+  }
+
   @media screen {
     table#cal td.today {
       border-left: solid 2px black;
@@ -69,8 +81,10 @@
       font-size: 105%;
       padding: 1 8 1 8;
     }
+    b.dayscount {
+      display: none;
+    }
   }
-
 </style>
 
 <%= calendar_date_select_includes %>
@@ -187,6 +201,7 @@
       }
       checkCol(td);
     }
+    recountWorkCounts();
   });
 
   // checks the table column to have the only _one_ instance of selected cell
@@ -204,8 +219,33 @@
     }
   }
 
+  function recountWorkCounts(){
+    var counts = {};
+    var c;
+
+    // initialize counts
+    $$('tr.user-row').each(function(tr){
+      counts[ tr2uid(tr) ] = 0;
+    });
+
+    // count each user selected days
+    $$('td.selected').each(function(td){
+      counts[ td2uid(td) ]++;
+    });
+
+    // output results
+    $$('tr.user-row').each(function(tr){
+      c = counts[ tr2uid(tr) ];
+      tr.lastElementChild.innerHTML = "<b class='dayscount'>" + (c > 0 ? c : '') + "</b>";
+    });
+  }
+
   function td2uid(td){
     return parseInt(td.parentNode.id.replace('tr-u-',''));
+  }
+
+  function tr2uid(tr){
+    return parseInt(tr.id.replace('tr-u-',''));
   }
 
   function td2day(td){
@@ -234,6 +274,7 @@ EOJS
 
 <%= javascript_tag <<-EOJS
   Event.observe(window,'load',setnoprint);
+  Event.observe(window,'load',recountWorkCounts);
 
   function setnoprint(){
     $$('tr.user-row').each(function(tr){
