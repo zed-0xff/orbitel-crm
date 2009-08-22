@@ -177,6 +177,9 @@ div#topmenu {
 	margin: 0 5em 5px 5em;
 }
 
+div#topmenu #add-settings-toggler img {
+	margin: 0 -4px 0 -6px;
+}
 
 /*
 -------------------------

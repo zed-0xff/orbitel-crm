@@ -24,6 +24,7 @@ class SessionsController < ApplicationController
       self.current_user = user
       new_cookie_flag = (params[:remember_me] == "1")
       handle_remember_cookie! new_cookie_flag
+      cookies[:can_manage] = user.can_manages_for_js
       redirect_back_or_default('/')
       #flash[:notice] = I18n.t(:logged_in)
     else
@@ -35,6 +36,7 @@ class SessionsController < ApplicationController
   end
 
   def destroy
+    cookies.delete :can_manage
     logout_killing_session!
     flash[:notice] = "Вы вышли из системы"
     redirect_back_or_default('/')

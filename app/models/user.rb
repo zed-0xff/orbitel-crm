@@ -41,6 +41,17 @@ class User < ActiveRecord::Base
     )
   end
 
+  def can_manage_any_of? *whats
+    whats.any?{ |what| can_manage?(what) }
+  end
+
+  # сокращаем список моделей до списка первых букв - для яваскрипта
+  def can_manages_for_js
+    %w'Customer House User'.map do |what|
+      can_manage?(what) ? what[0..0] : nil
+    end.compact.join.downcase
+  end
+
   def type
     @attributes['type']
   end
