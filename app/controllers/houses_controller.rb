@@ -1,7 +1,6 @@
 class HousesController < ApplicationController
   helper :tickets
 
-  before_filter :login_required
   before_filter :check_can_manage, :except => %w'show index check'
   before_filter :prepare_house
   
