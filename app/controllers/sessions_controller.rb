@@ -22,7 +22,7 @@ class SessionsController < ApplicationController
       self.current_user = user
       new_cookie_flag = (params[:remember_me] == "1")
       handle_remember_cookie! new_cookie_flag
-      cookies[:can_manage] = user.can_manages_for_js
+      cookies[:can_manage] = { :value => user.can_manages_for_js, :expires => 1.year.from_now }
       redirect_back_or_default('/')
       #flash[:notice] = I18n.t(:logged_in)
     else
