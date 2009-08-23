@@ -47,7 +47,7 @@ module UsersHelper
     raise "Invalid user" unless user
     options.reverse_merge!(
       :content_method => :name, 
-      :title_method   => :login, 
+    #  :title_method   => :login, 
       :class          => "user #{user.class.to_s.underscore}"
     )
     options[:class] << ' male' if user.male?
