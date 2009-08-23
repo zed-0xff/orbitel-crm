@@ -1,6 +1,11 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe TicketsController do
+  fixtures :users, :streets
+
+  before do
+    login_as :admin
+  end
 
   #Delete these examples and add some real ones
   it "should use TicketsController" do
@@ -15,10 +20,20 @@ describe TicketsController do
     end
   end
 
-  describe "GET 'create'" do
-    it "should be successful" do
-      get 'create'
-      response.should be_success
+  describe "'create'" do
+    it "GET should be forbidden"
+    it "POST should create a new ticket and redirect to it" do
+      post 'create', :ticket => {
+        :title => "title",
+        "house_attributes"=>{
+          "number"=>"1", 
+          "street"=>"Гоголя"
+        }
+      }
+      assigns[:ticket].should_not be_nil
+      assigns[:ticket].should be_valid
+      response.should be_redirect
+      response.should redirect_to( ticket_path( assigns[:ticket] ) )
     end
   end
 
