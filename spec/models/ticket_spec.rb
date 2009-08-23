@@ -5,9 +5,10 @@ describe Ticket do
     @valid_attributes = {
       :created_by_id => 1,
       :assignee_id => 1,
-      :house_id => 1,
+      :house => House.new(:street => Street.new(:name => 'str'), :number => 1),
       :notes => "value for notes",
-      :contact_info => "value for contact info"
+      :contact_info => "value for contact info",
+      :title => "суть проблемы"
     }
   end
 
@@ -21,7 +22,7 @@ describe Ticket do
   end
 
   describe "should create house if it not exists AND" do
-    it "should create street if it not exists" do
+    it "should NOT create street if it not exists" do
       attrs = @valid_attributes
       attrs.delete(:house_id)
       attrs[:house] = {
@@ -34,17 +35,12 @@ describe Ticket do
       lambda{
         lambda{
           lambda{
-            ticket = Ticket.create! attrs
-          }.should change(Ticket, :count).by(1)
-        }.should change(House, :count).by(1)
-      }.should change(Street, :count).by(1)
+            ticket = Ticket.create attrs
+          }.should_not change(Ticket, :count)
+        }.should_not change(House, :count)
+      }.should_not change(Street, :count)
 
-      ticket.reload
-      ticket.house.reload
-      ticket.house.street.reload
-
-      ticket.house.street.name.should == 'Test Street#2'
-      ticket.house.number.should == '1'
+      ticket.should_not be_valid
     end
 
     it "should NOT create street with blank name" do
