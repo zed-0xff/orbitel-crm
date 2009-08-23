@@ -1,6 +1,8 @@
 class HousesController < ApplicationController
   helper :tickets
 
+  before_filter :login_required
+  before_filter :check_can_manage, :except => %w'show index check'
   before_filter :prepare_house
   
   def index
@@ -110,6 +112,10 @@ class HousesController < ApplicationController
   end
 
   private
+
+  def check_can_manage
+    current_user.can_manage?:houses
+  end
 
   def prepare_house
     if params[:id]

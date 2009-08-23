@@ -1,6 +1,10 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe DeptsController do
+  fixtures :users
+  before do
+    login_as :admin
+  end
 
   #Delete these examples and add some real ones
   it "should use DeptsController" do
@@ -36,10 +40,16 @@ describe DeptsController do
     end
   end
 
-  describe "GET 'update'" do
-    it "should be successful" do
-      get 'update'
-      response.should be_success
+  describe "'update'" do
+    before do
+      @dept = Dept.create! :name => 'd1'
+    end
+
+    it "GET should be forbidden"
+
+    it "POST should be redirect" do
+      post 'update', :id => @dept.id, :dept => {:name => 'ddd'}
+      response.should be_redirect
     end
   end
 

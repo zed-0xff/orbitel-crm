@@ -1,6 +1,11 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe HousesController do
+  fixtures :users
+
+  before do
+    login_as :admin
+  end
 
   #Delete these examples and add some real ones
   it "should use HousesController" do
@@ -29,10 +34,18 @@ describe HousesController do
     end
   end
 
-  describe "GET 'update'" do
-    it "should be successful" do
-      get 'update'
-      response.should be_success
+  describe "'update'" do
+    before do
+      @house = House.create! :street => Street.new(:name => 's1'), :number => 1
     end
+
+    it "POST should be redirect" do
+      post 'update', :id => @house.id, :house => { :number => 111 }
+      response.should be_redirect
+    end
+
+    it "POST should update house attrs"
+
+    it "GET should be forbidden"
   end
 end
