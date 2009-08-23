@@ -19,4 +19,8 @@ module AuthenticatedTestHelper
     user
   end  
 
+  # not sure if this method should be here. // zed
+  def logout_keeping_session!
+    @request.session[:user_id] = nil
+  end
 end

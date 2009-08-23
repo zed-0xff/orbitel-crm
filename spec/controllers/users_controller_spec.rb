@@ -47,11 +47,11 @@ describe UsersController do
   
   
   
-  it "localizates" do
-    locale = "pt-BR"
-    get :new, :locale => locale
-    I18n.locale.should eql(locale)
-  end
+#  it "localizates" do
+#    locale = "pt-BR"
+#    get :new, :locale => locale
+#    I18n.locale.should eql(locale)
+#  end
   
   def create_user(options = {})
     post :create, :user => { :login => 'quire', :email => 'quire@example.com',
