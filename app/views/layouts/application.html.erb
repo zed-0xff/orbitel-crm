@@ -7,14 +7,20 @@
 <%= render :partial => 'users/user_bar' %>
 <%= logged_in? ? render('shared/menu') : '<div>&nbsp;</div>' %>
 
-<% if flash && flash[:error] %>
-  <div class="error"><%= h flash[:error] %></div>
-<% end %>
+<%- if flash -%>
+  <% if flash[:error] %>
+    <div class="error"><%= h flash[:error] %></div>
+  <% end %>
 
-<% if flash && flash[:notice] %>
-  <div id="notices" class="notice"><%= h flash[:notice] %></div>
-  <%= javascript_tag(visual_effect(:highlight, "notices", :duration => 0.75)) %>
-<% end %>
+  <% if flash[:error_html] %>
+    <div class="error"><%= flash[:error_html] %></div>
+  <% end %>
+
+  <% if flash[:notice] %>
+    <div id="notices" class="notice"><%= h flash[:notice] %></div>
+    <%= javascript_tag(visual_effect(:highlight, "notices", :duration => 0.75)) %>
+  <% end %>
+<%- end -%>
 
 <div class="content">
 <%= yield %>

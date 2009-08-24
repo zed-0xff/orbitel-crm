@@ -1,4 +1,6 @@
 class TicketsController < ApplicationController
+  include ERB::Util
+
   before_filter :check_type, :only => :create
   before_filter :prepare_ticket
 
@@ -56,6 +58,16 @@ class TicketsController < ApplicationController
     # logger.info ticket_attrs.inspect
 
     @ticket = klass.new( ticket_attrs )
+
+    if klass == Ticket && @ticket.customer && (t=Ticket.current.first( :conditions => {
+      :customer_id => @ticket.customer.id,
+      :title       => @ticket.title
+    }))
+      flash.now[:error_html] = "Такая заявка уже существует: <a href=\"#{ticket_path(t)}\">№#{t.id}: #{h(t.title)}</a>."
+      @ticket.house ||= House.new
+      render :new
+      return
+    end
 
     @ticket.created_by = current_user
     if @ticket.valid?
