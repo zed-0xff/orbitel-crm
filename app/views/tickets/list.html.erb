@@ -1,2 +1,12 @@
-<h1><%= @title %></h1>
+<h1><%= @title -%> (<%= @tickets.size -%>)</h1>
+
+<% if params[:all_depts] || params[:dept] %>
+  <div style="margin-left: 1.2em; margin-bottom: 0.8em">
+    <% form_tag({}, :method => :get) do %>
+      отдел:<%= select_tag 'dept', options_for_select( depts_for_select, params[:dept].to_i ) %>
+      <%= submit_tag 'Фильтр', :name => nil %>
+    <% end %>
+  </div>
+<% end %>
+
 <%= render 'table' %>

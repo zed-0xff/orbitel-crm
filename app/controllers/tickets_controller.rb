@@ -212,8 +212,10 @@ class TicketsController < ApplicationController
   end
 
   def prepare_tickets conditions = nil, options = {}
-    r = if params[:all_depts]
+    r = if params[:all_depts] || (params[:dept] && params[:dept].blank?)
       Ticket
+    elsif params[:dept] && !params[:dept].blank?
+      Ticket.for_dept(Dept.find(params[:dept].to_i))
     else
       Ticket.for_user(current_user)
     end

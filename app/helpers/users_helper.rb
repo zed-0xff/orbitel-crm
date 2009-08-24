@@ -104,7 +104,7 @@ module UsersHelper
   end
 
   def depts_for_select options = {}
-    r = [['== нет ==', nil]] + Dept.all.map{ |d| [d.name,d.id] }
+    r = [['(все отделы)', nil]] + Dept.all.map{ |d| [d.name,d.id] }
     if options.key?(:exclude)
       if options[:exclude]
         r.delete_if{ |rr| rr[1] == options[:exclude].id }
