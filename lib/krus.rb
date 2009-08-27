@@ -13,6 +13,16 @@ class Krus
     fetch_yaml_url "user_info/#{uid.to_i}.yaml"
   end
 
+  def self.user_traf_info uid, args={}
+    url = "user_traf_info/#{uid.to_i}.yaml"
+    if args.any?
+      url += "?" + args.map{ |k,v| "#{k}=#{v}" }.join('&')
+    end
+    r = fetch_yaml_url url
+    #(r.is_a?(Hash) && r.key?(:traf)) ? r[:traf] : r
+    r
+  end
+
   # Включить/выключить юзеру доступ в инет
   # возвращает то же, что и в user_info
   def self.user_toggle_inet uid, state

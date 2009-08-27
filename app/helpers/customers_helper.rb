@@ -76,4 +76,29 @@ module CustomersHelper
       idx == (@customers_for_link.size-1) ? nil : @customers_for_link[idx+1]
     end
   end
+
+  def traf_value t, tag=nil, type=''
+    t = t.to_i
+    is_local = type['local']
+    a, l =
+      if t < 512
+        ['','']
+      elsif t >= 10.gigabytes
+        [t/1073741824, 'G']
+      elsif t > 1.gigabyte
+        [("%1.1f" % (t/1073741824.0)), 'G']
+      elsif t > 1.megabyte
+        [t/1048576, 'M']
+      else
+        [t/1024, 'k']
+      end
+    klass = l
+    title = number_with_delimiter(t, :delimiter => ' ')
+    if @bandwidth && !is_local && t > (max_traf = (@bandwidth * 1024 / 8 * 3600 * 24))
+      klass += " red"
+      title += "; превышен максимум в #{number_to_human_size(max_traf)} !"
+    end
+    klass += " local" if is_local
+    tag ? "<#{tag} class=\"#{klass}\" title=\"#{title}\">#{a}<i>#{l}</i></#{tag}>" : "#{a}#{l}"
+  end
 end

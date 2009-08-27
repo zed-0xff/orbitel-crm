@@ -1,0 +1,59 @@
+<style>
+  table.traf td {
+    text-align: right;
+  }
+  table.traf i {
+    font-family: Verdana;
+    font-size: 7pt;
+    font-style: normal;
+  }
+  table.traf .g {
+    background: orange;
+  }
+  table.traf .g.local {
+    background: lightgrey;
+    font-weight: normal;
+  }
+  table.traf .g.local i {
+    font-weight: bold;
+  }
+  table.traf .m {
+    background: lightgrey;
+  }
+  table.traf .k {
+    color: lightgrey;
+  }
+  table.traf .m i {
+    /* font-weight: bold; */
+  }
+  table.traf .g {
+    font-weight: bold;
+  }
+  table.traf .red {
+    background: red;
+  }
+
+  h3 {
+    margin-bottom: 2px;
+  }
+</style>
+
+<h1><%= @title -%></h1>
+
+<h3>Трафик</h3>
+<table class="t1 traf">
+  <tr>
+    <th></th>
+    <%- @traf_types.each do |type| -%>
+      <th><%= type.to_s.gsub('_','<br/>') %></th>
+    <%- end -%>
+  </tr>
+  <%- @traf.keys.sort.each do |date|; row = @traf[date] -%>
+    <tr>
+      <td><%= date %></td>
+      <%- @traf_types.each do |type| -%>
+        <%= traf_value row[type], 'td', type.to_s %>
+      <%- end -%>
+    </tr>
+  <%- end -%>
+</table>

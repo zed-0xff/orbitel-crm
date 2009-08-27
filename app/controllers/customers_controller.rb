@@ -126,6 +126,14 @@ class CustomersController < ApplicationController
     render :layout => false
   end
 
+  def traf
+    ti = Krus.user_traf_info( @customer.external_id )
+    @title      = @customer.name
+    @traf       = ti[:traf]
+    @bandwidth  = ti[:bandwidth]
+    @traf_types = @traf.values.map{ |v| v.keys }.flatten.uniq.sort_by{ |v| v.to_s }
+  end
+
   private
 
   def prepare_customer
