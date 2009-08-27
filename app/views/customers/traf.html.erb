@@ -36,6 +36,16 @@
   h3 {
     margin-bottom: 2px;
   }
+
+  table.traf {
+    float: left;
+  }
+
+  #traf_chart {
+    float: left;
+    margin-left: 2em;
+    border: solid 1px lightgrey;
+  }
 </style>
 
 <h1><%= @title -%></h1>
@@ -57,3 +67,14 @@
     </tr>
   <%- end -%>
 </table>
+
+<div id="traf_chart"></div>
+
+<%= javascript_tag <<-EOJS
+  function open_flash_chart_data(){
+      return '#{@chart.to_json}';
+  }
+
+  swfobject.embedSWF("/open-flash-chart.swf", "traf_chart", "800", "500", "9.0.0");
+EOJS
+-%>

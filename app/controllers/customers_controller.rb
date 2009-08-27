@@ -1,4 +1,7 @@
 class CustomersController < ApplicationController
+  include ActionView::Helpers::TextHelper # for 'cycle' method
+  include ActionView::Helpers::NumberHelper   
+
   helper :calls, :tickets
 
   before_filter :prepare_customer
@@ -129,9 +132,108 @@ class CustomersController < ApplicationController
   def traf
     ti = Krus.user_traf_info( @customer.external_id )
     @title      = @customer.name
-    @traf       = ti[:traf]
-    @bandwidth  = ti[:bandwidth]
+    @traf       = ActiveSupport::OrderedHash.new
+    ti[:traf].keys.sort.each do |key|
+      @traf[key] = ti[:traf][key]
+    end
+    if ti[:bandwidth]
+      @max_day_traf    = ti[:bandwidth] * 1024 / 8 * 3600 * 24
+      @max_day_traf_mb = @max_day_traf / 1.megabyte
+    end
     @traf_types = @traf.values.map{ |v| v.keys }.flatten.uniq.sort_by{ |v| v.to_s }
+
+    colors = %w'#9933CC #99CC33 #CC9933 #0000ff #00ff00 #ffff00'
+
+    @chart = {
+      "y_axis"   => {
+        "max"   => 20,
+        "labels" => { "text" => " #val# Mb" }
+#        , "labels" => [
+#          { 'y' => 2048, 'text' => 'zzzz', 'grid-colour' => '#ff0000' }
+#        ]}
+      },
+      "x_axis"   => {
+        "min" => @traf.keys.first.to_time.to_i,
+        "max" => @traf.keys.last.to_time.to_i,
+        "steps" => 86400,
+        "labels" => {
+          "text" => "#date:d.m#",
+          "steps" => 86400,
+          "visible-steps" => 2,
+        }
+      },
+      "elements" => [],
+      "num_decimals" => 0
+    }
+
+    @traf_types.each do |traf_type|
+      traf_values = []
+      @traf.each do |dt,day_traf|
+        next unless (amount = day_traf[traf_type])
+        v = amount / 1.megabyte
+        next if v <= 0
+        traf_values << { 
+          'x'   => dt.to_time.to_i, 
+          'y'   => v,
+          'tip' => "#{traf_type}:<br>#{number_to_human_size(amount)}"
+        }
+      end
+
+      if @max_day_traf_mb && !traf_type.to_s['local']
+        traf_values.each do |h|
+          if h['y'] >= @max_day_traf_mb
+            h['type']     = 'solid-dot'
+            h['dot-size'] = 6
+            h['hollow']   = false
+            h['colour']   = '#ff0000'
+          end
+        end
+      end
+
+      chart_el = {
+        "font-size" => 10,
+        "text"      => traf_type.to_s,
+        "type"      => "line",
+        "colour"    => cycle(*colors),
+        "values"    => traf_values,
+        "tip"       => "!!!<br>#val#<br>#x_label#",
+        "width"     => (traf_type.to_s['local'] ? 1 : 3),
+        "dot-style" => {
+          'type'      => 'hollow-dot',
+          'dot-size'  => 5,
+          'halo-size' => 0
+        }
+      }
+      @chart['elements'] << chart_el
+    end
+
+    # determine Y axis maximum
+    @chart['elements'].each do |el|
+      max_value = el['values'].map{ |v| v['y'].to_i }.max.to_i
+      @chart['y_axis']['max'] = max_value if max_value > @chart['y_axis']['max']
+    end
+
+    if @max_day_traf_mb && @chart['y_axis']['max'] > @max_day_traf_mb
+      @chart['y_axis']['labels']['labels'] ||= []
+      @chart['y_axis']['labels']['labels'] << {
+        'y'           => @max_day_traf_mb,
+        'text'        => " #{number_to_human_size(@max_day_traf)}",
+        'grid-colour' => '#ff0000',
+        'colour'      => '#ff0000'
+      }
+    end
+
+    @chart['y_axis']['max'] = ((@chart['y_axis']['max'] / 1024) + 1) * 1024
+    @chart['y_axis']['labels']['labels'] ||= []
+
+    @chart['y_axis']['labels']['labels'] << { 'y' => 0,    'text' => '0 GB' }
+    @chart['y_axis']['labels']['labels'] << { 'y' => 1024, 'text' => '1 GB' }
+
+    # maximal Y value Y-axis label
+    @chart['y_axis']['labels']['labels'] << {
+      'y'           => @chart['y_axis']['max'],
+      'text'        => " #{number_to_human_size(@chart['y_axis']['max'] * 1.megabyte)}"
+    }
   end
 
   private

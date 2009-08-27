@@ -94,9 +94,9 @@ module CustomersHelper
       end
     klass = l
     title = number_with_delimiter(t, :delimiter => ' ')
-    if @bandwidth && !is_local && t > (max_traf = (@bandwidth * 1024 / 8 * 3600 * 24))
+    if @max_day_traf && !is_local && t > @max_day_traf
       klass += " red"
-      title += "; превышен максимум в #{number_to_human_size(max_traf)} !"
+      title += "; превышен максимум в #{number_to_human_size(@max_day_traf)} !"
     end
     klass += " local" if is_local
     tag ? "<#{tag} class=\"#{klass}\" title=\"#{title}\">#{a}<i>#{l}</i></#{tag}>" : "#{a}#{l}"
