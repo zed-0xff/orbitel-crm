@@ -17,7 +17,7 @@ class TariffChange < Ticket
   end
 
   def title
-    "смена ТП"
+    "смена ТП c #{date}"
   end
 
   def set_dept
