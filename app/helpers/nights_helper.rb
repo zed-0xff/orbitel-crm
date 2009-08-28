@@ -37,11 +37,6 @@ module NightsHelper
     %w'вс пн вт ср чт пт сб'[date.wday]
   end
 
-  # TODO: implement thru i18n
-  def month_name month
-    %w'Нулябрь Январь Февраль Март Апрель Май Июнь Июль Август Сентябрь Октябрь Ноябрь Декабрь'[month]
-  end
-
   def link_to_next_month title='&raquo;'
     month = @month + 1
     year  = @year

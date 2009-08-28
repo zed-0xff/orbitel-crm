@@ -63,4 +63,26 @@ module ApplicationHelper
     return true unless ticket
     ticket.priority > Ticket::PRIORITY_NORMAL ? 'r' : 'y'
   end
+
+  # TODO: implement thru i18n
+  def month_name month
+    %w'Нулябрь Январь Февраль Март Апрель Май Июнь Июль Август Сентябрь Октябрь Ноябрь Декабрь'[month]
+  end
+
+  def handle_ctrl_arrows
+    <<-EOJS
+      // handle Ctrl+Left & Ctrl+Right keys 
+      Event.observe(window, 'keydown', function(ev){ 
+        if( ev.ctrlKey ){ 
+          var link; 
+          if( ev.keyCode == 0x25 )  
+            link = $('prev-link'); 
+          else if( ev.keyCode == 0x27 )  
+            link = $('next-link'); 
+     
+          if( link && link.href ) document.location = link.href; 
+        } 
+      });
+    EOJS
+  end
 end

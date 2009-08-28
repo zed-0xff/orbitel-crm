@@ -1,6 +1,7 @@
 class CustomersController < ApplicationController
   include ActionView::Helpers::TextHelper # for 'cycle' method
   include ActionView::Helpers::NumberHelper   
+  include ApplicationHelper
 
   helper :calls, :tickets
 
@@ -130,21 +131,37 @@ class CustomersController < ApplicationController
   end
 
   def traf
-    ti = Krus.user_traf_info( @customer.external_id )
-    @title      = @customer.name
+    @traf_dt = Date.today
+    args = {}
+    if params[:pos]
+      @traf_dt += params[:pos].to_i.months
+      args[:month] = @traf_dt.month
+      args[:year]  = @traf_dt.year
+    end
+
+    dt_start = Date.civil(@traf_dt.year, @traf_dt.month)
+    dt_end   = Date.civil(@traf_dt.year, @traf_dt.month, -1)
+
+    ti = Krus.user_traf_info( @customer.external_id, args )
     @traf       = ActiveSupport::OrderedHash.new
-    ti[:traf].keys.sort.each do |key|
-      @traf[key] = ti[:traf][key]
+    return if ti[:traf].blank?
+
+#    (ti[:traf].keys.min..ti[:traf].keys.max).each do |key|
+    (dt_start..dt_end).each do |dt|
+      @traf[dt] = ti[:traf][dt]
     end
     if ti[:bandwidth]
       @max_day_traf    = ti[:bandwidth] * 1024 / 8 * 3600 * 24
       @max_day_traf_mb = @max_day_traf / 1.megabyte
     end
-    @traf_types = @traf.values.map{ |v| v.keys }.flatten.uniq.sort_by{ |v| v.to_s }
+    @traf_types = @traf.values.map{ |v| v.try(:keys) }.flatten.compact.uniq.sort_by{ |v| v.to_s }
 
-    colors = %w'#9933CC #99CC33 #CC9933 #0000ff #00ff00 #ffff00'
+    colors = %w'#0000ff #ffff00 #99CC33 #CC9933 #00ff00 #ffff00'
 
     @chart = {
+      "title" => {
+        'text' => "Интернет-трафик за #{month_name(@traf_dt.month)} #{@traf_dt.year}"
+      },
       "y_axis"   => {
         "max"   => 20,
         "labels" => { "text" => " #val# Mb" }
@@ -153,38 +170,44 @@ class CustomersController < ApplicationController
 #        ]}
       },
       "x_axis"   => {
-        "min" => @traf.keys.first.to_time.to_i,
-        "max" => @traf.keys.last.to_time.to_i,
-        "steps" => 86400,
+#        "min" => @traf.keys.first.to_time.to_i,
+#        "max" => @traf.keys.last.to_time.to_i,
+        "steps" => 2,
         "labels" => {
-          "text" => "#date:d.m#",
-          "steps" => 86400,
-          "visible-steps" => 2,
+          "labels" => @traf.keys.map{ |dt| dt.strftime('%d.%m') },
+          "steps"  => 2
         }
       },
       "elements" => [],
-      "num_decimals" => 0
+      "num_decimals" => 0,
+      "bg_colour" => '#eeeeee'
     }
 
     @traf_types.each do |traf_type|
+      tts = traf_type.to_s
+      next unless tts['inet']
+      is_local = tts['local']
       traf_values = []
       @traf.each do |dt,day_traf|
-        next unless (amount = day_traf[traf_type])
-        v = amount / 1.megabyte
-        next if v <= 0
-        traf_values << { 
-          'x'   => dt.to_time.to_i, 
-          'y'   => v,
-          'tip' => "#{traf_type}:<br>#{number_to_human_size(amount)}"
-        }
+        amount = day_traf ? day_traf[traf_type] : nil
+        v = amount.to_i / 1.megabyte
+        if v <= 0
+          traf_values << nil
+        else
+          traf_values << { 
+  #          'x'   => dt.to_time.to_i, 
+            (is_local ? 'y' : 'top')   => v,
+            'tip' => "#{dt} (#{traf_type})<br>#{number_to_human_size(amount)}"
+          }
+        end
       end
 
-      if @max_day_traf_mb && !traf_type.to_s['local']
+      if @max_day_traf_mb && !is_local
         traf_values.each do |h|
-          if h['y'] >= @max_day_traf_mb
-            h['type']     = 'solid-dot'
-            h['dot-size'] = 6
-            h['hollow']   = false
+          if h && h.key?('top') && h['top'] >= @max_day_traf_mb
+#            h['type']     = 'solid-dot'
+#            h['dot-size'] = 6
+#            h['hollow']   = false
             h['colour']   = '#ff0000'
           end
         end
@@ -193,8 +216,9 @@ class CustomersController < ApplicationController
       chart_el = {
         "font-size" => 10,
         "text"      => traf_type.to_s,
-        "type"      => "line",
+        "type"      => "bar_filled",
         "colour"    => cycle(*colors),
+        "alpha"     => 1.0,
         "values"    => traf_values,
         "tip"       => "!!!<br>#val#<br>#x_label#",
         "width"     => (traf_type.to_s['local'] ? 1 : 3),
@@ -209,7 +233,7 @@ class CustomersController < ApplicationController
 
     # determine Y axis maximum
     @chart['elements'].each do |el|
-      max_value = el['values'].map{ |v| v['y'].to_i }.max.to_i
+      max_value = el['values'].map{ |v| v ? v['top'].to_i : 0 }.max.to_i
       @chart['y_axis']['max'] = max_value if max_value > @chart['y_axis']['max']
     end
 
@@ -226,8 +250,15 @@ class CustomersController < ApplicationController
     @chart['y_axis']['max'] = ((@chart['y_axis']['max'] / 1024) + 1) * 1024
     @chart['y_axis']['labels']['labels'] ||= []
 
-    @chart['y_axis']['labels']['labels'] << { 'y' => 0,    'text' => '0 GB' }
-    @chart['y_axis']['labels']['labels'] << { 'y' => 1024, 'text' => '1 GB' }
+    a0 = (0...(@chart['y_axis']['max']/1024)).to_a
+    a = a0; gsize = 1
+    while a.size > 10
+      gsize += 1
+      a = a0.in_groups_of(gsize).map{|x| x.first}.compact
+    end
+    a.each do |v|
+      @chart['y_axis']['labels']['labels'] << { 'y' => v*1024, 'text' => "#{v} GB" }
+    end
 
     # maximal Y value Y-axis label
     @chart['y_axis']['labels']['labels'] << {

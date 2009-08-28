@@ -149,18 +149,7 @@
 </td></tr></table>
 
 <%= javascript_tag <<-EOJS
-  // handle Ctrl+Left & Ctrl+Right keys
-  Event.observe(window, 'keydown', function(ev){
-    if( ev.ctrlKey ){
-      var link;
-      if( ev.keyCode == 0x25 ) 
-        link = $('prev-link');
-      else if( ev.keyCode == 0x27 ) 
-        link = $('next-link');
-
-      if( link && link.href ) document.location = link.href;
-    }
-  });
+  #{handle_ctrl_arrows}
 
   // pop-up menu on billing advanced functions
 

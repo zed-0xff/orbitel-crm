@@ -41,40 +41,70 @@
     float: left;
   }
 
-  #traf_chart {
+  #traf_chart_div {
     float: left;
-    margin-left: 2em;
+    margin: 0 0 0 1em;
     border: solid 1px lightgrey;
+    padding: 0;
   }
+
+  h3 a {
+    font-weight: normal;
+  }
+
+  div.rarr, div.larr {
+    position: relative;
+    top: 0.9em;
+  }
+  div.rarr { float:right }
+  div.larr { float:left  }
 </style>
 
-<h1><%= @title -%></h1>
+<div class="larr"><%= prev_customer_link(:action => 'traf') -%></div>
+<div class="rarr"><%= next_customer_link(:action => 'traf') -%></div>
+<h1><%= @customer.name -%></h1>
 
-<h3>Трафик</h3>
-<table class="t1 traf">
-  <tr>
-    <th></th>
-    <%- @traf_types.each do |type| -%>
-      <th><%= type.to_s.gsub('_','<br/>') %></th>
-    <%- end -%>
-  </tr>
-  <%- @traf.keys.sort.each do |date|; row = @traf[date] -%>
+<h3>
+  Трафик за 
+  <%= link_to "&laquo;", :pos => (params[:pos].to_i - 1) -%>
+  <%= @traf_dt.strftime('%m.%Y') -%>
+  <%= link_to "&raquo;", :pos => (params[:pos].to_i + 1) -%>
+</h3>
+
+<% if @traf.blank? %>
+  <p>Нет трафика</p>
+<% else %>
+  <table class="t1 traf">
     <tr>
-      <td><%= date %></td>
+      <th></th>
       <%- @traf_types.each do |type| -%>
-        <%= traf_value row[type], 'td', type.to_s %>
+        <th><%= type.to_s.gsub('_','<br/>') %></th>
       <%- end -%>
     </tr>
-  <%- end -%>
-</table>
+    <%- @traf.keys.sort.each do |date|; row = @traf[date] -%>
+      <tr>
+        <td><%= date %></td>
+        <%- @traf_types.each do |type| -%>
+          <%= traf_value row.try(:[],type), 'td', type.to_s %>
+        <%- end -%>
+      </tr>
+    <%- end -%>
+  </table>
 
-<div id="traf_chart"></div>
+  <div id="traf_chart_div">
+    <div id="traf_chart"></div>
+  </div>
 
-<%= javascript_tag <<-EOJS
-  function open_flash_chart_data(){
-      return '#{@chart.to_json}';
-  }
+  <div class="clear"/>
 
-  swfobject.embedSWF("/open-flash-chart.swf", "traf_chart", "800", "500", "9.0.0");
-EOJS
--%>
+  <%= javascript_tag <<-EOJS
+    function open_flash_chart_data(){
+        return '#{@chart.to_json}';
+    }
+
+    swfobject.embedSWF("/open-flash-chart.swf", "traf_chart", "900", "300", "9.0.0");
+  EOJS
+  -%>
+<% end %>
+
+<%= javascript_tag handle_ctrl_arrows %>

@@ -24,17 +24,17 @@ module CustomersHelper
     r
   end
 
-  def prev_customer_link
-    customer_link :prev
+  def prev_customer_link opts = {}
+    customer_link :prev, opts
   end
 
-  def next_customer_link
-    customer_link :next
+  def next_customer_link opts = {}
+    customer_link :next, opts
   end
 
   private
 
-  def customer_link dir
+  def customer_link dir, opts = {}
     case dir
       when :prev
         cmp  = '<'
@@ -57,9 +57,9 @@ module CustomersHelper
       end
 
     if cust
-      opts = {}
       opts[:from] = params[:from] if params[:from]
-      link_to "<b>ctrl</b>#{text}", customer_path(cust, opts), :id => "#{dir}-link"
+      path = opts[:action] ? opts.merge(:controller => 'customers', :id => cust) : customer_path(cust, opts)
+      link_to "<b>ctrl</b>#{text}", path, :id => "#{dir}-link"
     else
       "<span style=\"color:gray\">#{text}</span>"
     end
