@@ -42,9 +42,7 @@ function show_additional_settings(ev){
 				main_add_menu_items.push({
 					name: i[1],
 					className: i[0],
-					callback: function(){
-						window.location = '/' + i[0];
-					}
+					href: '/' + i[0]
 				});
 			}
 		});

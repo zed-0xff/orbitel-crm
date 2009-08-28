@@ -38,11 +38,11 @@ Proto.Menu = Class.create({
 					item.separator 
 						? '' 
 						: Object.extend(new Element('a', {
-							href: '#',
+							href: item.href || '#' , // zzzzzzz
 							title: item.name,
 							className: (item.className || '') + (item.disabled ? ' disabled' : ' enabled')
 						}), { _callback: item.callback })
-						.observe('click', this.onClick.bind(this))
+						.observe( item.href ? 'dblclick' : 'click', this.onClick.bind(this)) // zzzzzzz
 						.observe('contextmenu', Event.stop)
 						.update(item.name)
 				)
