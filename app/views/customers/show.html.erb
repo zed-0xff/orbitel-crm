@@ -155,6 +155,12 @@
 
   var myMenuItems = [
     {
+      name: 'График трафика',
+      className: 'traf-chart',
+      href: "#{url_for :action => 'traf', :id => @customer}"
+    },{
+      separator: true
+    },{
       name: 'Включить Интернет',
       className: 'inet-on',
       callback: function() {

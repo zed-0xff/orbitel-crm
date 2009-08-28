@@ -169,6 +169,9 @@ div.jsmenu a {
 .jsmenu.zzz li {
 	padding-right: 0.6em;
 }
+.jsmenu.zzz a.traf-chart {
+  background: #f9f8f7 url(/images/chart.png) 2px 50% no-repeat;
+}
 .jsmenu.zzz a.inet-on {
   background: #f9f8f7 url(/images/tick-circle-frame.png) 2px 50% no-repeat;
 }
