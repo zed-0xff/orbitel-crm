@@ -1,0 +1,182 @@
+<style>
+  table.lcal {
+    margin-left: auto;
+    margin-right: auto;
+    border-collapse: collapse;
+  }
+  table.lcal td {
+    vertical-align: top;
+    padding: 0;
+  }
+  table.lcal td div.dt{
+    font: 7pt Tahoma;
+    text-align: right;
+    position: absolute;
+    right: 1px;
+    top: 0px;
+  }
+  table.lcal td div.day {
+    width:  160px;
+    height: 110px;
+    overflow: auto;
+    padding: 2px;
+    margin: 0;
+    word-wrap: break-word;
+    position: relative; /* for static positioning of 'dt' div */
+  }
+  table.lcal td.day {
+    border: solid 1px #c0c0c0;
+  }
+  table.lca1l td.day.weekend {
+    background: #ffe8e8;
+  }
+  table.lcal td.day.weekend div.dt {
+    color: red;
+  }
+
+  table.lcal td a {
+    white-space: normal;
+/*    display: block;*/
+    min-height: 16px;
+/*    float: left;*/
+  }
+
+  table.lcal td a.tickets-closed,
+  table.lcal td a.tickets-reopened {
+    margin-left: 3px;
+  }
+
+  table.lcal td div.clear {
+    height: 1px;
+    width: 1px;
+    overflow: hidden;
+    padding: 0;
+  }
+
+  a.calls {
+    padding-left: 18px;
+    background: url(/images/bell.png) no-repeat left 1px;
+  }
+
+  a.tickets { 
+    padding-left: 18px;
+    background: url(/images/notebooks--plus.png) no-repeat left 1px;
+  } 
+    
+  a.tickets-closed { 
+    padding-left: 18px;
+    background: url(/images/notebooks--check.png) no-repeat left 1px;
+  }   
+        
+  a.tickets-reopened { 
+    padding-left: 18px;
+    background: url(/images/notebooks--reopened.png) no-repeat left 1px;
+  }   
+
+  a.customer {
+    padding-left: 16px;
+    background: url(/images/customer-add.png) no-repeat left 1px;
+  }
+
+  a.calls, div.tickets, div.customers {
+    margin-top: 5px;
+  }
+
+  table.lcal td a.calls,
+  table.lcal td a.house {
+/*    float: none; */
+    display: block;
+  }
+
+  table.lcal td a.house {
+    background-color: #ffff77;
+  }
+
+  /* used for customers count */
+  table.lcal td i {
+    font: 7pt normal Tahoma;
+    color: gray;
+    padding-left: 4px;
+    position: relative;
+    top: 2px;
+  }
+
+  table.lcal th {
+    font-weight: bold;
+  }
+
+  table.lcal th.weekend {
+    color: red;
+  }
+
+  h1 {
+    text-align: center;
+  }
+
+  div.rarr, div.larr {
+    position: relative;
+    top: 0.9em;
+  }
+  div.rarr { float:right }
+  div.larr { float:left  }
+</style>
+
+<div class="larr"><%= prev_month_link -%></div>
+<div class="rarr"><%= next_month_link -%></div>
+<h1><%= "#{month_name(@start_date.month)} #{@start_date.year}" -%></h1>
+
+<table class="lcal">
+  <tr>
+    <th>понедельник</th>
+    <th>вторник</th>
+    <th>среда</th>
+    <th>четверг</th>
+    <th>пятница</th>
+    <th class="weekend">суббота</th>
+    <th class="weekend">воскресенье</th>
+  </tr>
+  <tr>
+    <% if @start_date.cwday != 1 %>
+      <td colspan="<%= @start_date.cwday-1 -%>"></td>
+    <% end %>
+    <% (@start_date..@end_date).each do |dt| %>
+      <td class="day<%= ' weekend' if dt.cwday>5 -%>">
+        <div class="day">
+          <div class="dt"><%= dt.day -%></div>
+
+          <% if @dobjects[dt][:houses].any? %>
+            <%- @dobjects[dt][:houses].each do |obj| -%>
+              <%= link_to_address_of(obj, :title => "Новый дом") -%>
+            <%- end -%>
+          <% else %>
+            <br>
+          <% end %>
+
+          <div class="tickets">
+            <%= link_to_tickets dt %>
+            <%= link_to_tickets dt, :closed,   "Заявок выполнено" %>
+            <%= link_to_tickets dt, :reopened, "Заявок переоткрыто" %>
+          </div>
+
+          <% unless @dobjects[dt][:calls].blank? %>
+            <%= link_to @dobjects[dt][:calls], '#', :class => 'calls' %>
+          <% end %>
+
+          <div class="customers">
+            <%- @dobjects[dt][:customers].each do |cust| -%>
+              <%= link_to_customer(cust, :text => '', :title => "Новый абонент: #{h(cust.name_with_address)}") -%>
+            <%- end -%>
+            <i><%= @dobjects[dt][:customers].size if @dobjects[dt][:customers].any? %></i>
+          </div>
+        </div>
+      </td>
+      <%= "</tr><tr>" if dt.cwday == 7 %>
+    <% end %>
+    <% if @end_date.cwday != 7 %>
+      <td colspan="<%= 7-@end_date.cwday -%>"></td>
+    <% end %>
+  </tr>
+</table>
+
+<%= javascript_tag handle_ctrl_arrows %>
+

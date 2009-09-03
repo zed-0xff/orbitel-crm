@@ -212,13 +212,32 @@ class TicketsController < ApplicationController
   end
 
   def prepare_tickets conditions = nil, options = {}
-    r = if params[:all_depts] || (params[:dept] && params[:dept].blank?)
-      Ticket
-    elsif params[:dept] && !params[:dept].blank?
-      Ticket.for_dept(Dept.find(params[:dept].to_i))
-    else
-      Ticket.for_user(current_user)
+    r = nil
+    params.each do |k,v|
+      case k.to_sym
+        when :all_depts
+          r ||= Ticket
+        when :dept
+          r ||= Ticket
+          unless v.blank?
+            r = r.for_dept(Dept.find(v.to_i))
+          end
+        when :created_at
+          r ||= Ticket
+          r = r.created_at(v.to_date)
+        when :closed_at
+          r ||= Ticket
+          r = r.closed_at(v.to_date)
+        when :reopened_at
+          r ||= Ticket
+          r = r.reopened_at(v.to_date)
+        else
+      end
     end
+
+    # if none of above cases matched
+    r ||= Ticket.for_user(current_user)
+    
     options[:conditions] ||= conditions
     options[:include] = [:house, :assignee, {:house => :street}]
     r.all options

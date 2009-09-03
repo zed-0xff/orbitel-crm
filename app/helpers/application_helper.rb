@@ -5,7 +5,7 @@ module ApplicationHelper
     date.to_s + (date == Date.today ? " (сегодня)" : '')
   end
 
-  def link_to_address_of obj
+  def link_to_address_of obj, attrs = {}
     return nil unless obj
     house = obj.is_a?(House) ? obj : obj.house
     return nil unless house
@@ -27,14 +27,15 @@ module ApplicationHelper
       else
         klass += ' house4'
     end
-    link_to(title, house_path(house), :class => klass) +
+    attrs[:class] ||= klass
+    link_to(title, house_path(house), attrs) +
       ((obj.respond_to?(:flat) && !obj.flat.blank?) ? "<span style=\"color:#b8b8b8\">-#{obj.flat}</span>" : '')
   end
   alias :link_to_address :link_to_address_of
 
-  def link_to_customer customer
+  def link_to_customer customer, attrs = {}
     return nil unless customer
-    attrs = { :class => 'customer' }
+    attrs[:class] ||= 'customer'
     unless si = Rails.cache.read("customer.#{customer.id}.status-icon")
       si = customer_link_class(customer)
       Rails.cache.write "customer.#{customer.id}.status-icon", si, :expires_in => 24.hours
@@ -46,7 +47,7 @@ module ApplicationHelper
         when 'r': attrs[:title] = "На абонента есть заявка с высоким приоритетом"
       end
     end
-    link_to customer.name, customer_path(customer), attrs
+    link_to((attrs.delete(:text) || customer.name), customer_path(customer), attrs)
   end
 
   # calculate a customer icon based on his CURRENT tickets

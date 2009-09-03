@@ -33,6 +33,26 @@ class Ticket < ActiveRecord::Base
     { :conditions => { :dept_id => dept }}
   }
 
+  named_scope :created_at, lambda{ |date|
+    { :conditions => { :created_at => (date.to_time)..((date+1).to_time - 1) }}
+  }
+
+  named_scope :closed_at, lambda{ |date|
+    { :conditions => { :closed_at => (date.to_time)..((date+1).to_time - 1) }}
+  }
+
+  named_scope :reopened_at, lambda{ |date|
+    { 
+      :joins      => :ticket_history_entries,
+      :conditions => { 
+        :ticket_history_entries => {
+          :created_at => (date.to_time)..((date+1).to_time - 1),
+          :new_status => ST_REOPENED
+        }
+      }
+    }
+  }
+
   after_create :log_new_ticket
 
   after_create  :update_caches
@@ -89,7 +109,7 @@ class Ticket < ActiveRecord::Base
       args.first[:house] = house
       args.first.delete :house_attributes
     end
-    super *args
+    super(*args)
   end
 
   def address
