@@ -34,7 +34,7 @@ class TicketsController < ApplicationController
     klass  = ticket_type.blank? ? Ticket : Kernel.const_get(ticket_type)
     h1 = params[:ticket] || {}
     h2 = params[klass.to_s.underscore] || {}
-    ticket_attrs = h1.deep_merge(h2)
+    ticket_attrs = deep_merge(h1, h2)
 
     customer_name_addr = ticket_attrs.delete :customer
 
@@ -241,5 +241,23 @@ class TicketsController < ApplicationController
     options[:conditions] ||= conditions
     options[:include] = [:house, :assignee, {:house => :street}]
     r.all options
+  end
+
+  # this method is here because Rails cannot merge two HashWithIndifferentAccess'es
+  def deep_merge h1,h2
+    r = h1.is_a?(HashWithIndifferentAccess) ? HashWithIndifferentAccess.new : Hash.new
+    h1.each do |k1,v1|
+      if v1.is_a?(Hash) && h2[k1].is_a?(Hash)
+        r[k1] = deep_merge(h1[k1], h2[k1])
+      else
+        r[k1] = v1
+      end
+    end
+    h2.each do |k2,v2|
+      unless h1.key?(k2)
+        r[k2] = v2
+      end
+    end
+    r
   end
 end
