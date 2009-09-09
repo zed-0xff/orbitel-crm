@@ -72,7 +72,7 @@
     <td><%= link_to_address_of @customer %>
   </tr>
   <tr>
-    <th>телефоны
+    <th>телефон<%= 'ы' if @customer.phones.size > 1 -%>
     <td><%= @customer.phones.map(&:humanize).join("; ") %>
   </tr>
   <% if current_user.is_a?(Admin) && @customer.external_id %>
