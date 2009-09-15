@@ -20,6 +20,11 @@ class TicketsController < ApplicationController
       params[:ticket] = { :customer => c.name_with_address }
       @focus = 'ticket_title'
     end
+
+    respond_to do |format|
+      format.html
+      format.yaml { render :text => { 'authenticity_token' => form_authenticity_token }.to_yaml }
+    end
   end
 
   def new_tariff_change
@@ -59,39 +64,52 @@ class TicketsController < ApplicationController
 
     @ticket = klass.new( ticket_attrs )
 
+    ok = false
+
     if klass == Ticket && @ticket.customer && (t=Ticket.current.first( :conditions => {
       :customer_id => @ticket.customer.id,
       :title       => @ticket.title
     }))
       flash.now[:error_html] = "Такая заявка уже существует: <a href=\"#{ticket_path(t)}\">№#{t.id}: #{h(t.title)}</a>."
       @ticket.house ||= House.new
-      render :new
-      return
-    end
-
-    @ticket.created_by = current_user
-    if @ticket.valid?
-      @ticket.save!
-      redirect_to ticket_path(@ticket)
-      flash[:notice] = "Создана заявка № #{@ticket.id}"
+#      render :new
+#      return
     else
-      if params[:quick_customer].to_i == 1
-        @ticket.house = House.new
-        if !customer_name_addr.blank? && !@ticket.customer
-          @ticket.errors.add :customer, "^Абонент \"#{customer_name_addr}\" не найден"
+      @ticket.created_by = current_user
+      if @ticket.valid?
+        @ticket.save!
+#        redirect_to ticket_path(@ticket)
+        flash[:notice] = "Создана заявка № #{@ticket.id}"
+        ok = true
+      else
+        if params[:quick_customer].to_i == 1
+          @ticket.house = House.new
+          if !customer_name_addr.blank? && !@ticket.customer
+            @ticket.errors.add :customer, "^Абонент \"#{customer_name_addr}\" не найден"
+          end
+        end
+
+        if(
+          @ticket.errors.on(:house_street) && !@ticket.house.street &&
+          (!(st=ticket_attrs.try(:[], :house_attributes).try(:[], :street)).blank?)
+        )
+          # dirty hack
+          s = @ticket.errors.on(:house_street)
+          s[0..-1] = "^Улицы \"#{st}\" не существует"
         end
       end
+    end
 
-      if(
-        @ticket.errors.on(:house_street) && !@ticket.house.street &&
-        (!(st=ticket_attrs.try(:[], :house_attributes).try(:[], :street)).blank?)
-      )
-        # dirty hack
-        s = @ticket.errors.on(:house_street)
-        s[0..-1] = "^Улицы \"#{st}\" не существует"
-      end
-
-      render :new
+    respond_to do |format|
+      format.html { ok ? redirect_to(ticket_path(@ticket)) : render(:new) }
+      format.yaml { 
+        r = { 
+          'ticket' => @ticket.attributes.reject{ |k,v| v.blank? },
+          'ok'     => ok
+        }
+        r['errors'] = @ticket.errors.full_messages unless ok
+        render :text => r.ya2yaml 
+      }
     end
   end
 

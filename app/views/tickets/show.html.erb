@@ -61,7 +61,7 @@
 
   <tr>
     <th>создатель</th>
-    <td><%= link_to_user @ticket.created_by %></td>
+    <td><%= link_to_user(@ticket.created_by) if @ticket.created_by %></td>
   </tr>
 
   <% if @ticket.dept %>

@@ -194,7 +194,7 @@ class Ticket < ActiveRecord::Base
       :user => self.created_by,
       :old_status => nil,
       :new_status => self.status
-    )
+    ) if self.created_by
   end
 
   def update_caches
