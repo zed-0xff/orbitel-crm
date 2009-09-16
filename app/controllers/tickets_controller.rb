@@ -113,6 +113,44 @@ class TicketsController < ApplicationController
     end
   end
 
+  # to be called from API
+  def find
+    sanitizers = {
+      :type            => Proc.new{ |x| x.to_s },
+      :status          => Proc.new{ |st| st.is_a?(Array) ? st.map(&:to_i) : st.to_i },
+      :customer_id     => Proc.new{ |x| x.to_i },
+      :customer_ext_id => Proc.new{ |x| x.to_i }
+    }
+    c = {}
+    params.each do |k,v|
+      k = k.to_sym
+      c[k] = sanitizers[k].call(v) if sanitizers[k]
+    end
+    if c.key?(:customer_ext_id)
+      if cust = Customer.find_by_external_id(c[:customer_ext_id])
+        c.delete :customer_ext_id
+        c[:customer_id] = cust.id
+      else
+        c = nil # disallow Ticket.first call
+        r['error'] = "Cannot find customer by ext_id = #{c[:customer_ext_id]}"
+      end
+    end
+
+    r = {}; @ticket = nil
+
+    @ticket = Ticket.first(
+      :conditions => c,
+      :order => "created_at DESC"
+    ) if c
+
+    respond_to do |format|
+      format.yaml { 
+        r['ticket'] = @ticket && @ticket.attributes.reject{ |k,v| v.blank? }
+        render :text => r.ya2yaml 
+      }
+    end
+  end
+
   def edit
   end
 
@@ -277,5 +315,20 @@ class TicketsController < ApplicationController
       end
     end
     r
+  end
+
+  def rescue_action(exception)
+    respond_to do |format|
+      format.html {
+        super
+      }
+      format.yaml {
+        log_error exception
+        render :text => {
+          'ok'    => false,
+          'error' => exception.to_s
+        }.ya2yaml
+      }
+    end
   end
 end

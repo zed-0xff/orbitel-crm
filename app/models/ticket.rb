@@ -120,6 +120,11 @@ class Ticket < ActiveRecord::Base
     end
   end
 
+  # assign customer by its external id
+  def customer_ext_id= ext_id
+    self.customer = Customer.find_by_external_id ext_id
+  end
+
   def change_status! new_status, options = {}
     if options[:user] 
       if options[:assign]

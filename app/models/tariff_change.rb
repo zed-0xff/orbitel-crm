@@ -28,6 +28,12 @@ class TariffChange < Ticket
     self.custom_info = value.to_s
   end
 
+  # find tariff by its external_id
+  def tariff_ext_id= value
+    t = Tariff.find_by_external_id(value.to_i)
+    self.tariff = t.id if t
+  end
+
   def tariff
     if self.custom_info.to_s =~ /^\d+$/
       custom_info.to_i

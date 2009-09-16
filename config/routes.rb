@@ -26,7 +26,8 @@ ActionController::Routing::Routes.draw do |map|
     :assigned_to_me => :get,
     :all            => :get,
     :only_new       => :get,
-    :closed         => :get
+    :closed         => :get,
+    :find           => :post
   }, :member => {
     :close       => :post,
     :reopen      => :post,
