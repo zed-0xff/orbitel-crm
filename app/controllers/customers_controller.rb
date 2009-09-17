@@ -2,6 +2,7 @@ class CustomersController < ApplicationController
   include ActionView::Helpers::TextHelper # for 'cycle' method
   include ActionView::Helpers::NumberHelper   
   include ApplicationHelper
+  include CustomersHelper # hmm?
 
   helper :calls, :tickets
 
@@ -265,6 +266,29 @@ class CustomersController < ApplicationController
       'y'           => @chart['y_axis']['max'],
       'text'        => " #{number_to_human_size(@chart['y_axis']['max'] * 1.megabyte)}"
     }
+  end
+
+  def change_karma
+    value = params[:value].to_i
+    raise "invalid value" if value.abs != 1
+
+    unless allow_karma_change_of(@customer)
+      render :update do |page|
+        page << 'alert("Вы сегодня уже изменяли карму этому пользователю")'
+      end
+      return
+    end
+
+    @customer.karma = @customer.karma.to_i + value
+    @customer.save!
+
+    # allow changing Customer's karma by each User only once per 24h
+    cache_key = "customer.#{@customer.id}.karma-changed-by.#{current_user.id}"
+    Rails.cache.write cache_key, true, :expires_in => 24.hours
+
+    render :update do |page|
+      page.replace_html 'karma', karma_of(@customer)
+    end
   end
 
   private

@@ -54,6 +54,12 @@
   img#billing-func {
     cursor: pointer;
   }
+
+  th.sep {
+    height: 1px;
+    margin: 0;
+    padding: 0;
+  }
 </style>
 
 <div class="larr"><%= prev_customer_link -%></div>
@@ -75,7 +81,13 @@
     <th>телефон<%= 'ы' if @customer.phones.size > 1 -%>
     <td><%= @customer.phones.map(&:humanize).join("; ") %>
   </tr>
+  <tr><th class="sep" colspan="2"></th></tr>
+  <tr>
+    <th>карма</th>
+    <td id="karma"><%= karma_of @customer %></td>
+  </tr>
   <% if current_user.is_a?(Admin) && @customer.external_id %>
+    <tr><th class="sep" colspan="2"></th></tr>
     <tr style="color:gray">
       <th>external_id</th>
       <td><%= @customer.external_id %>

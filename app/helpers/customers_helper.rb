@@ -32,6 +32,41 @@ module CustomersHelper
     customer_link :next, opts
   end
 
+  def karma_of cust
+    r = '&nbsp;'
+    r+= link_to_remote('-', 
+                        {
+                          :url   => {:action => 'change_karma', :id => cust, :value => -1}
+                        },
+                        :style => 'color:red; text-decoration:none',
+                        :title => 'понизить карму'
+                      ) if allow_karma_change_of(cust)
+    r+= '<strong>&nbsp;'
+    r+=
+      if cust.karma.to_i > 0
+        '<span style="color:green">'
+      elsif cust.karma.to_i < 0
+        '<span style="color:red">'
+      else
+        '<span style="color:gray">'
+      end
+    r+= cust.karma.to_i.to_s
+    r+= "</span>&nbsp;</strong>"
+    r+= link_to_remote('+', 
+                        {
+                          :url   => {:action => 'change_karma', :id => cust, :value => +1}
+                        },
+                        :style => 'color:green; text-decoration:none',
+                        :title => 'повысить карму'
+                      ) if allow_karma_change_of(cust)
+    r
+  end
+
+  def allow_karma_change_of cust
+    cache_key = "customer.#{cust.id}.karma-changed-by.#{current_user.id}"
+    !Rails.cache.read(cache_key)
+  end
+
   private
 
   def customer_link dir, opts = {}
