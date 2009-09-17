@@ -41,6 +41,7 @@ class TicketsController < ApplicationController
     h2 = params[klass.to_s.underscore] || {}
     ticket_attrs = deep_merge(h1, h2)
 
+    allow_doubles      = ticket_attrs.delete :allow_doubles
     customer_name_addr = ticket_attrs.delete :customer
 
     if params[:quick_customer].to_i == 1
@@ -66,9 +67,12 @@ class TicketsController < ApplicationController
 
     ok = false
 
-    if klass == Ticket && @ticket.customer && (t=Ticket.current.first( :conditions => {
-      :customer_id => @ticket.customer.id,
-      :title       => @ticket.title
+    if klass == Ticket && 
+      @ticket.customer && 
+      !allow_doubles   &&
+      (t=Ticket.current.first( :conditions => {
+        :customer_id => @ticket.customer.id,
+        :title       => @ticket.title
     }))
       flash.now[:error_html] = "Такая заявка уже существует: <a href=\"#{ticket_path(t)}\">№#{t.id}: #{h(t.title)}</a>."
       @ticket.house ||= House.new

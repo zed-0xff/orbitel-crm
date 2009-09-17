@@ -33,6 +33,11 @@ class Radius::Call < ActiveRecord::Base
     end
   end
 
+  def night?
+    t = self.acctstarttime
+    ([0,6].include?(t.wday)) ? (t.hour>16 || t.hour<10) : (t.hour>18 || t.hour<9)
+  end
+
   # from 'caller' (source number) field now
   # because destination number is always our support phone number
   def customer

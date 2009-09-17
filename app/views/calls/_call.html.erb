@@ -1,22 +1,22 @@
-  <tr id="tr<%=call.id-%>">
-    <td align="right" class="nobr"><%= Phone.humanize(call.caller) %></td>
-    <td class="nobr"><%= call.start_time.strftime("%Y-%m-%d %H:%M:%S") -%></td>
-    <td id="dur<%=call.id-%>"><%= distance_of_time_in_images(call) %></td>
-    <td><%= link_to_address_of(call.customer) %></td>
-    <td id="ph<%=call.id-%>">
-      <%- if call.customer -%>
-        <%= link_to_customer call.customer %>
-        <%= link_to( '', new_ticket_path(:customer_id => call.customer),
-              :class => 'r',
-              :title => 'Создать заявку'
-        ) if call.start_time > 15.minutes.ago %>
-      <%- else -%>
-        <%= image_tag('textfield.png',
-              :class => 'fff',
-              :title => 'Сопоставить абонента',
-              :alt   => '',
-              :onclick => "fff(#{call.id})"
-        ) %>
-      <%- end -%>
-    </td>
-  </tr>
+<tr id="tr<%=call.id-%>"<%= ' class="night"' if call.night?  -%>>
+  <td align="right" class="nobr"><%= Phone.humanize(call.caller) %></td>
+  <td class="nobr"><%= call.start_time.strftime("%Y-%m-%d %H:%M:%S") -%></td>
+  <td id="dur<%=call.id-%>"><%= distance_of_time_in_images(call) %></td>
+  <td><%= link_to_address_of(call.customer) %></td>
+  <td id="ph<%=call.id-%>">
+    <%- if call.customer -%>
+      <%= link_to_customer call.customer %>
+      <%= link_to( '', new_ticket_path(:customer_id => call.customer),
+            :class => 'r',
+            :title => 'Создать заявку'
+      ) if call.start_time > 15.minutes.ago %>
+    <%- else -%>
+      <%= image_tag('textfield.png',
+            :class => 'fff',
+            :title => 'Сопоставить абонента',
+            :alt   => '',
+            :onclick => "fff(#{call.id})"
+      ) %>
+    <%- end -%>
+  </td>
+</tr>
