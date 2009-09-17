@@ -1,6 +1,6 @@
-<tr id="tr<%=call.id-%>"<%= ' class="night"' if call.night?  -%>>
+<tr id="tr<%=call.id-%>">
   <td align="right" class="nobr"><%= Phone.humanize(call.caller) %></td>
-  <td class="nobr"><%= call.start_time.strftime("%Y-%m-%d %H:%M:%S") -%></td>
+  <td class="nobr<%= ' night' if call.night?  -%>"><%= call.start_time.strftime("%Y-%m-%d %H:%M:%S") -%></td>
   <td id="dur<%=call.id-%>"><%= distance_of_time_in_images(call) %></td>
   <td><%= link_to_address_of(call.customer) %></td>
   <td id="ph<%=call.id-%>">
