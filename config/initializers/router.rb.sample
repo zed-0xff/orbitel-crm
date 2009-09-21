@@ -1,3 +1,8 @@
 ActionController::Dispatcher.to_prepare(:router) do
   Router.ip_info_url = 'http://some.router.host/ip_info.rbx/IP'
+
+  Router.menu_items.unshift(
+    :name => 'ping',
+    :href => 'http://router.my/path/to/ping/script?iface={IFACE}&ip={IP}'
+  ) unless Router.menu_items.find{ |m| m[:name] == 'ping' }
 end

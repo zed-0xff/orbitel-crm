@@ -26,7 +26,7 @@
         <%= image_tag('icon_expand.gif', 
                       :alt     => 'Дополнительные функции', 
                       :class   => 'router-func',
-                      :onclick => "router_menu(event,#{ip.to_json})"
+                      :onclick => "router_menu(event, #{ip.to_json}, #{info['interface'].to_json})"
                      ) %>
       </td>
     </tr>

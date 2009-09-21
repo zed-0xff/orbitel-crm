@@ -207,7 +207,8 @@
     m.show(ev);
   });
 
-  function router_menu(ev,ip){
+
+  function router_menu(ev,ip,iface){
     var fake_ev = {stop:function(){}};
     if(ev){
       ev.stop();
@@ -221,7 +222,9 @@
 
     var menu_items = #{Router.menu_items.to_json};
     for(var i=0; i<menu_items.length; i++){
-      menu_items[i].href = menu_items[i].href.replace('{IP}',ip);
+      menu_items[i].href = menu_items[i].href.
+        replace('{IP}',ip).
+        replace('{IFACE}',iface);
     }
 
     var menu = new Proto.Menu({

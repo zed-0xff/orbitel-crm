@@ -1,5 +1,19 @@
 class Router
   cattr_accessor :ip_info_url
+  cattr_accessor :menu_items
+
+  # menu items to show in Customer -> [router part]
+  # пункты меню, которые показываются в просмотре Абонента -> "Данные роутера"
+  # (надо нажать на серенький плюсик)
+  @@menu_items = [
+    {
+      :name => 'tcpdump',
+      :href => 'tcpdump://{IP}'
+    },{
+      :name => 'iftop',
+      :href => 'iftop://{IP}'
+    }
+  ]
 
   # fetch ip info (vlan, mac address, etc)
   def self.ip_info ip
@@ -8,19 +22,6 @@ class Router
 
   # ping ip address to test for lost packets
   def self.ping ip
-  end
-
-  # menu items to show in Customer -> [router part]
-  # пункты меню, которые показываются в просмотре Абонента -> "Данные роутера"
-  # (надо нажать на серенький плюсик)
-  def self.menu_items
-    [{
-      :name => 'tcpdump',
-      :href => 'tcpdump://{IP}'
-    },{
-      :name => 'iftop',
-      :href => 'iftop://{IP}'
-    }]
   end
 
   private
