@@ -206,5 +206,31 @@
   Event.observe('billing-func', 'click', function(ev){
     m.show(ev);
   });
+
+  function router_menu(ev,ip){
+    var fake_ev = {stop:function(){}};
+    if(ev){
+      ev.stop();
+      fake_ev.clientX = ev.clientX;
+      fake_ev.clientY = ev.clientY;
+    } else {
+      var offset  = $$('img.router-func')[0].positionedOffset();
+      fake_ev.clientX = offset[0] + 5;
+      fake_ev.clientY = offset[1] + 5;
+    }
+
+    var menu_items = #{Router.menu_items.to_json};
+    for(var i=0; i<menu_items.length; i++){
+      menu_items[i].href = menu_items[i].href.replace('{IP}',ip);
+    }
+
+    var menu = new Proto.Menu({
+      selector:  '#add-settings-toggler',
+      className: 'jsmenu desktop zzz',
+      menuItems: menu_items
+    });
+    menu.show(fake_ev);
+
+  }
 EOJS
 %>

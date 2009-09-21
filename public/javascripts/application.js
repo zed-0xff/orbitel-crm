@@ -31,12 +31,13 @@ function show_additional_settings(ev){
 
 	if( ! main_add_menu ){
 		var main_add_menu_items = [
-      {
-        name:      'Календарь',
-        className: 'calendar',
-        href:      '/calendar'
-      }
-    ];
+                  {
+                    name:      'Календарь',
+                    className: 'calendar',
+                    href:      '/calendar'
+                  }
+                ];
+
 		var ck = readCookie('can_manage');
 
 		$H({ 

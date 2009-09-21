@@ -10,6 +10,19 @@ class Router
   def self.ping ip
   end
 
+  # menu items to show in Customer -> [router part]
+  # пункты меню, которые показываются в просмотре Абонента -> "Данные роутера"
+  # (надо нажать на серенький плюсик)
+  def self.menu_items
+    [{
+      :name => 'tcpdump',
+      :href => 'tcpdump://{IP}'
+    },{
+      :name => 'iftop',
+      :href => 'iftop://{IP}'
+    }]
+  end
+
   private
 
   def self.fetch_yaml_url url

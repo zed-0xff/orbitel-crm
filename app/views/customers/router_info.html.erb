@@ -3,14 +3,32 @@
 <style>
   .green { color:green }
   .red   { color:red }
+
+  table.t1 td.noborder, td.noborder {
+    border: 0;
+    padding: 0 1px;
+  }
+  tr:hover td.noborder {
+    background-color: white;
+  }
+  img.router-func {
+    cursor: pointer;
+  }
 </style>
 
 <table class="t1">
   <%- @info.each do |ip,info| -%>
     <tr class="<%= info['status'].to_i == 0 ? 'red' : 'green' -%>">
-      <td><%= ip -%></td>
-      <td><%= info['interface'] -%></td>
       <td><%= info['status'].to_i == 0 ? 'Выключен' : 'Включен' -%></td>
+      <td><%= info['interface'] -%></td>
+      <td><%= ip -%></td>
+      <td class="noborder">
+        <%= image_tag('icon_expand.gif', 
+                      :alt     => 'Дополнительные функции', 
+                      :class   => 'router-func',
+                      :onclick => "router_menu(event,#{ip.to_json})"
+                     ) %>
+      </td>
     </tr>
   <%- end -%>
 </table>
