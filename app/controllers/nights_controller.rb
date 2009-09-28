@@ -22,8 +22,21 @@ class NightsController < ApplicationController
     @users += all_users.values
 
     @nights = Settings["nights.#{@year}.#{@month}"] || {}
-    if @readonly && @nights.any?
-      @users.delete_if{ |u| !@nights.values.include?(u.id) }
+    if @readonly
+      @users.delete_if{ |u| !@nights.values.include?(u.id) } if @nights.any?
+    else
+      prev_month = @month - 1
+      prev_year  = @year
+      if prev_month == 0
+        prev_year -= 1
+        prev_month = 12
+      end
+      prev_nights    = Settings["nights.#{prev_year}.#{prev_month}"] || {}
+      prev_month_end = Date.civil( prev_year, prev_month, -1 )
+      @prev_month_last = {}
+      prev_nights.sort_by{ |dt,uid| dt }.each do |dt,uid|
+        @prev_month_last[uid] = (prev_month_end - dt) + 1
+      end
     end
   end
 

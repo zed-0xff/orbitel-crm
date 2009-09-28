@@ -231,7 +231,7 @@
 
     col.each(function(el){
       if( el.hasClassName('selected')) return;
-      if( el.parentNode.hasClassName('noprint')) return;
+      if( el.parentNode.hasClassName('noprint') && !prev_month_last[td2uid(el)]) return;
       var db = daysBefore(el);
       var da = daysAfter(el);
       if( da === false && db === false ) return;
@@ -269,10 +269,14 @@
     return klass ? $$('.' + klass) : [];
   }
 
-  function daysBefore(el){
-    var r = 0;
+  var prev_month_last = #{@prev_month_last.to_json};
+
+  function daysBefore(td){
+    var r = 0, el = td;
     while( (el = el.previousElementSibling) && !el.hasClassName('selected') ) r += 1;
-    return el ? r : false;
+    if(el) return r;
+    //console.log( td2day(td) + prev_month_last[td2uid(td)]);
+    return (prev_month_last[td2uid(td)] || 11) + r - 2;
   }
 
   function daysAfter(el){
