@@ -4,6 +4,7 @@ module NightsHelper
   
     klass += " weekend" if [6,7].include?(date.cwday)
     klass += " today" if date == Date.today
+    klass += " day#{date.day}" unless block_given?
 
     buffer << "<td class=\"#{klass}\">"
 

@@ -6,6 +6,14 @@
     padding: 0;
   }
 
+  table#cal td.wday {
+    text-align: center;
+    color: gray;
+    font-size: 6pt;
+    width: 16px;
+    max-width: 16px;
+  }
+
   td.weekend {
     border: solid 1px #888888;
 /*    background-color: #ffcccc !important;*/
@@ -57,11 +65,9 @@
   b.dayscount {
     display: block;
     text-align: right;
-    position: relative;
-    left: 2em;
-    top: 1px;
+    position: absolute;
     font-weight: normal;
-    color: lightgrey;
+    color: #bbb;
     font-size: 7pt;
   }
 
@@ -186,6 +192,7 @@
 <%= javascript_tag <<-EOJS
   Sortable.create("cal_tbody", {tag:"tr", ghosting:true, handle:"username"});
 
+  // handle clicking on days
   Event.observe('cal','click',function(ev){
     var td = ev.element();
     if( td.tagName != 'TD' || !td.hasClassName('wday') ) return;
@@ -201,8 +208,78 @@
       }
       checkCol(td);
     }
+    handle_mouseover(ev);
     recountWorkCounts();
   });
+
+  var prev_col;
+
+  // handle mouseover of days
+  Event.observe('cal_tbody','mouseover', handle_mouseover);
+
+  function handle_mouseover(ev){
+    var el = ev.target;
+    if( !el || !el.hasClassName('wday') ) return;
+    if( prev_col ) prev_col.each(function(t){ t.innerHTML = '' });
+    if( el.hasClassName('selected') ) return;
+
+    var col = columnOf(el);
+
+    if( col.any(function(el){ return el.hasClassName('selected') })) return;
+
+    prev_col = col;
+
+    col.each(function(el){
+      if( el.hasClassName('selected')) return;
+      if( el.parentNode.hasClassName('noprint')) return;
+      var db = daysBefore(el);
+      var da = daysAfter(el);
+      if( da === false && db === false ) return;
+
+      var dmin = (da===false) ? db : ((db===false) ? da : Math.min(da,db));
+      var html = '';
+
+      el.style.fontWeight = '';
+
+      if( dmin <= 2)
+        el.style.color = 'red';
+      else if( dmin >= 4 ) {
+        el.style.color = 'green';
+        el.style.fontWeight = 'bold';
+      } else
+        el.style.color = 'gray'
+
+      if( db === false || (da !== false && da < db )){
+        html += da + '&raquo;';
+        el.style.textAlign = 'right';
+      } else if( da === false || db < da){
+        html += '&laquo;' + db;
+        el.style.textAlign = 'left';
+      } else {
+        html += da;
+        el.style.textAlign = 'center';
+      }
+
+      el.innerHTML = html;
+    });
+  }
+
+  function columnOf(el){
+    var klass = el.classNames().find(function(x){ if(x.length>3 && x.substr(0,3)=='day') return true })
+    return klass ? $$('.' + klass) : [];
+  }
+
+  function daysBefore(el){
+    var r = 0;
+    while( (el = el.previousElementSibling) && !el.hasClassName('selected') ) r += 1;
+    return el ? r : false;
+  }
+
+  function daysAfter(el){
+    var r = 0;
+    while( (el = el.nextElementSibling) && !el.hasClassName('selected') ) r += 1;
+    return el ? r : false;
+  }
 
   // checks the table column to have the only _one_ instance of selected cell
   function checkCol(td){
@@ -237,6 +314,8 @@
     $('param_nights').value = nights;
 
     $('params_form').onsubmit();
+
+    setnoprint();
   }
   
 EOJS
@@ -259,6 +338,7 @@ EOJS
   function recountWorkCounts(){
     var counts = {};
     var c;
+    var uid;
 
     // initialize counts
     $$('tr.user-row').each(function(tr){
@@ -272,8 +352,16 @@ EOJS
 
     // output results
     $$('tr.user-row').each(function(tr){
-      c = counts[ tr2uid(tr) ];
-      tr.lastElementChild.innerHTML = "<b class='dayscount'>" + (c > 0 ? c : '') + "</b>";
+      c = counts[ (uid=tr2uid(tr)) ];
+      if( !$('cnt' + uid) ){
+        var el = document.createElement('b');
+        el.className = 'dayscount';
+        el.id = 'cnt' + uid;
+        el.style.top  = tr.offsetTop + 3;
+        el.style.left = tr.offsetLeft + tr.clientWidth + 6;
+        document.body.appendChild(el);
+      }
+      $('cnt' + uid).innerHTML = (c > 0 ? c : '');
     });
   }
 
