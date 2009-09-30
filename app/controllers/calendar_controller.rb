@@ -15,6 +15,13 @@ class CalendarController < ApplicationController
     count   :calls, :date_field => 'start_time'
     count   :closed_tickets, :class => Ticket, :date_field => 'closed_at'
     count   :reopened_tickets, :class => TicketHistoryEntry, :conditions => {:new_status => Ticket::ST_REOPENED}
+
+    @totals = Hash.new(0)
+    @dobjects.values.each do |day|
+      day.each do |k,v|
+        @totals[k] += v.is_a?(Array) ? v.size : v
+      end
+    end
   end
 
   private

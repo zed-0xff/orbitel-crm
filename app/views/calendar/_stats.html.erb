@@ -1,0 +1,37 @@
+<div id="stats">
+
+  <table>
+    <tr>
+      <td>новых домов:</td>
+      <td><a class="house"><%= @totals[:houses] -%></a>
+    </tr>
+    <tr>
+      <td>новых абонентов:</td>
+      <td><a class="customer" style="padding-left:18px"><%= @totals[:customers] -%></a>
+    </tr>
+    <tr>
+      <td>звонков от абонентов:</td>
+      <td><a class="calls"><%= @totals[:calls] -%></a>
+    </tr>
+  </table>
+
+  <table style="margin-left: 3em">
+    <tr>
+      <td>заявок создано:</td>
+      <td><a class="tickets"><%= @totals[:tickets] -%></a>
+    </tr>
+    <tr>
+      <td>заявок выполнено:</td>
+      <td><a class="tickets-closed"><%= @totals[:closed_tickets] -%></a>
+    </tr>
+    <tr>
+      <td>заявок переоткрыто:</td>
+      <td><a class="tickets-reopened"><%= @totals[:reopened_tickets] -%></a>
+    </tr>
+  </table>
+
+  <div> Итого: </div>
+</div>
+
+<div class="clear"></div>
+

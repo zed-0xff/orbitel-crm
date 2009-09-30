@@ -119,6 +119,33 @@
   }
   div.rarr { float:right }
   div.larr { float:left  }
+
+  div#stats {
+    margin-top: 1em;
+    margin-right: 3em;
+  }
+  table.lcal div#stats {
+    margin-right: 0;
+  }
+
+  div#stats > div, div#stats > table {
+    float: right;
+    margin-left: 3em;
+  }
+  div#stats > div {
+    margin: 0 -2em 0 4em;
+    font-weight: bold;
+    padding-top: 3px;
+  }
+  div#stats a {
+    color: black;
+    cursor: default;
+    background-color: white;
+    margin: 0;
+  }
+  div#stats a:hover {
+    text-decoration: none;
+  }
 </style>
 
 <div class="larr"><%= prev_month_link -%></div>
@@ -173,10 +200,14 @@
       <%= "</tr><tr>" if dt.cwday == 7 %>
     <% end %>
     <% if @end_date.cwday != 7 %>
-      <td colspan="<%= 7-@end_date.cwday -%>"></td>
+      <td colspan="<%= 7-@end_date.cwday -%>">
+        <%= render 'stats' if @end_date.cwday <= 3 %>
+      </td>
     <% end %>
   </tr>
 </table>
+
+<%= render 'stats' unless @end_date.cwday <= 3 %>
 
 <%= javascript_tag handle_ctrl_arrows %>
 
