@@ -23,7 +23,7 @@ class CalendarController < ApplicationController
     klass = opts[:class] || tag.to_s.capitalize.singularize.constantize
     opts[:date_field] ||= 'created_at'
     klass.all(
-      :conditions => { opts[:date_field] => @start_date..@end_date },
+      :conditions => { opts[:date_field] => @start_date.to_time..((@end_date.to_date+1).to_time-1) },
       :order      => opts[:date_field]
     ).each do |obj|
       @dobjects[ obj.created_at.to_date ][tag] << obj
@@ -34,7 +34,7 @@ class CalendarController < ApplicationController
     klass = opts[:class] || tag.to_s.capitalize.singularize.constantize
     opts[:date_field] ||= 'created_at'
     klass.count(
-      :conditions => { opts[:date_field] => @start_date..@end_date }.merge(opts[:conditions] || {}),
+      :conditions => { opts[:date_field] => @start_date.to_time..((@end_date.to_date+1).to_time-1) }.merge(opts[:conditions] || {}),
       :group      => "DATE(#{opts[:date_field]})",
       :order      => opts[:date_field]
     ).each do |date,cnt|
