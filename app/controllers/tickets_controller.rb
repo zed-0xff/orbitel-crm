@@ -324,7 +324,7 @@ class TicketsController < ApplicationController
   def rescue_action(exception)
     respond_to do |format|
       format.html {
-        super
+        super(exception)
       }
       format.yaml {
         log_error exception
