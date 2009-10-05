@@ -5,7 +5,7 @@ class TariffChange < Ticket
   validates_presence_of :tariff, :message => '^Тариф не выбран'
   validates_presence_of :contact_name, :message => "^Абонент не указан"
 
-  def validate
+  def validate_on_create
     if self.date
       if self.date < (Date.today-1.month)
         self.errors.add :date, "^Дата не может быть раньше одного месяца от текущей" 
