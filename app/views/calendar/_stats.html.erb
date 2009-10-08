@@ -3,30 +3,32 @@
   <table>
     <tr>
       <td>новых домов:</td>
-      <td><a class="house"><%= @totals[:houses] -%></a>
+      <td><a class="house"><%= @totals[:houses] -%></a></td>
+      <td><%= extrapolate @totals[:houses] -%></td>
     </tr>
     <tr>
       <td>новых абонентов:</td>
-      <td><a class="customer" style="padding-left:18px"><%= @totals[:customers] -%></a>
+      <td><a class="customer" style="padding-left:18px"><%= @totals[:customers] -%></a></td>
+      <td><%= extrapolate @totals[:customers] -%></td>
     </tr>
     <tr>
       <td>звонков от абонентов:</td>
-      <td><a class="calls"><%= @totals[:calls] -%></a>
+      <td><a class="calls"><%= @totals[:calls] -%></a></td>
     </tr>
   </table>
 
   <table style="margin-left: 3em">
     <tr>
       <td>заявок создано:</td>
-      <td><a class="tickets"><%= @totals[:tickets] -%></a>
+      <td><a class="tickets"><%= @totals[:tickets] -%></a></td>
     </tr>
     <tr>
       <td>заявок выполнено:</td>
-      <td><a class="tickets-closed"><%= @totals[:closed_tickets] -%></a>
+      <td><a class="tickets-closed"><%= @totals[:closed_tickets] -%></a></td>
     </tr>
     <tr>
       <td>заявок переоткрыто:</td>
-      <td><a class="tickets-reopened"><%= @totals[:reopened_tickets] -%></a>
+      <td><a class="tickets-reopened"><%= @totals[:reopened_tickets] -%></a></td>
     </tr>
   </table>
 

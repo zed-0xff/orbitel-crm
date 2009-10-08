@@ -8,6 +8,14 @@ module CalendarHelper
     end
   end
 
+  def extrapolate value
+    e = Date.today.end_of_month
+    if Date.today < e && value.to_i > 0 && params[:pos].to_i == 0
+      t = (1.0 * value.to_i / Date.today.day * e.day).to_i
+      "<span class=\"extrapolate\" title=\"прогноз\">#{t}</span>"
+    end
+  end
+
   def prev_month_link opts = {}
     month_link :prev, opts
   end
