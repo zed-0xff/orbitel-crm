@@ -33,6 +33,8 @@ class CalendarController < ApplicationController
       :conditions => { opts[:date_field] => @start_date.to_time..((@end_date.to_date+1).to_time-1) },
       :order      => opts[:date_field]
     ).each do |obj|
+      # skip houses that have no customers
+      next if obj.is_a?(House) && !obj.customers.first
       @dobjects[ obj.created_at.to_date ][tag] << obj
     end
   end
