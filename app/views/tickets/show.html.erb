@@ -85,7 +85,10 @@
     </tr>
     <tr>
       <td colspan="2" style="<%=priority_style(@ticket.priority)-%>; font-size:120%; padding-left: 0.8em; padding-right: 0.8em">
-        <%= h(@ticket.notes).strip.gsub("\n",'<br/>') %>
+        <%= auto_link(simple_format(h(@ticket.notes))) do |text|
+          text.size > 30 ? "#{text[0..20]} .. #{text[-10..-1]}"  : text
+        end
+        %>
       </td>
     </tr>
   <% end %>
