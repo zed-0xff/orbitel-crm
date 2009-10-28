@@ -327,6 +327,8 @@ EOJS
 <% end %>
 
 <%= javascript_tag <<-EOJS
+  #{handle_ctrl_arrows}
+  
   Event.observe(window,'load',setnoprint);
   Event.observe(window,'load',recountWorkCounts);
 

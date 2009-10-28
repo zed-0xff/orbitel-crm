@@ -45,7 +45,7 @@ module NightsHelper
       month = 1
       year += 1
     end
-    link_to title, {:month => month, :year => year}, :class => 'noprint'
+    link_to title, {:month => month, :year => year}, :class => 'noprint', :id => 'next-link'
   end
 
   def link_to_prev_month title='&laquo;'
@@ -55,6 +55,6 @@ module NightsHelper
       month = 12
       year -= 1
     end
-    link_to title, {:month => month, :year => year}, :class => 'noprint'
+    link_to title, {:month => month, :year => year}, :class => 'noprint', :id => 'prev-link'
   end
 end

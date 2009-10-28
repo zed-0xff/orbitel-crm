@@ -340,6 +340,11 @@ a.user {
 	white-space: pre;
 }
 
+a.user.deleted {
+  text-decoration: line-through;
+  color: gray;
+}
+
 a.house {
 	white-space: pre;
 	color: black;

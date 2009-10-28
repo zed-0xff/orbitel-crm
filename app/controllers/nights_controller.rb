@@ -22,6 +22,11 @@ class NightsController < ApplicationController
     @users += all_users.values
 
     @nights = Settings["nights.#{@year}.#{@month}"] || {}
+
+    # show deleted users if they have any nights in current month
+    # hide otherwise
+    @users.delete_if{ |u| u.deleted? && !@nights.values.include?(u.id) } if @nights.any?
+
     if @readonly
       @users.delete_if{ |u| !@nights.values.include?(u.id) } if @nights.any?
     else

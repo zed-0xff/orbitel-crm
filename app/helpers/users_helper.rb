@@ -52,6 +52,7 @@ module UsersHelper
     )
     options[:class] << ' male' if user.male?
     options[:class] << ' female' if user.female?
+    options[:class] << ' deleted' if user.deleted?
     content_text   = options.delete(:content_text)
     content_text ||= user.send(options.delete(:content_method))
     content_text = user.login if content_text.blank?

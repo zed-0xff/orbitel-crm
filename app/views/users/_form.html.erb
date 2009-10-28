@@ -25,5 +25,11 @@
   <p><%= f.label :password_confirmation %><br/>
   <%= f.password_field :password_confirmation %></p>
 
+  <p>
+    <%= f.check_box :deleted %>
+    <%= f.label :deleted, 'Пользователь удален' %><br>
+    <small style="padding-left:20px; color:gray">(удаленные пользователи не могут входить в систему)</small>
+  </p>
+
   <p><%= submit_tag %></p>
 <% end -%>
