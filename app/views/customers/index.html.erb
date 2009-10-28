@@ -18,8 +18,13 @@
 <table class="t1 customers">
   <% @customers.each do |customer| %>
     <tr>
-      <td><%= link_to_customer customer %>
-      <td><%= link_to_address_of customer %>
+      <td><%= link_to_customer customer %></td>
+      <td><%= link_to_address_of customer %></td>
+      <td><%= link_to(
+          image_tag('edit.png', :title => 'Редактировать'),
+          edit_customer_path(customer)
+        ) if current_user.can_manage?(:customers) %>
+      </td>
     </tr>
   <% end %>
 </table>
