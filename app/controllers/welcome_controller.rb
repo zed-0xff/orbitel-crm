@@ -4,10 +4,13 @@ class WelcomeController < ApplicationController
 
   def index
     if logged_in?
+      cond = {}
+      cond = "comment IS NOT NULL" if params[:comments_only]
       @history = TicketHistoryEntry.paginate(
         :page     => params[:page],
         :per_page => params[:per_page] || 30,
-        :order    => "created_at DESC"
+        :order    => "created_at DESC",
+        :conditions => cond
       )
     end
   end

@@ -1,4 +1,18 @@
-<h2 style="margin: 30 0 0 0">Последние события:</h2>
+<h2 style="margin: 30 0 0 0">
+  Последние события:
+  <span style="padding-left: 1em; font-size:7pt; font-weight: normal; position: relative; top: -1px">
+  <%= link_to_unless_current '[все]', { 
+    :page => params[:page] 
+  } 
+  %>
+  <%= link_to_unless_current '[комментарии]', { 
+    :page => params[:page],
+    :comments_only => 1
+  } 
+  %>
+  <span>
+</h2>
+
 <table style="margin: 0 0 8 8" class="history">
   <% @history.group_by{ |he| he.created_at.to_date }.each do |date,entries| %>
     <tr>
@@ -20,3 +34,19 @@
 </table>
 
 <%= will_paginate @history %>
+
+<%= javascript_tag <<-EOJS
+      // handle Ctrl+Left & Ctrl+Right keys 
+      Event.observe(window, 'keydown', function(ev){ 
+        if( ev.ctrlKey ){ 
+          var page;
+          if( ev.keyCode == 0x25 )  
+            page = #{params[:page].to_i > 1 ? (params[:page].to_i-1) : 'false' };
+          else if( ev.keyCode == 0x27 )  
+            page = #{[params[:page].to_i,1].max + 1};
+     
+          if( page ) document.location = "#{params[:comments_only] ? '?comments_only=1&page=' : '?page='}" + page; 
+        } 
+      });
+EOJS
+%>
