@@ -66,7 +66,13 @@
 <div class="rarr"><%= next_customer_link -%></div>
 <h1><%= h @customer.name %></h1>
 
-<h3>Данные абонента</h3>
+<h3>
+  Данные абонента
+  <%= link_to(
+    image_tag('edit.png', :title => 'Редактировать'), 
+    edit_customer_path(@customer)
+  ) if current_user.can_manage?(:customers) %>
+</h3>
 
 <table class="t1">
   <tr>

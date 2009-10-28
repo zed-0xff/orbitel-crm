@@ -7,10 +7,11 @@ class CustomersController < ApplicationController
   helper :calls, :tickets
 
   before_filter :prepare_customer
+  before_filter :check_can_manage, :only => %w'edit update'
 
   skip_before_filter :verify_authenticity_token, :only => [:auto_complete]
 
-  verify :method => :post, :only => %w'billing_toggle_inet'
+  verify :method => :post, :only => %w'billing_toggle_inet delete_phone add_phone'
 
   BILLING_INFO_CACHE_PERIOD = 4.hours
   ROUTER_INFO_CACHE_PERIOD  = 5.minutes
@@ -291,7 +292,37 @@ class CustomersController < ApplicationController
     end
   end
 
+  def update
+    @customer.update_attributes(params[:customer])
+    if (t=params[:new_phone].to_s.gsub(/[^0-9]/,'')).size >= 5
+      @customer.phones.add t
+    end
+    redirect_to customer_path(@customer)
+  end
+
+  # called from AJAX
+  def delete_phone
+    @phone = @customer.phones.find(params[:phone_id].to_i)
+    @phone.destroy
+    render :partial => 'phones'
+  end
+
+  # called from AJAX
+  def add_phone
+    if (t=params[:new_phone].to_s.gsub(/[^0-9]/,'')).size >= 5
+      @customer.phones.add t
+      params[:new_phone] = nil
+    else
+      @new_phone_is_invalid = true
+    end
+    render :partial => 'phones'
+  end
+
   private
+
+  def check_can_manage
+    current_user.can_manage?:customers
+  end
 
   def prepare_customer
     @customer = Customer.find(params[:id].to_i) if params[:id]

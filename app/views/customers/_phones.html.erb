@@ -1,0 +1,28 @@
+<table>
+  <% @customer.phones.each do |phone| %>
+    <tr>
+      <td><%= phone.humanize %></td>
+      <td><%= link_to_remote(
+        image_tag('cross-small.png', :title => 'Удалить телефон'),
+        :update  => 'phones_place',
+        :url     => { :action => 'delete_phone', :phone_id => phone, :id => @customer },
+        :confirm => "Удалить телефон #{phone.humanize} ?"
+      ) %></td>
+    </tr>
+  <% end %>
+  <tr>
+    <td><%= text_field_tag 'new_phone', (params[:new_phone] || 'новый номер'), 
+      :maxlength => 15, 
+      :size      => 12,
+      :style     => 'color:#999; text-align: center;' + (@new_phone_is_invalid ? 'border: solid 2px red' : ''),
+      :onfocus   => 'this.style.color="black"; if(this.value=="новый номер") this.value=""',
+      :onblur    => 'if(this.value == ""){this.value="новый номер"; this.style.color="#999"}'
+    %></td>
+    <td><%= link_to_remote(
+      image_tag('add.png', :title => 'Добавить телефон'),
+      :update  => 'phones_place',
+      :url     => { :action => 'add_phone', :id => @customer },
+      :with => "'new_phone=' + $F('new_phone')"
+    ) %></td>
+  </tr>
+</table>
