@@ -32,7 +32,7 @@ module AuthenticatedSystem
     #  end
     #
     def authorized?(action = action_name, resource = nil)
-      logged_in?
+      logged_in? && !current_user.deleted?
     end
 
     # Filter method to enforce a login requirement.
@@ -64,8 +64,15 @@ module AuthenticatedSystem
     def access_denied
       respond_to do |format|
         format.html do
-          store_location
-          redirect_to new_session_path
+          if current_user && current_user.deleted?
+            cookies.delete :can_manage
+            logout_killing_session!
+            redirect_to '/'
+            flash[:error] = 'Пользователь удален'
+          else
+            store_location
+            redirect_to new_session_path
+          end
         end
         # format.any doesn't work in rails version < http://dev.rubyonrails.org/changeset/8987
         # Add any other API formats here.  (Some browsers, notably IE6, send Accept: */* and trigger 
