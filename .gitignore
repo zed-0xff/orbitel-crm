@@ -12,3 +12,4 @@ db/schema.rb
 test
 krus_customers.yml
 *.sql
+public/system

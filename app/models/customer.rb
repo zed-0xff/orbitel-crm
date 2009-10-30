@@ -17,6 +17,8 @@ class Customer < ActiveRecord::Base
     end
   end
 
+  has_attached_file :photo, :styles => { :profile => "300x300>" }
+
   def initialize *args
     if args.first.is_a?(Hash)
       phones   = args.first.delete(:phones)

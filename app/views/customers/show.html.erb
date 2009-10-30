@@ -60,10 +60,25 @@
     margin: 0;
     padding: 0;
   }
+
+  div.photo {
+    float: right;
+    margin-right: 20px;
+    margin-top: 10px;
+    border: solid 1px lightgrey;
+    padding: 8px;
+  }
 </style>
 
 <div class="larr"><%= prev_customer_link -%></div>
 <div class="rarr"><%= next_customer_link -%></div>
+
+<% if @customer.photo? %>
+  <div class="photo">
+    <%= image_tag @customer.photo.url(:profile), :class => 'photo' %>
+  </div>
+<% end %>
+
 <h1><%= h @customer.name %></h1>
 
 <h3>
@@ -74,7 +89,8 @@
   ) if current_user.can_manage?(:customers) %>
 </h3>
 
-<table class="t1">
+
+<table class="t1" style="max-width: 30em">
   <tr>
     <th>имя
     <td><%= h @customer.name %>
