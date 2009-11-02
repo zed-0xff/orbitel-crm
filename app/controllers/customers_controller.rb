@@ -11,7 +11,7 @@ class CustomersController < ApplicationController
 
   skip_before_filter :verify_authenticity_token, :only => [:auto_complete]
 
-  verify :method => :post, :only => %w'billing_toggle_inet delete_phone add_phone'
+  verify :method => :post, :only => %w'billing_toggle_inet billing_correct_balance delete_phone add_phone'
 
   BILLING_INFO_CACHE_PERIOD = 4.hours
   ROUTER_INFO_CACHE_PERIOD  = 5.minutes
@@ -123,6 +123,11 @@ class CustomersController < ApplicationController
 
   def billing_toggle_inet
     @info = @customer.billing_toggle_inet(params[:state] == 'on')
+    billing_info
+  end
+
+  def billing_correct_balance
+    @info = @customer.billing_correct_balance(params[:amount], params[:comment])
     billing_info
   end
 

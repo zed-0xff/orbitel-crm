@@ -195,6 +195,30 @@
     },{
       separator: true
     },{
+      name: 'Коррекция баланса..',
+      className: 'correct-bal',
+      callback: function() {
+        var amount = prompt("Сумма?\\n\\n(может быть отрицательной)");
+        if( amount == null ) return;
+        amount = parseFloat(amount);
+        if( isNaN(amount) || amount.abs() < 0.01 ){ alert("неверная сумма"); return }
+      
+        var comment = prompt("Причина коррекции");    
+        if( !comment ){ alert("Причина должна быть введена"); return }
+        comment = comment.replace(/^\s*|\s*$/g,'')
+        if( !comment ){ alert("Причина должна быть введена"); return }
+
+        #{ remote_function(
+            :url       => { :action => 'billing_correct_balance', :id => @customer },
+            :with      => "'amount=' + encodeURIComponent(amount) + '&comment=' + encodeURIComponent(comment)",
+            :update    => 'billing_info',
+            :loading   => "$('billing_indicator').show()",
+            :complete  => "$('billing_indicator').hide()"
+        )}
+      }
+    },{
+      separator: true
+    },{
       name: 'Включить Интернет',
       className: 'inet-on',
       callback: function() {

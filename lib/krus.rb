@@ -1,3 +1,6 @@
+require 'cgi'
+require 'yaml'
+
 class Krus
   cattr_accessor :host, :port, :key
 
@@ -30,14 +33,40 @@ class Krus
     fetch_yaml_url "user_info/#{uid.to_i}.yaml?toggle=#{st}&key=#{key}"
   end
 
+  # Коррекция баланса юзера
+  # возвращает то же, что и в user_info
+  def self.user_correct_balance uid, amount, comment
+    fetch_yaml_url(
+      "payments/correct_balance/#{uid.to_i}" +
+        "?amount=#{CGI.escape(amount)}" + 
+        "&comment=#{CGI.escape(comment)}" + 
+        "&key=#{key}",
+      true
+    )
+  end
+
   private
 
-  def self.fetch_yaml_url url
+  def self.fetch_yaml_url url, follow_redirect = false
     url = URI.parse "http://#{host}:#{port}/#{url}"
     res = Net::HTTP.start(url.host, url.port) {|http|
       http.read_timeout = 600
       http.get(url.request_uri)
     }
+
+    if RAILS_ENV == 'development'
+      Rails.logger.info("KRUS status:   #{res.code} #{res.msg}")
+      Rails.logger.info("KRUS redirect: #{res['location']}") unless res['location'].blank?
+      Rails.logger.info("KRUS body:     #{res.body}") 
+    end
+
+    if follow_redirect && res.is_a?(Net::HTTPRedirection)
+      return fetch_yaml_url( 
+        res['location'].
+        sub("http://#{host}:#{port}/",''). # make location relative (DIRTY!)
+        sub("http://#{host}/",'')
+      )
+    end
 
     YAML::load( res.body )
   end

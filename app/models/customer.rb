@@ -86,6 +86,19 @@ class Customer < ActiveRecord::Base
     r
   end
 
+  def billing_correct_balance amount, comment
+    return false unless self.external_id
+    r = Krus.user_correct_balance(self.external_id, amount, comment)
+    if r && r[:status] && r[:status].is_a?(Hash)
+      Rails.cache.write(
+        "customer.#{self.id}.ips", 
+        r[:status].keys.sort_by{ |ip| ip.split('.').map(&:to_i) },
+        :expires_in => 8.hours
+      )
+    end
+    r
+  end
+
   def router_info
     ips = self.ips
     return nil unless ips

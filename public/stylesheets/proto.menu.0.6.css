@@ -178,6 +178,9 @@ div.jsmenu a {
 .jsmenu.zzz a.inet-off {
   background: #f9f8f7 url(/images/minus-circle-frame.png) 2px 50% no-repeat;
 }
+.jsmenu.zzz a.correct-bal {
+  background: #f9f8f7 url(/images/money_add.png) 2px 50% no-repeat;
+}
 .jsmenu.zzz a.customers {
   background: #f9f8f7 url(/images/customer.png) 2px 50% no-repeat;
 }
