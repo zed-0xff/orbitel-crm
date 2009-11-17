@@ -60,6 +60,19 @@ class Customer < ActiveRecord::Base
     self.flat = a[1].strip if a[1]
   end
 
+  def billing_tariff_name
+    cache_key = "customer.#{self.id}.tariff"
+    r = Rails.cache.read cache_key
+    return r if r
+
+    bi = billing_info
+    return nil unless bi
+
+    r = bi[:tarif]
+    Rails.cache.write cache_key, r, :expires_in => 24.hours
+    r
+  end
+
   def billing_info
     return nil unless self.external_id
     r = Krus.user_info(self.external_id)

@@ -113,6 +113,7 @@ class CustomersController < ApplicationController
 
   def billing_info
     expire_fragment("customers/#{@customer.id}/billing_info")
+    Rails.cache.delete "customer.#{@customer.id}.tariff"
     @info ||= @customer.billing_info
     if v = @info[:traf_report]
       v.delete(:in_sat_day) if v[:in_sat] == v[:in_sat_day]
