@@ -1,0 +1,2 @@
+module Tickets::ConnectionTicketsHelper
+end

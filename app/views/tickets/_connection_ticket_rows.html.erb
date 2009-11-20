@@ -1,0 +1,28 @@
+<tr><td colspan="2"><hr width="90%"/></td></tr>
+
+<tr>
+  <th>тариф</th>
+  <td align="center" style="font-size:120%; padding-left: 0.8em; padding-right: 0.8em">
+    <%= h @ticket.tariff_name %>
+  </td>
+</tr>
+
+<tr>
+  <th>VLAN</th>
+  <td align="center" style="font-size:120%; padding-left: 0.8em; padding-right: 0.8em">
+    <span id="vlan_content">
+      <%= render 'tickets/connection_tickets/vlan' %>
+    </span>
+  </td>
+</tr>
+
+<tr>
+  <th>IP</th>
+  <td align="center" style="font-size:120%; padding-left: 0.8em; padding-right: 0.8em">
+    <% if @ticket.ip %>
+      <%= h @ticket.ip %>
+    <% else %>
+      <font color=red>IP не назначен</font>
+    <% end %>
+  </td>
+</tr>
