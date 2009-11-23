@@ -2,6 +2,9 @@ class ConnectionTicket < Ticket
   before_create :set_dept
   serialize :custom_info
 
+  validates_format_of :vlan, :with => /^\d*$/
+  validates_format_of :ip,   :with => /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/, :allow_blank => true
+
   def title
     "Подключение"
   end

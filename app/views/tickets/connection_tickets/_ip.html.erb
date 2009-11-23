@@ -1,0 +1,11 @@
+<%- if @ticket.ip.blank? -%>
+  <font color="red">IP не назначен</font>
+<%- else -%>
+  <%= h @ticket.ip -%>
+<%- end -%>
+
+<%= link_to_remote image_tag('edit.png'), 
+  :update   => 'ip_content',
+  :html     => { :class => 'toolbox' },
+  :url      => { :controller => 'tickets/connection_tickets', :action => 'ip_edit', :id => @ticket }
+-%>

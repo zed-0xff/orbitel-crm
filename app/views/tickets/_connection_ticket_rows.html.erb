@@ -1,15 +1,36 @@
+<% content_for :head do %>
+  <style>
+    div.fieldWithErrors {
+      display: inline;
+      background-color: inherit;
+    }
+    div.fieldWithErrors input {
+      border: solid 2px red;
+      margin-bottom: 1px;
+    }
+
+    .toolbox {
+      float: right;
+      margin-top: 4px;
+    }
+    div.toolbox {
+      margin-top: 0;
+    }
+  </style>
+<% end %>
+
 <tr><td colspan="2"><hr width="90%"/></td></tr>
 
 <tr>
   <th>тариф</th>
-  <td align="center" style="font-size:120%; padding-left: 0.8em; padding-right: 0.8em">
+  <td align="center" style="font-size:120%">
     <%= h @ticket.tariff_name %>
   </td>
 </tr>
 
 <tr>
   <th>VLAN</th>
-  <td align="center" style="font-size:120%; padding-left: 0.8em; padding-right: 0.8em">
+  <td align="center" style="font-size:120%">
     <span id="vlan_content">
       <%= render 'tickets/connection_tickets/vlan' %>
     </span>
@@ -18,11 +39,9 @@
 
 <tr>
   <th>IP</th>
-  <td align="center" style="font-size:120%; padding-left: 0.8em; padding-right: 0.8em">
-    <% if @ticket.ip %>
-      <%= h @ticket.ip %>
-    <% else %>
-      <font color=red>IP не назначен</font>
-    <% end %>
+  <td align="center" style="font-size:120%">
+    <span id="ip_content">
+      <%= render 'tickets/connection_tickets/ip' %>
+    </span>
   </td>
 </tr>

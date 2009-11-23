@@ -1,22 +1,22 @@
 <% remote_form_for( 
   :ticket, 
-  :update => 'vlan_content',
+  :update => 'ip_content',
   :url    => {:action => 'update', :id => @ticket}, 
   :html   => {:style => 'margin:0'} 
 ) do |f| %>
-  <%= f.text_field 'vlan', :maxlength => 4 %>
+  <%= f.text_field 'ip', :maxlength => 15 %>
 
   <div class="toolbox">
     <%= link_to_remote 'отмена', 
       :html   => { :style  => 'font-size:10pt; position: relative; top: -3px' },
-      :update => 'vlan_content',
-      :url    => { :controller => 'tickets/connection_tickets', :action => 'vlan', :id => @ticket }
+      :update => 'ip_content',
+      :url    => { :controller => 'tickets/connection_tickets', :action => 'ip', :id => @ticket }
     %>
     <%= image_submit_tag 'disk-black.png' %>
   </div>
 <% end %>
 
 <%= javascript_tag <<EOJS
-  $('ticket_vlan').focus()
+  $('ticket_ip').focus()
 EOJS
 %>
