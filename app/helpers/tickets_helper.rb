@@ -76,11 +76,11 @@ module TicketsHelper
 
     if he.comment
       desc += "<br/>" unless desc.blank?
-      desc += "<b>" 
+      desc += "<b>" unless he.system_message?
       desc += auto_link(h(length ? truncate(he.comment, length) : he.comment)).gsub("\n","<br/>") do |text|
         text.size > 30 ? "#{text[0..20]} .. #{text[-10..-1]}"  : text
       end
-      desc += "</b>"
+      desc += "</b>" unless he.system_message?
     end
     desc
   end
