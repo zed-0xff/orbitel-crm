@@ -16,6 +16,12 @@
     div.toolbox {
       margin-top: 0;
     }
+
+    img.ajax {
+      position: absolute;
+      right: 20px;
+      top: 4px;
+    }
   </style>
 <% end %>
 
@@ -42,6 +48,15 @@
   <td align="center" style="font-size:120%">
     <span id="ip_content">
       <%= render 'tickets/connection_tickets/ip' %>
+    </span>
+  </td>
+</tr>
+
+<tr>
+  <th>роутер</th>
+  <td align="center" style="font-size:120%">
+    <div id="router_content" style="position: relative">
+      <%= render 'tickets/connection_tickets/router' %>
     </span>
   </td>
 </tr>

@@ -1,15 +1,17 @@
 class Tickets::ConnectionTicketsController < ApplicationController
   before_filter :prepare_ticket
-  before_filter :check_can_manage, :only => %w'vlan_edit ip_edit update'
+  before_filter :check_can_manage, :except => %w'vlan ip'
 
-  def vlan;      render '_vlan',      :layout => false; end
-  def vlan_edit; render '_vlan_edit', :layout => false; end
-  def ip;        render '_ip',        :layout => false; end
+  layout false
+
+  def vlan;      render '_vlan'      ; end
+  def vlan_edit; render '_vlan_edit' ; end
+  def ip;        render '_ip'        ; end
   def ip_edit
     if @ticket.ip.blank?
       @ticket.ip = '192.168.'
     end
-    render '_ip_edit',   :layout => false
+    render '_ip_edit'
   end
 
   def update
@@ -46,7 +48,12 @@ class Tickets::ConnectionTicketsController < ApplicationController
       partial += '_edit'
     end
 
-    render partial, :layout => false
+    render partial
+  end
+
+  def update_router_status
+    @ticket.update_router_status!
+    render '_router'
   end
 
   private

@@ -1,0 +1,15 @@
+<% if @ticket.router_status != 'OK' %>
+  <font color="red"><%= h(@ticket.router_status || '?') %></font>
+<% else %>
+  <font color="green">ok</font>
+<% end %>
+
+<%= link_to_remote image_tag('arrow-circle-double.png', :alt => 'обновить'), 
+  :update   => 'router_content',
+  :loading  => '$("router_ajax").show()',
+  :loaded   => '$("router_ajax").hide()',
+  :html     => { :class => 'toolbox' },
+  :url      => { :controller => 'tickets/connection_tickets', :action => 'update_router_status', :id => @ticket }
+-%>
+
+<%= image_tag 'ajax.gif', :class => 'ajax', :style => 'display:none', :id => 'router_ajax' %>
