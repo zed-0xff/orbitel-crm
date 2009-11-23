@@ -1,13 +1,15 @@
 <% if @ticket.router_status != 'OK' %>
   <% if @ticket.can_create_at_router? %>
-    <%= link_to_remote "создать абонента",
-      :update   => 'router_content',
-      :loading  => '$("router_ajax").show()',
-      :loaded   => '$("router_ajax").hide()',
-      :url      => { :controller => 'tickets/connection_tickets', :action => 'create_at_router', :id => @ticket },
-      :confirm  => 'Создать абонента?',
-      :method   => 'post'
-    -%>
+    <% if @ticket.assignee == current_user %>
+      <%= link_to_remote "создать абонента",
+        :update   => 'router_content',
+        :loading  => '$("router_ajax").show()',
+        :loaded   => '$("router_ajax").hide()',
+        :url      => { :controller => 'tickets/connection_tickets', :action => 'create_at_router', :id => @ticket },
+        :confirm  => 'Создать абонента?',
+        :method   => 'post'
+      -%>
+    <% end %>
   <% else %>
     <font color="red"><%= h(@ticket.router_status || '?').strip.gsub("\n","<br/>") %></font>
   <% end %>
@@ -15,12 +17,14 @@
   <font color="green">ok</font>
 <% end %>
 
-<%= link_to_remote image_tag('arrow-circle-double.png', :alt => 'обновить'), 
-  :update   => 'router_content',
-  :loading  => '$("router_ajax").show()',
-  :loaded   => '$("router_ajax").hide()',
-  :html     => { :class => 'toolbox' },
-  :url      => { :controller => 'tickets/connection_tickets', :action => 'update_router_status', :id => @ticket }
--%>
+<% if @ticket.assignee == current_user %>
+  <%= link_to_remote image_tag('arrow-circle-double.png', :alt => 'обновить'), 
+    :update   => 'router_content',
+    :loading  => '$("router_ajax").show()',
+    :loaded   => '$("router_ajax").hide()',
+    :html     => { :class => 'toolbox' },
+    :url      => { :controller => 'tickets/connection_tickets', :action => 'update_router_status', :id => @ticket }
+  -%>
+<% end %>
 
 <%= image_tag 'ajax.gif', :class => 'ajax', :style => 'display:none', :id => 'router_ajax' %>
