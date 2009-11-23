@@ -1,5 +1,16 @@
 <% if @ticket.router_status != 'OK' %>
-  <font color="red"><%= h(@ticket.router_status || '?') %></font>
+  <% if @ticket.can_create_at_router? %>
+    <%= link_to_remote "создать абонента",
+      :update   => 'router_content',
+      :loading  => '$("router_ajax").show()',
+      :loaded   => '$("router_ajax").hide()',
+      :url      => { :controller => 'tickets/connection_tickets', :action => 'create_at_router', :id => @ticket },
+      :confirm  => 'Создать абонента?',
+      :method   => 'post'
+    -%>
+  <% else %>
+    <font color="red"><%= h(@ticket.router_status || '?').strip.gsub("\n","<br/>") %></font>
+  <% end %>
 <% else %>
   <font color="green">ok</font>
 <% end %>

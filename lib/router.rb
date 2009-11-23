@@ -1,5 +1,8 @@
+require 'net/http'
+require 'yaml'
+
 class Router
-  cattr_accessor :ip_info_url
+  cattr_accessor %w'ip_info_url create_user_url'
   cattr_accessor :menu_items
 
   # menu items to show in Customer -> [router part]
@@ -22,6 +25,17 @@ class Router
 
   # ping ip address to test for lost packets
   def self.ping ip
+  end
+
+  # создать юзера на роутере
+  def self.create_user! vlan, ip, comment
+    h = {}
+    h[:vlan] = vlan
+    h[:ip]   = ip
+    h[:fio]  = comment
+    h[:ru]  = 'ру' # для автоопределения кодировки на стороне сервера
+    r = Net::HTTP.post_form( URI.parse(create_user_url), h)
+    r.body
   end
 
   private

@@ -56,6 +56,19 @@ class Tickets::ConnectionTicketsController < ApplicationController
     render '_router'
   end
 
+  def create_at_router
+    if @ticket.can_create_at_router?
+      TicketHistoryEntry.create!(
+        :ticket         => @ticket,
+        :user           => current_user,
+        :comment        => "создал абонента на роутере",
+        :system_message => true
+      )
+      @ticket.create_at_router!
+    end
+    render '_router'
+  end
+
   private
 
   def check_can_manage

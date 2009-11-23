@@ -23,9 +23,9 @@ class ConnectionTicket < Ticket
       self.router_status =
         if !status.is_a?(Hash)
           status.inspect
-        elsif status['status'] == 0
-          status['error'] || status.inspect
-        elsif status['status'] == 1
+        elsif status['error']
+          status['error']
+        elsif status['interface']
           if self.vlan.to_s == status['interface'].to_s.sub('vlan','')
             'OK'
           else
@@ -35,10 +35,28 @@ class ConnectionTicket < Ticket
           status.inspect
         end
     end
+    if self.router_status != 'OK' && self.created_at_router
+      self.router_status = "#{self.router_status}\n(already created)"
+    end
     self.save!
   end
 
-  %w'vlan ip tariff_name router_status'.each do |m|
+  def can_create_at_router?
+    self.router_status.to_s.strip == 'ip not found' && !self.created_at_router
+  end
+
+  # создать абонента на роутере
+  def create_at_router!
+    r = Router.create_user! vlan, ip, customer.name_with_address
+    Rails.logger.info "Router response: #{r.inspect}"
+    self.router_status = r
+    if r['OK']
+      self.created_at_router = true
+    end
+    self.save!
+  end
+
+  %w'vlan ip tariff_name router_status created_at_router'.each do |m|
     class_eval %Q<
       def #{m}
         custom_info.try(:[], :#{m})
