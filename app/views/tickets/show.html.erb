@@ -100,7 +100,7 @@
 </table>
 
 <ul class="actions">
-  <% if [nil, Ticket::ST_NEW, Ticket::ST_REOPENED].include?(@ticket.status) %>
+  <% if [nil, Ticket::ST_NEW, Ticket::ST_REOPENED].include?(@ticket.status) || !@ticket.assignee %>
     <li><%= link_to "&raquo; принять в обработку", 
               accept_ticket_path(@ticket), 
               :method => :post %>
