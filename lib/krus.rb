@@ -26,6 +26,10 @@ class Krus
     r
   end
 
+  def self.ip_info ip
+    fetch_yaml_url "ip_info/#{ip}.yaml"
+  end
+
   # Включить/выключить юзеру доступ в инет
   # возвращает то же, что и в user_info
   def self.user_toggle_inet uid, state
@@ -45,9 +49,20 @@ class Krus
     )
   end
 
+  # создать новое подключение
+  def self.user_create_connection uid, tarif_id, ip
+    fetch_url(
+      "connections/create" +
+        "?user_id=#{CGI.escape(uid)}" + 
+        "&tarif_id=#{CGI.escape(tarif_id)}" + 
+        "&ip=#{CGI.escape(ip)}" + 
+        "&key=#{key}"
+    )
+  end
+
   private
 
-  def self.fetch_yaml_url url, follow_redirect = false
+  def self.fetch_url url, follow_redirect = false
     url = URI.parse "http://#{host}:#{port}/#{url}"
     res = Net::HTTP.start(url.host, url.port) {|http|
       http.read_timeout = 600
@@ -61,13 +76,17 @@ class Krus
     end
 
     if follow_redirect && res.is_a?(Net::HTTPRedirection)
-      return fetch_yaml_url( 
+      return fetch_url( 
         res['location'].
         sub("http://#{host}:#{port}/",''). # make location relative (DIRTY!)
         sub("http://#{host}/",'')
       )
     end
 
-    YAML::load( res.body )
+    res.body
+  end
+
+  def self.fetch_yaml_url url, follow_redirect = false
+    YAML::load fetch_url(url,follow_redirect)
   end
 end

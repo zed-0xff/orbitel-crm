@@ -16,10 +16,13 @@
     div.toolbox {
       margin-top: 0;
     }
+    a.toolbox {
+      margin-left: 2px;
+    }
 
     img.ajax {
       position: absolute;
-      right: 20px;
+      left: 2px;
       top: 4px;
     }
   </style>
@@ -60,3 +63,33 @@
     </span>
   </td>
 </tr>
+
+<tr>
+  <th>биллинг</th>
+  <td align="center" style="font-size:120%; max-width: 500px">
+    <div id="billing_content" style="position: relative">
+      <%= render 'tickets/connection_tickets/billing' %>
+    </span>
+  </td>
+</tr>
+
+<%= javascript_tag <<-EOJS
+  function update_router(){
+    #{remote_function(
+      :update   => 'router_content',
+      :loading  => '$("router_ajax").show()',
+      :loaded   => '$("router_ajax").hide()',
+      :url      => { :controller => 'tickets/connection_tickets', :action => 'update_router_status', :id => @ticket }
+    )}
+  }
+
+  function update_billing(){
+    #{remote_function(
+      :update   => 'billing_content',
+      :loading  => '$("billing_ajax").show()',
+      :loaded   => '$("billing_ajax").hide()',
+      :url      => { :controller => 'tickets/connection_tickets', :action => 'update_billing_status', :id => @ticket }
+    )}
+  }
+EOJS
+%>

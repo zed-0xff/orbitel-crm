@@ -1,0 +1,39 @@
+<% if %w'OK ok Включен'.include?(@ticket.billing_status) %>
+  <font color="green"><%= @ticket.billing_status.downcase == 'ok' ? @ticket.billing_status.downcase : @ticket.billing_status -%></font>
+<% else %>
+  <% if @ticket.billing_status == 'Выключен' %>
+    <font color="red" style="margin-left:16px">
+      Выключен
+    </font>
+  <% elsif @ticket.can_create_at_billing? %>
+    <% if @ticket.assignee == current_user %>
+      <%= link_to_remote "создать абонента",
+        :update   => 'billing_content',
+        :loading  => '$("billing_ajax").show()',
+        :loaded   => '$("billing_ajax").hide()',
+        :url      => { :controller => 'tickets/connection_tickets', :action => 'create_at_billing', :id => @ticket },
+        :confirm  => 'Создать абонента?',
+        :method   => 'post'
+      -%>
+    <% end %>
+  <% else %>
+    <font color="red" <%= 'style="font-size:10pt"' if @ticket.billing_status.to_s.mb_chars.size > 30 -%>>
+      <%= h(@ticket.billing_status || '?').strip.gsub("\n","<br/>") %>
+    </font>
+  <% end %>
+<% end %>
+
+<% if @ticket.assignee == current_user %>
+  <%= link_to_function image_tag('arrow-circle-double.png', :title => 'обновить'), 'update_billing()', :class => 'toolbox' -%>
+  <% if @ticket.billing_status == 'Выключен' %>
+    <%= link_to_remote image_tag('tick-circle-frame.png', :title => 'включить'),
+        :update   => 'billing_content',
+        :loading  => '$("billing_ajax").show()',
+        :loaded   => '$("billing_ajax").hide()',
+        :html     => { :class => 'toolbox' },
+        :url      => { :controller => 'tickets/connection_tickets', :action => 'billing_inet_on', :id => @ticket }
+      -%>
+  <% end %>
+<% end %>
+
+<%= image_tag 'ajax.gif', :class => 'ajax', :style => 'display:none', :id => 'billing_ajax' %>

@@ -2,7 +2,8 @@
   :ticket, 
   :update => 'ip_content',
   :url    => {:action => 'update', :id => @ticket}, 
-  :html   => {:style => 'margin:0'} 
+  :html   => {:style => 'margin:0'},
+  :success=> 'update_router();update_billing()'
 ) do |f| %>
   <%= f.text_field 'ip', :maxlength => 15 %>
 

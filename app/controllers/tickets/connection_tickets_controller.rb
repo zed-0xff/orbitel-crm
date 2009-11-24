@@ -56,6 +56,11 @@ class Tickets::ConnectionTicketsController < ApplicationController
     render '_router'
   end
 
+  def update_billing_status
+    @ticket.update_billing_status!
+    render '_billing'
+  end
+
   def create_at_router
     if @ticket.can_create_at_router?
       TicketHistoryEntry.create!(
@@ -67,6 +72,12 @@ class Tickets::ConnectionTicketsController < ApplicationController
       @ticket.create_at_router!
     end
     render '_router'
+  end
+
+  def billing_inet_on
+    info = @ticket.customer.billing_toggle_inet(true)
+    @ticket.update_billing_status! info
+    render '_billing'
   end
 
   private
