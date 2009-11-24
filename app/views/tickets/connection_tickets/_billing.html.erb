@@ -1,12 +1,5 @@
 <% if %w'OK ok Включен'.include?(@ticket.billing_status) %>
-  <font color="green"><%= @ticket.billing_status.downcase == 'ok' ? @ticket.billing_status.downcase : @ticket.billing_status -%></font>
-<% else %>
-  <% if @ticket.billing_status == 'Выключен' %>
-    <font color="red" style="margin-left:16px">
-      Выключен
-    </font>
-  <% elsif @ticket.can_create_at_billing? %>
-    <% if @ticket.assignee == current_user %>
+  <% if @ticket.can_create_at_billing? && @ticket.assignee == current_user %>
       <%= link_to_remote "создать абонента",
         :update   => 'billing_content',
         :loading  => '$("billing_ajax").show()',
@@ -15,7 +8,14 @@
         :confirm  => 'Создать абонента?',
         :method   => 'post'
       -%>
-    <% end %>
+  <% else %>
+    <font color="green"><%= @ticket.billing_status.downcase == 'ok' ? @ticket.billing_status.downcase : @ticket.billing_status -%></font>
+  <% end %>
+<% else %>
+  <% if @ticket.billing_status == 'Выключен' %>
+    <font color="red" style="margin-left:16px">
+      Выключен
+    </font>
   <% else %>
     <font color="red" <%= 'style="font-size:10pt"' if @ticket.billing_status.to_s.mb_chars.size > 30 -%>>
       <%= h(@ticket.billing_status || '?').strip.gsub("\n","<br/>") %>

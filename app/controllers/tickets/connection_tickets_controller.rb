@@ -74,6 +74,19 @@ class Tickets::ConnectionTicketsController < ApplicationController
     render '_router'
   end
 
+  def create_at_billing
+    if @ticket.can_create_at_billing?
+      TicketHistoryEntry.create!(
+        :ticket         => @ticket,
+        :user           => current_user,
+        :comment        => "создал подключение на биллинге",
+        :system_message => true
+      )
+      @ticket.create_at_billing!
+    end
+    render '_billing'
+  end
+
   def billing_inet_on
     info = @ticket.customer.billing_toggle_inet(true)
     @ticket.update_billing_status! info

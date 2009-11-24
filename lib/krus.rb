@@ -44,7 +44,7 @@ class Krus
       "payments/correct_balance/#{uid.to_i}" +
         "?amount=#{CGI.escape(amount)}" + 
         "&comment=#{CGI.escape(comment)}" + 
-        "&key=#{key}",
+        "&key=#{CGI.escape(key)}",
       true
     )
   end
@@ -53,10 +53,10 @@ class Krus
   def self.user_create_connection uid, tarif_id, ip
     fetch_url(
       "connections/create" +
-        "?user_id=#{CGI.escape(uid)}" + 
-        "&tarif_id=#{CGI.escape(tarif_id)}" + 
+        "?user_id=#{uid.to_i}" + 
+        "&tarif_id=#{tarif_id.to_i}" + 
         "&ip=#{CGI.escape(ip)}" + 
-        "&key=#{key}"
+        "&key=#{CGI.escape(key)}"
     )
   end
 

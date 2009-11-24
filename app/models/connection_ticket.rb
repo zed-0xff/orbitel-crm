@@ -82,7 +82,9 @@ class ConnectionTicket < Ticket
   end
 
   def can_create_at_billing?
-    !self.vlan.blank? && !self.ip.blank? && self.billing_status == 'OK'
+    !self.vlan.blank? && !self.ip.blank? && 
+      self.billing_status == 'OK' &&
+      !self.created_at_billing
   end
 
   # создать абонента на роутере
@@ -92,6 +94,19 @@ class ConnectionTicket < Ticket
     self.router_status = r
     if r['OK']
       self.created_at_router = true
+    end
+    self.save!
+  end
+
+  # создать подключение на биллинге
+  def create_at_billing!
+    r = Krus.user_create_connection customer.external_id, tarif_ext_id, ip
+    Rails.logger.info "Billing response: #{r.inspect}"
+    self.billing_status = r
+    if r.strip.upcase == 'OK'
+      self.created_at_billing = true
+      # подразумеваем что создающий подключение код сразу же его и включает. для теста.
+      self.billing_status     = "Включен" 
     end
     self.save!
   end
