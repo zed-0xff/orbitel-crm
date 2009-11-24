@@ -119,7 +119,15 @@ class ConnectionTicket < Ticket
     self.save!
   end
 
-  %w'vlan ip tariff_name router_status billing_status created_at_router created_at_billing tarif_ext_id'.each do |m|
+  def tariff_name
+    if tarif_ext_id
+      Tariff.find_by_external_id(tarif_ext_id).try(:name) || "?? не найден (#{tarif_ext_id}) ??"
+    else
+      "?? не задан ??"
+    end
+  end
+
+  %w'vlan ip router_status billing_status created_at_router created_at_billing tarif_ext_id'.each do |m|
     class_eval %Q<
       def #{m}
         custom_info.try(:[], :#{m})
