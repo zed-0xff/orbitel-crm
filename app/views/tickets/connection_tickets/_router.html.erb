@@ -1,6 +1,6 @@
 <% if @ticket.router_status != 'OK' %>
   <% if @ticket.can_create_at_router? %>
-    <% if @ticket.assignee == current_user %>
+    <% if @ticket.editable_by? current_user %>
       <%= link_to_remote "создать абонента",
         :update   => 'router_content',
         :loading  => '$("router_ajax").show()',
@@ -17,7 +17,7 @@
   <font color="green">ok</font>
 <% end %>
 
-<% if @ticket.assignee == current_user %>
+<% if @ticket.editable_by? current_user %>
   <%= link_to_function image_tag('arrow-circle-double.png', :alt => 'обновить'), 'update_router()', :class => 'toolbox' -%>
 <% end %>
 

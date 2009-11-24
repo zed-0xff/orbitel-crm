@@ -4,7 +4,7 @@
   <%= h @ticket.ip -%>
 <%- end -%>
 
-<% if @ticket.assignee == current_user %>
+<% if @ticket.editable_by? current_user %>
   <%= link_to_remote image_tag('edit.png'), 
     :update   => 'ip_content',
     :html     => { :class => 'toolbox' },

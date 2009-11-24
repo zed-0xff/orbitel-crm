@@ -1,5 +1,5 @@
 <% if %w'OK ok Включен'.include?(@ticket.billing_status) %>
-  <% if @ticket.can_create_at_billing? && @ticket.assignee == current_user %>
+  <% if @ticket.can_create_at_billing? && @ticket.editable_by?(current_user) %>
       <%= link_to_remote "создать абонента",
         :update   => 'billing_content',
         :loading  => '$("billing_ajax").show()',
@@ -23,7 +23,7 @@
   <% end %>
 <% end %>
 
-<% if @ticket.assignee == current_user %>
+<% if @ticket.editable_by? current_user %>
   <%= link_to_function image_tag('arrow-circle-double.png', :title => 'обновить'), 'update_billing()', :class => 'toolbox' -%>
   <% if @ticket.billing_status == 'Выключен' %>
     <%= link_to_remote image_tag('tick-circle-frame.png', :title => 'включить'),

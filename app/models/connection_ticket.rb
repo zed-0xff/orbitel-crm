@@ -13,6 +13,14 @@ class ConnectionTicket < Ticket
     self.dept = Dept[:prorabs]
   end
 
+  def editable?
+    self.status == ST_ACCEPTED
+  end
+
+  def editable_by? user
+    editable? && self.assignee == user
+  end
+
   def update_router_status!
     if vlan.blank?
       self.router_status = "VLAN не назначен"
