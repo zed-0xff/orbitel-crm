@@ -127,7 +127,7 @@ class ConnectionTicket < Ticket
     end
   end
 
-  %w'vlan ip router_status billing_status created_at_router created_at_billing tarif_ext_id'.each do |m|
+  %w'vlan ip router_status billing_status created_at_router created_at_billing tarif_ext_id manager'.each do |m|
     class_eval %Q<
       def #{m}
         custom_info.try(:[], :#{m})
