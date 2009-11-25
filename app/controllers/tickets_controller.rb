@@ -108,8 +108,9 @@ class TicketsController < ApplicationController
       format.html { ok ? redirect_to(ticket_path(@ticket)) : render(:new) }
       format.yaml { 
         r = { 
-          'ticket' => @ticket.attributes.reject{ |k,v| v.blank? },
-          'ok'     => ok
+          'ticket'    => @ticket.attributes.reject{ |k,v| v.blank? },
+          'ticket_id' => @ticket.id,
+          'ok'        => ok
         }
         r['errors'] = @ticket.errors.full_messages unless ok
         render :text => r.ya2yaml 

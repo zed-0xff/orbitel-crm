@@ -1,6 +1,9 @@
 class Customer < ActiveRecord::Base
   before_save :cleanup_name
 
+  validates_presence_of   :name
+  validates_uniqueness_of :external_id
+
   belongs_to :house
 
   has_many :calls

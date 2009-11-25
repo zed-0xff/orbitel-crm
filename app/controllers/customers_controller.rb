@@ -324,6 +324,34 @@ class CustomersController < ApplicationController
     render :partial => 'phones'
   end
 
+  # to be called from API
+  # сначала ищем кастомера по external_id, если такого нет - то создаем
+  # в любом случае возвращаем id созданного либо найденного 
+  def find_or_create
+    r = {}
+    if !params[:customer]
+      r['error'] = "no 'customer' in params"
+    elsif !params[:customer][:external_id]
+      r['error'] = "no 'customer[external_id]' in params"
+    elsif params[:customer][:external_id].to_s !~ /^\d+$/
+      r['error'] = "invalid external_id"
+    else
+      if customer = Customer.find_by_external_id(params[:customer][:external_id].to_i)
+        r['customer_id'] = customer.id
+      else
+        customer = Customer.new( params[:customer] )
+        if customer.valid?
+          customer.save!
+          r['customer_id'] = customer.id
+        else
+          r['error'] = "validation failed"
+          r['errors'] = customer.errors.full_messages
+        end
+      end
+    end
+    render :text => r.to_yaml
+  end
+
   private
 
   def check_can_manage
