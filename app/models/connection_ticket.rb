@@ -120,8 +120,8 @@ class ConnectionTicket < Ticket
   end
 
   def tariff_name
-    if tarif_ext_id
-      Tariff.find_by_external_id(tarif_ext_id).try(:name) || "?? не найден (#{tarif_ext_id}) ??"
+    unless self.tarif_ext_id.blank?
+      Tariff.find_by_external_id(self.tarif_ext_id.to_i).try(:name) || "?? не найден (#{tarif_ext_id}) ??"
     else
       "?? не задан ??"
     end
