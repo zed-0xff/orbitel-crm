@@ -64,7 +64,7 @@ class ConnectionTicket < Ticket
           'OK'
         elsif status[:name]
           if status[:user_id] && status[:user_id].to_i == customer.external_id
-            if status[:tarif_id] && status[:tarif_id] == self.tarif_ext_id
+            if status[:tarif_id].to_i > 0 && status[:tarif_id].to_i == self.tarif_ext_id.to_i
               status[:status].try(:[],ip).try(:[],:name) || '??'
             else
               "неверный тариф:\n#{status[:tarif]}"
