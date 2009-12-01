@@ -219,8 +219,15 @@ class TicketsController < ApplicationController
   end
 
   def redirect
-    @ticket.redirect!( Dept.find(params[:dept_id]), :user => current_user )
-    flash[:notice] = "Заявка переадресована"
+    if params[:dept_id]
+      @ticket.redirect!( Dept.find(params[:dept_id].to_i), :user => current_user )
+      flash[:notice] = "Заявка переадресована"
+    elsif params[:user_id]
+      @ticket.redirect!( User.find(params[:user_id].to_i), :user => current_user )
+      flash[:notice] = "Заявка переадресована"
+    else
+      flash[:error] = "Недопустимая комбинация параметров!"
+    end
     redirect_to ticket_path(@ticket)
   end
 

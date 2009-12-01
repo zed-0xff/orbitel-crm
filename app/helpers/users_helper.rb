@@ -116,4 +116,21 @@ module UsersHelper
     r
   end
 
+  def users_for_select options = {}
+    r = User.all.
+      delete_if{ |u| u.deleted? || u.class == User || u.is_a?(VirtualUser) }.
+      sort_by(&:name).
+      map{ |d| [d.name,d.id] }
+
+    if options.key?(:exclude)
+      if options[:exclude]
+        r.delete_if{ |rr| rr[1] == options[:exclude].id }
+      else
+        r.delete_if{ |rr| rr[1] == options[:exclude] }
+      end
+    end
+
+    r
+  end
+
 end

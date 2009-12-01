@@ -156,6 +156,12 @@ class Ticket < ActiveRecord::Base
       end
       self.save!
     elsif target.is_a?(User)
+      self.assignee = target
+      self.history << TicketHistoryEntry.new(
+        :user       => options[:user],
+        :comment    => "переадресовал заявку пользователю \"#{target.name}\""
+      )
+      self.save!
     else
       raise "Invalid redirect target: #{target.inspect}"
     end

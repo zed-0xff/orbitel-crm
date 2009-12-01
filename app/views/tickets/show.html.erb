@@ -128,17 +128,43 @@
   <% end %>
 
   <% if @ticket.status != Ticket::ST_CLOSED %>
-    <li><%= link_to_function "&raquo; переадресовать в другой отдел" do |page|
-              page.visual_effect :toggle_blind, :redirect_form, :duration => 0.15
+    <li><%= link_to_function "&raquo; переадресовать.." do |page|
+              page.visual_effect :toggle_blind, :redirects, :duration => 0.15
             end %>
 
-      <% form_tag( redirect_ticket_path(@ticket), 
-          :id => 'redirect_form', 
-          :style => 'display:none; margin: 5px 0 0 18px' 
-         ) do %>
-          <%= select_tag 'dept_id', options_for_select(depts_for_select(:exclude => @ticket.dept)) %>
-          <%= submit_tag 'Переадресовать', :name => nil %>
-      <% end %>
+      <ul id="redirects" style="display:none">
+        <li>
+          <%= link_to_function "в другой отдел.." do |page|
+              page.visual_effect :toggle_blind, :redirect_dept_form, :duration => 0.15
+          end %>
+          <% form_tag( redirect_ticket_path(@ticket), 
+              :id => 'redirect_dept_form', 
+              :style => 'display:none; margin: 5px 0 0 18px' 
+             ) do %>
+              <%= select_tag 'dept_id', options_for_select(depts_for_select(:exclude => @ticket.dept)) %>
+              <%= submit_tag 'Переадресовать', :name => nil %>
+          <% end %>
+        </li>
+        <li>
+          <%= link_to_function "конкретно на человека.." do |page|
+              page.visual_effect :toggle_blind, :redirect_ppl_form, :duration => 0.15
+          end %>
+          <% form_tag( redirect_ticket_path(@ticket), 
+              :id => 'redirect_ppl_form', 
+              :style => 'display:none; margin: 5px 0 0 18px' 
+             ) do %>
+              <%= select_tag 'user_id', options_for_select(users_for_select(:exclude => @ticket.assignee)) %>
+              <%= submit_tag 'Переадресовать', :name => nil %>
+          <% end %>
+        </li>
+        <% if @ticket.assignee != current_user %>
+          <li><%= link_to "принять в обработку", 
+              accept_ticket_path(@ticket), 
+              :method  => :post,
+              :confirm => "принять заявку в обработку?" %>
+        <% end %>
+      </ul>
+
 
     <li><%= link_to_function "&raquo; изменить приоритет" do |page|
               page.visual_effect :toggle_blind, :priority_form, :duration => 0.15
