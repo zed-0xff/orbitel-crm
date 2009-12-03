@@ -118,17 +118,19 @@
 </table>
 
 <table class="tlayout" width="100%"><tr valign="top"><td style="min-width:40%">
-
   <h3>Данные биллинга
-    <%= image_tag('icon_expand.gif', :alt => 'Дополнительные функции', :id => 'billing-func') %>
+    <% if @customer.external_id %>
+      <%= image_tag('icon_expand.gif', :alt => 'Дополнительные функции', :id => 'billing-func') %>
 
-    <%= link_to_remote image_tag('arrow-circle-double.png', :alt => 'reload'), 
-      :url       => billing_info_customer_path(@customer),
-      :update    => 'billing_info',
-      :loading   => "$('billing_indicator').show()",
-      :complete  => "$('billing_indicator').hide()"
-    %>
-    <%= image_tag 'ajax.gif', :style => 'display:none', :id => 'billing_indicator' %>
+      <%= link_to_remote image_tag('arrow-circle-double.png', :alt => 'reload'), 
+        :url       => billing_info_customer_path(@customer),
+        :update    => 'billing_info',
+        :loading   => "$('billing_indicator').show()",
+        :complete  => "$('billing_indicator').hide()",
+        :html      => { :id => 'reload_binfo' }
+      %>
+      <%= image_tag 'ajax.gif', :style => 'display:none', :id => 'billing_indicator' %>
+    <% end %>
   </h3>
   <div id="billing_info"><%= @binfo %></div>
 </div>
@@ -136,17 +138,16 @@
 </td><td>
 
   <h3>Данные роутера
-    <%= link_to_remote image_tag('arrow-circle-double.png', :alt => 'reload'), 
-      {
+    <% if @customer.external_id %>
+      <%= link_to_remote image_tag('arrow-circle-double.png', :alt => 'reload'), 
         :url       => router_info_customer_path(@customer),
         :update    => 'router_info',
         :loading   => "$('router_indicator').show()",
-        :complete  => "$('router_indicator').hide()"
-      }, {
-        :id => 'router-info-link'
-      }
-    %>
-    <%= image_tag 'ajax.gif', :style => 'display:none', :id => 'router_indicator' %>
+        :complete  => "$('router_indicator').hide()",
+        :html      => { :id => 'reload_rinfo' }
+      %>
+      <%= image_tag 'ajax.gif', :style => 'display:none', :id => 'router_indicator' %>
+    <% end %>
   </h3>
   <div id="router_info"><%= @rinfo %></div>
 </div>
@@ -184,6 +185,12 @@
 
 <%= javascript_tag <<-EOJS
   #{handle_ctrl_arrows}
+
+  if( #{(@customer.external_id && (@rinfo.blank? || @binfo.blank?)).to_json} )
+    Event.observe(window,'load',function(){
+      $('reload_binfo').onclick();
+      $('reload_rinfo').onclick();
+    });
 
   // pop-up menu on billing advanced functions
 
@@ -240,7 +247,7 @@ EOJS
             :url       => { :action => 'billing_toggle_inet', :id => @customer, :state => 'on' },
             :update    => 'billing_info',
             :loading   => "$('billing_indicator').show()",
-            :complete  => "$('billing_indicator').hide(); $('router-info-link').onclick()"
+            :complete  => "$('billing_indicator').hide(); $('reload_rinfo').onclick()"
         )}
       }
     },{
@@ -251,7 +258,7 @@ EOJS
             :url       => { :action => 'billing_toggle_inet', :id => @customer, :state => 'off' },
             :update    => 'billing_info',
             :loading   => "$('billing_indicator').show()",
-            :complete  => "$('billing_indicator').hide(); $('router-info-link').onclick()"
+            :complete  => "$('billing_indicator').hide(); $('reload_rinfo').onclick()"
         )}
       }
     }
@@ -263,9 +270,10 @@ EOJS
     menuItems: myMenuItems
   });
 
-  Event.observe('billing-func', 'click', function(ev){
-    m.show(ev);
-  });
+  if( #{@customer.external_id.to_json} )
+    Event.observe('billing-func', 'click', function(ev){
+      m.show(ev);
+    });
 
 
   function router_menu(ev,ip,iface){
