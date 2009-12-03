@@ -339,10 +339,17 @@ class CustomersController < ApplicationController
       if customer = Customer.find_by_external_id(params[:customer][:external_id].to_i)
         r['customer_id'] = customer.id
       else
+        phones = params[:customer].delete(:phones)
         customer = Customer.new( params[:customer] )
         if customer.valid?
           customer.save!
           r['customer_id'] = customer.id
+          unless phones.blank?
+            customer.phones.add phones
+            # сохраняем без кидания эксепшенов если невозможно сохранить
+            # т.к. есть вероятность совпадения номеров телефонов с другими кастомерами
+            customer.save
+          end
         else
           r['error'] = "validation failed"
           r['errors'] = customer.errors.full_messages
