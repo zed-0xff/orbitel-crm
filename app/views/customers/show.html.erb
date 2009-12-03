@@ -186,9 +186,13 @@
 <%= javascript_tag <<-EOJS
   #{handle_ctrl_arrows}
 
-  if( #{(@customer.external_id && (@rinfo.blank? || @binfo.blank?)).to_json} )
+  if( #{( @customer.external_id && @binfo.blank? ).to_json} )
     Event.observe(window,'load',function(){
       $('reload_binfo').onclick();
+      $('reload_rinfo').onclick();
+    });
+  else if( #{( @customer.external_id && @rinfo.blank? ).to_json} )
+    Event.observe(window,'load',function(){
       $('reload_rinfo').onclick();
     });
 
