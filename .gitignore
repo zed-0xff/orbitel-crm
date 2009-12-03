@@ -13,3 +13,4 @@ test
 krus_customers.yml
 *.sql
 public/system
+*.log
