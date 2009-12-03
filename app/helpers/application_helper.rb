@@ -33,7 +33,7 @@ module ApplicationHelper
   end
   alias :link_to_address :link_to_address_of
 
-  def link_to_customer customer, attrs = {}
+  def link_to_customer customer, attrs = {}, link_opts = {}
     return nil unless customer
     attrs[:class] ||= 'customer'
     unless si = Rails.cache.read("customer.#{customer.id}.status-icon")
@@ -47,7 +47,7 @@ module ApplicationHelper
         when 'r': attrs[:title] = "На абонента есть заявка с высоким приоритетом"
       end
     end
-    link_to((attrs.delete(:text) || customer.name), customer_path(customer), attrs)
+    link_to((attrs.delete(:text) || customer.name), customer_path(customer, link_opts), attrs)
   end
 
   # calculate a customer icon based on his CURRENT tickets
