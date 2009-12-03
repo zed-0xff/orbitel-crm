@@ -194,7 +194,14 @@
       href: "#{url_for :action => 'traf', :id => @customer}"
     },{
       separator: true
-    },{
+    }
+  ];
+EOJS
+%>
+
+<%= javascript_tag <<-EOJS if current_user.can_manage?(:customers)
+  myMenuItems.push(
+    {
       name: 'Коррекция баланса..',
       className: 'correct-bal',
       callback: function() {
@@ -216,9 +223,16 @@
             :complete  => "$('billing_indicator').hide()"
         )}
       }
-    },{
+    },{ 
       separator: true
-    },{
+    }
+  );
+EOJS
+%>
+
+<%= javascript_tag <<-EOJS
+  myMenuItems.push(
+    {
       name: 'Включить Интернет',
       className: 'inet-on',
       callback: function() {
@@ -241,7 +255,7 @@
         )}
       }
     }
-  ];
+  );
 
   var m = new Proto.Menu({
     selector:  '#billing-func',

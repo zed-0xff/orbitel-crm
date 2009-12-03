@@ -7,7 +7,7 @@ class CustomersController < ApplicationController
   helper :calls, :tickets
 
   before_filter :prepare_customer
-  before_filter :check_can_manage, :only => %w'edit update'
+  before_filter :check_can_manage, :only => %w'edit update billing_correct_balance delete_phone add_phone'
 
   skip_before_filter :verify_authenticity_token, :only => [:auto_complete]
 
