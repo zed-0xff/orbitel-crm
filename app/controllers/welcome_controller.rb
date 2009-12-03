@@ -8,7 +8,7 @@ class WelcomeController < ApplicationController
       cond = "comment IS NOT NULL" if params[:comments_only]
       @history = TicketHistoryEntry.paginate(
         :page     => params[:page],
-        :per_page => params[:per_page] || 30,
+        :per_page => params[:per_page] || 50,
         :order    => "created_at DESC",
         :conditions => cond
       )
