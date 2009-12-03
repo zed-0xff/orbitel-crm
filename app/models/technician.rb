@@ -1,3 +1,3 @@
 class Technician < User
-  CAN_MANAGE = %w'House Customer'
+  CAN_MANAGE = %w'House'
 end
