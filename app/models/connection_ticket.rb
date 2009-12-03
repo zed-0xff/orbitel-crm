@@ -123,6 +123,8 @@ class ConnectionTicket < Ticket
     unless self.tarif_ext_id.blank?
       Tariff.find_by_external_id(self.tarif_ext_id.to_i).try(:name) || "?? не найден (#{tarif_ext_id}) ??"
     else
+      Rails.logger.error self.inspect
+      Rails.logger.error self.custom_info.inspect
       "?? не задан ??"
     end
   end
