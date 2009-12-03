@@ -2,7 +2,7 @@ class Customer < ActiveRecord::Base
   before_save :cleanup_name
 
   validates_presence_of   :name
-  validates_uniqueness_of :external_id
+  validates_uniqueness_of :external_id, :allow_nil => true
 
   belongs_to :house
 
@@ -10,6 +10,8 @@ class Customer < ActiveRecord::Base
   has_many :tickets
 
   has_many :phones, :dependent => :delete_all do
+    # add one or many phone numbers to customer
+    # input can be either String(comma separated) or Array
     def add phone
       phones = Phone.from_string_or_array(phone)
       phones.each do |ph|
