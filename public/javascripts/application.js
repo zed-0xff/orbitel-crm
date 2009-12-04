@@ -16,6 +16,23 @@ function make_clickable_rows(){
 }
 
 var main_add_menu;
+var search_box;
+
+function toggle_search(){
+  if( !search_box ){
+    search_box = $('search-box');
+    $("search-q").observe('keydown',function(ev){
+      if( ev.keyCode == 27 ) search_box.hide();
+    })
+  }
+
+  if( search_box.visible() ){
+    search_box.hide();
+  } else {
+    search_box.show();
+    $("search-q").focus();
+  }
+}
 
 function show_additional_settings(ev){
 	var fake_ev = {stop:function(){}};

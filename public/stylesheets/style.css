@@ -100,6 +100,16 @@ table.history tr:first-child td.date {
 	white-space: pre;
 }
 
+table.notable,
+table.notable tbody,
+table.notable tr,
+table.notable td {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-collapse: collapse;
+}
+
 @media print {
 	.noprint, 
 	div.copyright,
@@ -179,6 +189,10 @@ div#topmenu {
 
 div#topmenu #add-settings-toggler img {
 	margin: 0 -4px 0 -6px;
+}
+
+div#topmenu #search-toggler img {
+	margin: 0 -4px 0 -5px;
 }
 
 /*
@@ -456,4 +470,27 @@ a#next-link b, a#prev-link b {
 a#next-link {
 	text-align: right;
 	display: block;
+}
+
+/*
+ * search
+ */
+
+div#search-box {
+  width: 174px;
+  height: 19px;
+  background: red url(/images/search-box.png) no-repeat;
+  margin-left: 2px;
+  padding: 0;
+  position: relative;
+  top: 3px;
+}
+
+div#search-box input {
+  border: 0;
+  height: 15px;
+  width: 168px;
+  margin: 1px 3px 1px 3px;
+  padding: 0;
+  color: #96969d;
 }
