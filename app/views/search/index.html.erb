@@ -1,0 +1,46 @@
+<h1>Поиск <%= h @q.inspect %></h1>
+
+<form action="/search">
+  <%= text_field_tag :q, @q %>
+</form>
+
+<% unless @customers.blank? %>
+  <h2>Абоненты (<%= @customers.size %>)</h2>
+  <table>
+    <% @customers.sort_by(&:name).each do |customer| %>
+      <tr>
+        <td><%= link_to_customer customer, :text => highlight_nocase(customer.name, @q) %>
+      </tr>
+    <% end %>
+  </table>
+<% end %>
+
+<% unless @streets.blank? %>
+  <h2>Улицы (<%= @streets.size %>)</h2>
+  <table>
+    <% @streets.sort_by(&:name).each do |street| %>
+      <tr>
+        <td><%= link_to highlight_nocase(street.name, @q), :controller => 'houses', :street => street.name %>
+      </tr>
+    <% end %>
+  </table>
+<% end %>
+
+<% unless @houses.blank? %>
+  <h2>Дома (<%= @houses.size %>)</h2>
+  <table>
+    <% @houses.sort_by(&:address).each do |house| %>
+      <tr>
+        <td><%= link_to_address_of house %>
+      </tr>
+    <% end %>
+  </table>
+<% end %>
+
+
+<%= javascript_tag <<-EOJS
+  Event.observe(window,'load', function(){
+    $('q').select();
+  });
+EOJS
+%>

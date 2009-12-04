@@ -110,6 +110,10 @@ table.notable td {
   border-collapse: collapse;
 }
 
+strong.highlight {
+  background: #FFFF66;
+}
+
 @media print {
 	.noprint, 
 	div.copyright,
