@@ -4,7 +4,7 @@
 
   | <%= link_to "#{image_tag('notebooks.png')}Заявки", tickets_path -%> 
   | <%= link_to "#{image_tag('bell.png')}Звонки", '/calls' -%> 
-  | <%= link_to "#{image_tag('moon.png')}Ночные дежурства", '/nights' -%> 
+  <%# | < %= link_to "#{image_tag('moon.png')}Ночные дежурства", '/nights' -%> 
   <%#- if current_user.can_manage_any_of? :customers, :houses, :users -%>
     | <%= link_to_function image_tag('icon_expand.gif', :alt => 'Дополнительные функции'), 'show_additional_settings(event)', :id => 'add-settings-toggler' %>
   <%#- end -%>

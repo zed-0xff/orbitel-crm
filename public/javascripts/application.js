@@ -35,6 +35,10 @@ function show_additional_settings(ev){
                     name:      'Календарь',
                     className: 'calendar',
                     href:      '/calendar'
+                  },{
+                    name:      'Ночные дежурства',
+                    className: 'nights',
+                    href:      '/nights'
                   }
                 ];
 

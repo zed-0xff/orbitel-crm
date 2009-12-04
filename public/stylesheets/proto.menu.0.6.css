@@ -193,4 +193,7 @@ div.jsmenu a {
 .jsmenu.zzz a.calendar {
   background: #f9f8f7 url(/images/calendar.png) 2px 50% no-repeat;
 }
+.jsmenu.zzz a.nights {
+  background: #f9f8f7 url(/images/moon.png) 2px 50% no-repeat;
+}
 
