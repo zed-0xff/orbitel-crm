@@ -2,12 +2,7 @@
   <center>
   <table class="notable"><tr><td style="padding-right: 3px">
   [
-  <%= link_to "#{image_tag('rainbow.png')}Главная", '/' -%>
-
-  | <%= link_to "#{image_tag('notebooks.png')}Заявки", tickets_path -%> 
-  | <%= link_to "#{image_tag('bell.png')}Звонки", '/calls' -%> 
-  <%# | < %= link_to "#{image_tag('moon.png')}Ночные дежурства", '/nights' -%> 
-  | <%= link_to_function image_tag('search.png', :title => 'Поиск'), 'toggle_search()', :id => 'search-toggler' %>
+  <%= link_to_function image_tag('search.png', :title => 'Поиск'), 'toggle_search()', :id => 'search-toggler' %>
   </td><td> 
     <div id="search-box" style="display:none">
       <form action="/search">
@@ -15,6 +10,11 @@
       </form>
     </div>
   </td><td>
+  | <%= link_to "#{image_tag('rainbow.png')}Главная", '/' -%>
+
+  | <%= link_to "#{image_tag('notebooks.png')}Заявки", tickets_path -%> 
+  | <%= link_to "#{image_tag('bell.png')}Звонки", '/calls' -%> 
+  <%# | < %= link_to "#{image_tag('moon.png')}Ночные дежурства", '/nights' -%> 
   <%#- if current_user.can_manage_any_of? :customers, :houses, :users -%>
     | <%= link_to_function image_tag('icon_expand.gif', :title => 'Дополнительные функции'), 'show_additional_settings(event)', :id => 'add-settings-toggler' %>
   <%#- end -%>
