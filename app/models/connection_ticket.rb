@@ -130,15 +130,13 @@ class ConnectionTicket < Ticket
   end
 
   %w'vlan ip router_status billing_status created_at_router created_at_billing tarif_ext_id manager'.each do |m|
-    class_eval %Q<
-      def #{m}
-        custom_info.try(:[], :#{m})
-      end
-      def #{m}= value
-        self.custom_info ||= {}
-        self.custom_info[:#{m}] = value
-      end
-    >
+    define_method m do
+      custom_info.try(:[], m.to_sym)
+    end
+    define_method "#{m}=" do |value|
+      self.custom_info ||= {}
+      self.custom_info[m.to_sym] = value
+    end
   end
 
   private
