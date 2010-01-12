@@ -84,13 +84,13 @@ class ConnectionTicket < Ticket
   end
 
   def can_create_at_router?
-    !self.vlan.blank? && !self.ip.blank? && 
-      self.router_status.to_s.strip == 'ip not found' && 
+    !self.vlan.blank? && !self.ip.blank? &&
+      self.router_status.to_s.strip == 'ip not found' &&
       !self.created_at_router
   end
 
   def can_create_at_billing?
-    !self.vlan.blank? && !self.ip.blank? && 
+    !self.vlan.blank? && !self.ip.blank? &&
       self.billing_status == 'OK' &&
       !self.created_at_billing
   end
@@ -114,7 +114,7 @@ class ConnectionTicket < Ticket
     if r.strip.upcase == 'OK'
       self.created_at_billing = true
       # подразумеваем что создающий подключение код сразу же его и включает. для теста.
-      self.billing_status     = "Включен" 
+      self.billing_status     = "Включен"
     end
     self.save!
   end
@@ -131,18 +131,19 @@ class ConnectionTicket < Ticket
 
   %w'vlan ip router_status billing_status created_at_router created_at_billing tarif_ext_id manager'.each do |m|
     define_method m do
-      custom_info.try(:[], m.to_sym)
+      init_custom_info
+      custom_info[m.to_sym]
     end
     define_method "#{m}=" do |value|
-      self.custom_info ||= {}
+      init_custom_info
       self.custom_info[m.to_sym] = value
     end
   end
 
   private
 
-  def after_find
+  def init_custom_info
+    self.custom_info = YAML::load(custom_info) if custom_info.is_a?(String)
     self.custom_info ||= {}
   end
-  alias_method :after_initialize, :after_find
 end
