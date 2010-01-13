@@ -1,6 +1,6 @@
 class CustomersController < ApplicationController
   include ActionView::Helpers::TextHelper # for 'cycle' method
-  include ActionView::Helpers::NumberHelper   
+  include ActionView::Helpers::NumberHelper
   include ApplicationHelper
   include CustomersHelper # hmm?
 
@@ -26,14 +26,14 @@ class CustomersController < ApplicationController
 
     @items = Customer.find(:all, find_options)
 
-    render :text => '<ul class="customers-autocomplete">' + 
-      @items.map{|item| "<li><div class='name'>#{item.name}</div><div class='addr'>(#{item.address})</div>" }.join + 
+    render :text => '<ul class="customers-autocomplete">' +
+      @items.map{|item| "<li><div class='name'>#{item.name}</div><div class='addr'>(#{item.address})</div>" }.join +
       '</ul>'
   end
 
   def index
     @title = 'Абоненты'
-    
+
     conditions =
       if params[:filter].blank?
         nil
@@ -128,7 +128,8 @@ class CustomersController < ApplicationController
   end
 
   def billing_correct_balance
-    @info = @customer.billing_correct_balance(params[:amount], params[:comment])
+    comment = "#{params[:comment]}\n(#{current_user.name || current_user.login})"
+    @info = @customer.billing_correct_balance(params[:amount], comment)
     billing_info
   end
 
@@ -202,8 +203,8 @@ class CustomersController < ApplicationController
         if v <= 0
           traf_values << nil
         else
-          traf_values << { 
-  #          'x'   => dt.to_time.to_i, 
+          traf_values << {
+  #          'x'   => dt.to_time.to_i,
             (is_local ? 'y' : 'top')   => v,
             'tip' => "#{dt} (#{traf_type})<br>#{number_to_human_size(amount)}"
           }
@@ -326,7 +327,7 @@ class CustomersController < ApplicationController
 
   # to be called from API
   # сначала ищем кастомера по external_id, если такого нет - то создаем
-  # в любом случае возвращаем id созданного либо найденного 
+  # в любом случае возвращаем id созданного либо найденного
   def find_or_create
     r = {}
     if !params[:customer]
