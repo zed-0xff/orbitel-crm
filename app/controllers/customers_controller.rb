@@ -303,6 +303,24 @@ class CustomersController < ApplicationController
     if params[:delete_photo]
       @customer.photo = nil
     end
+    if !params[:customer][:photo] && params[:photo_url].to_s.strip != 'http://' && !params[:photo_url].to_s.strip.blank?
+      begin
+        require 'net/http'
+        require 'uri'
+
+        url = URI.parse(params[:photo_url])
+        res = Net::HTTP.start(url.host, url.port) {|http|
+          http.get(url.request_uri)
+        }
+        @customer.photo = StringIO.new(res.body)
+        if res.body.size > 1000
+          flash[:notice] = 'Фото получено'
+        end
+      rescue
+        Rails.logger.error $!
+        flash[:error] = $!.inspect
+      end
+    end
     @customer.update_attributes(params[:customer])
     if (t=params[:new_phone].to_s.gsub(/[^0-9]/,'')).size >= 5
       @customer.phones.add t

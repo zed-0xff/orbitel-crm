@@ -17,7 +17,7 @@
   <p><%= f.label :address, 'Адрес' %><br/>
     <%= f.text_field :address %></p>
 
-  <p style="margin-bottom:0"><%= f.label :photo, 'Фото' %></p>
+  <p style="margin-bottom:0"><%= f.label :photo, 'Загрузить фото' %></p>
   <% if @customer.photo? %>
     <div class="photo">
       <%= image_tag @customer.photo.url(:profile), :class => 'photo' %>
@@ -25,7 +25,15 @@
     <%= check_box_tag :delete_photo %>
     <%= label_tag 'delete_photo', 'Удалить фото' %>
   <% end %>
-  <p style="margin-top:0"><%= f.file_field :photo %></p>
+  <p style="margin-top:0; margin-bottom:0"><%= f.file_field :photo %></p>
+
+  <p style="margin-bottom:0; margin-top:0; font-size:8pt"><%= label_tag :photo_url, 'Или указать URL фото-файла' %></p>
+  <p style="margin-top:0"><%= text_field_tag :photo_url, 'http://',
+    :size    => 30,
+    :style   => 'color:#999',
+    :onfocus => 'this.style.color="black"; if(this.value=="http://") this.value=""',
+    :onblur  => 'if(this.value == ""){this.value="http://"; this.style.color="#999"}'
+  %></p>
 
 
   <div>
