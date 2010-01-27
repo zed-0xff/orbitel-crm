@@ -300,6 +300,9 @@ class CustomersController < ApplicationController
   end
 
   def update
+    if params[:delete_photo]
+      @customer.photo = nil
+    end
     @customer.update_attributes(params[:customer])
     if (t=params[:new_phone].to_s.gsub(/[^0-9]/,'')).size >= 5
       @customer.phones.add t
