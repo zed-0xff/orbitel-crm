@@ -84,7 +84,7 @@
 <h3>
   Данные абонента
   <%= link_to(
-    image_tag('edit.png', :title => 'Редактировать'), 
+    image_tag('edit.png', :title => 'Редактировать'),
     edit_customer_path(@customer)
   ) if current_user.can_manage?(:customers) %>
 </h3>
@@ -115,6 +115,20 @@
       <td><%= @customer.external_id %>
     </tr>
   <% end %>
+  <% unless @customer.comment.blank? %>
+    <tr><td colspan="2"><hr width="90%"/></td></tr>
+    <tr>
+      <th colspan="2">комментарии</th>
+    </tr>
+    <tr>
+      <td colspan="2" style="font-size:120%; padding-left: 0.8em; padding-right: 0.8em">
+        <%= auto_link(simple_format(h(@customer.comment))) do |text|
+          text.size > 30 ? "#{text[0..20]} .. #{text[-10..-1]}"  : text
+        end
+        %>
+      </td>
+    </tr>
+  <% end %>
 </table>
 
 <table class="tlayout" width="100%"><tr valign="top"><td style="min-width:40%">
@@ -122,7 +136,7 @@
     <% if @customer.external_id %>
       <%= image_tag('icon_expand.gif', :alt => 'Дополнительные функции', :id => 'billing-func') %>
 
-      <%= link_to_remote image_tag('arrow-circle-double.png', :alt => 'reload'), 
+      <%= link_to_remote image_tag('arrow-circle-double.png', :alt => 'reload'),
         :url       => billing_info_customer_path(@customer),
         :update    => 'billing_info',
         :loading   => "$('billing_indicator').show()",
@@ -139,7 +153,7 @@
 
   <h3>Данные роутера
     <% if @customer.external_id %>
-      <%= link_to_remote image_tag('arrow-circle-double.png', :alt => 'reload'), 
+      <%= link_to_remote image_tag('arrow-circle-double.png', :alt => 'reload'),
         :url       => router_info_customer_path(@customer),
         :update    => 'router_info',
         :loading   => "$('router_indicator').show()",
@@ -176,7 +190,7 @@
 <% end %>
 
 </td><td id="tickets_place">
-  <%= render 'tickets', 
+  <%= render 'tickets',
     :title       => 'Текущие заявки',
     :link_title  => '[все]',
     :link_action => 'all_tickets'
@@ -220,8 +234,8 @@ EOJS
         if( amount == null ) return;
         amount = parseFloat(amount);
         if( isNaN(amount) || amount.abs() < 0.01 ){ alert("неверная сумма"); return }
-      
-        var comment = prompt("Причина коррекции");    
+
+        var comment = prompt("Причина коррекции");
         if( !comment ){ alert("Причина должна быть введена"); return }
         comment = comment.replace(/^\s*|\s*$/g,'')
         if( !comment ){ alert("Причина должна быть введена"); return }
@@ -234,7 +248,7 @@ EOJS
             :complete  => "$('billing_indicator').hide()"
         )}
       }
-    },{ 
+    },{
       separator: true
     }
   );
