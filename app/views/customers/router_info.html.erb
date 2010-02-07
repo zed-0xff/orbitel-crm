@@ -21,10 +21,22 @@
     <tr class="<%= info['status'].to_i == 0 ? 'red' : 'green' -%>">
       <td><%= info['status'].to_i == 0 ? 'Выключен' : 'Включен' -%></td>
       <td><%= info['interface'] -%></td>
-      <td><%= ip -%></td>
+      <% if @info.size > 1 %>
+        <td><%= ip -%></td>
+      <% end %>
+      <% if info['channel'] || info['error'] %>
+        <td>
+          <%= h(info['channel']) -%>
+          <% if info['error'].blank? %>
+            OK
+          <% else %>
+            <font color='red'><%= h info['error'] -%></font>
+          <% end %>
+        </td>
+      <% end %>
       <td class="noborder">
-        <%= image_tag('icon_expand.gif', 
-                      :alt     => 'Дополнительные функции', 
+        <%= image_tag('icon_expand.gif',
+                      :alt     => 'Дополнительные функции',
                       :class   => 'router-func',
                       :onclick => "router_menu(event, #{ip.to_json}, #{info['interface'].to_json})"
                      ) %>
