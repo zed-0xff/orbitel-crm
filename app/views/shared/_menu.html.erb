@@ -3,18 +3,18 @@
   <table class="notable"><tr><td style="padding-right: 3px">
   [
   <%= link_to_function image_tag('search.png', :title => 'Поиск'), 'toggle_search()', :id => 'search-toggler' %>
-  </td><td> 
+  </td><td>
     <div id="search-box" style="display:none">
       <form action="/search">
         <input name="q" id="search-q">
       </form>
     </div>
   </td><td>
-  | <%= link_to "#{image_tag('rainbow.png')}Главная", '/' -%>
+  | <%= link_to "#{image_tag('rainbow.png')}Главная".html_safe, '/' -%>
 
-  | <%= link_to "#{image_tag('notebooks.png')}Заявки", tickets_path -%> 
-  | <%= link_to "#{image_tag('bell.png')}Звонки", '/calls' -%> 
-  <%# | < %= link_to "#{image_tag('moon.png')}Ночные дежурства", '/nights' -%> 
+  | <%= link_to "#{image_tag('notebooks.png')}Заявки".html_safe, tickets_path -%>
+  | <%= link_to "#{image_tag('bell.png')}Звонки".html_safe, '/calls' -%>
+  <%# | < %= link_to "#{image_tag('moon.png')}Ночные дежурства", '/nights' -%>
   <%#- if current_user.can_manage_any_of? :customers, :houses, :users -%>
     | <%= link_to_function image_tag('icon_expand.gif', :title => 'Дополнительные функции'), 'show_additional_settings(event)', :id => 'add-settings-toggler' %>
   <%#- end -%>
