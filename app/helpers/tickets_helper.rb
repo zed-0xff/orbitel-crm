@@ -82,7 +82,7 @@ module TicketsHelper
       end
       desc += "</b>" unless he.system_message?
     end
-    desc
+    desc.html_safe
   end
 
   def link_to_tickets title, path, conditions = {}, options = {}
@@ -114,7 +114,7 @@ module TicketsHelper
   def ajax_street_selector
     r = ''
     r+= "<div class='fieldWithErrors'>" if @ticket.errors.on(:house_street)
-    r+= text_field_with_auto_complete(:street, :name, 
+    r+= text_field_with_auto_complete(:street, :name,
       {
         :size  => 20,
         :name  => "#{@ticket.class.to_s.underscore}[house_attributes][street]",
@@ -160,5 +160,11 @@ module TicketsHelper
   def fiz_tariffs_for_select
     @tariffs_for_select ||= Tariff.all #:conditions => [ "avail_ur = ? OR avail_fiz = ?", true, true ]
     [['= Тариф не выбран =',nil]] + @tariffs_for_select.find_all(&:avail_fiz).map{ |t| [t.name, t.id] }
+  end
+
+  def format_ticket_notes notes
+    auto_link(h(notes.strip).gsub("\n","<br />")) do |text|
+      text.size > 30 ? "#{text[0..20]} .. #{text[-10..-1]}"  : text
+    end
   end
 end
