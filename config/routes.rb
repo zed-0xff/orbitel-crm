@@ -1,85 +1,53 @@
-ActionController::Routing::Routes.draw do |map|
-  map.logout '/logout', :controller => 'sessions', :action => 'destroy'
-  map.login '/login', :controller => 'sessions', :action => 'new'
-  #map.register '/register', :controller => 'users', :action => 'create'
-  #map.signup '/signup', :controller => 'users', :action => 'new'
-  map.resources :users
-  map.resources :houses, :collection => {
-    :check => :any
-  }
+Crm::Application.routes.draw do
+  match '/logout' => 'sessions#destroy', :as => :logout
+  match '/login' => 'sessions#new', :as => :login
+  resources :users
+  resources :houses do
+    collection do
+      post :check
+    end
+  end
 
-  map.resources :streets, :collection => {
-    :auto_complete => :post
-  }
+  resources :streets do
+    collection do
+      post :auto_complete
+    end
+  end
 
-  map.resources :customers, :collection => {
-    :auto_complete => :post,
-    :find_or_create => :post
-  }, :member => {
-    :billing_info  => :post,
-    :router_info   => :post
-  }
+  resources :customers do
+    collection do
+      post :find_or_create
+      post :auto_complete
+    end
+    member do
+      post :billing_info
+      post :router_info
+    end
+  end
 
-  map.resources :tickets, :collection => { 
-    :new_request    => :get,
-    :new_tariff_change => :get,
-    :mine           => :get,
-    :assigned_to_me => :get,
-    :all            => :get,
-    :only_new       => :get,
-    :closed         => :get,
-    :find           => :post
-  }, :member => {
-    :close       => :post,
-    :reopen      => :post,
-    :accept      => :post,
-    :add_comment => :post,
-    :redirect    => :post
-  }
+  resources :tickets do
+    collection do
+  get :assigned_to_me
+  get :only_new
+  post :find
+  get :closed
+  get :new_request
+  get :all
+  get :mine
+  get :new_tariff_change
+  end
+    member do
+  post :add_comment
+  post :reopen
+  post :redirect
+  post :close
+  post :accept
+  end
 
-  map.resource :session
+  end
 
-  map.resources :depts
-
-  # The priority is based upon order of creation: first created -> highest priority.
-
-  # Sample of regular route:
-  #   map.connect 'products/:id', :controller => 'catalog', :action => 'view'
-  # Keep in mind you can assign values other than :controller and :action
-
-  # Sample of named route:
-  #   map.purchase 'products/:id/purchase', :controller => 'catalog', :action => 'purchase'
-  # This route can be invoked with purchase_url(:id => product.id)
-
-  # Sample resource route (maps HTTP verbs to controller actions automatically):
-  #   map.resources :products
-
-  # Sample resource route with options:
-  #   map.resources :products, :member => { :short => :get, :toggle => :post }, :collection => { :sold => :get }
-
-  # Sample resource route with sub-resources:
-  #   map.resources :products, :has_many => [ :comments, :sales ], :has_one => :seller
-  
-  # Sample resource route with more complex sub-resources
-  #   map.resources :products do |products|
-  #     products.resources :comments
-  #     products.resources :sales, :collection => { :recent => :get }
-  #   end
-
-  # Sample resource route within a namespace:
-  #   map.namespace :admin do |admin|
-  #     # Directs /admin/products/* to Admin::ProductsController (app/controllers/admin/products_controller.rb)
-  #     admin.resources :products
-  #   end
-
-  # You can have the root of your site routed with map.root -- just remember to delete public/index.html.
-  map.root :controller => "welcome"
-
-  # See how all your routes lay out with "rake routes"
-
-  # Install the default routes as the lowest priority.
-  # Note: These default routes make all actions in every controller accessible via GET requests. You should
-  # consider removing the them or commenting them out if you're using named routes and resources.
-  map.connect ':controller/:action/:id'
-  map.connect ':controller/:action/:id.:format'
+  resource :session
+  resources :depts
+  match '/' => 'welcome#index'
+  match '/:controller(/:action(/:id))'
 end
