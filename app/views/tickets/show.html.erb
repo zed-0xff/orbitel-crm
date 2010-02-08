@@ -101,34 +101,34 @@
 
 <ul class="actions">
   <% if [nil, Ticket::ST_NEW, Ticket::ST_REOPENED].include?(@ticket.status) || !@ticket.assignee %>
-    <li><%= link_to "&raquo; принять в обработку", 
-              accept_ticket_path(@ticket), 
+    <li><%= link_to "» принять в обработку",
+              accept_ticket_path(@ticket),
               :method => :post %>
   <% elsif @ticket.status == Ticket::ST_ACCEPTED %>
-    <li><%= link_to_function "&raquo; закрыть с комментарием" do |page|
+    <li><%= link_to_function "» закрыть с комментарием" do |page|
             page.visual_effect :toggle_blind, :close_form, :duration => 0.15
             page << 'window.setTimeout("$(\'close_text\').focus()",150);'
           end %>
-      <% form_tag( close_ticket_path(@ticket), 
-          :id => 'close_form', 
-          :style => 'display:none; margin: 5px 0 0 18px' 
+      <% form_tag( close_ticket_path(@ticket),
+          :id => 'close_form',
+          :style => 'display:none; margin: 5px 0 0 18px'
          ) do %>
           <%= text_area_tag 'comment', '', :style => 'height:3.1em; width:30em; float:left', :id => 'close_text' %>
           <%= submit_tag 'Закрыть', :name => nil %>
           <p class="clear"></p>
       <% end %>
 
-    <li><%= link_to "&raquo; просто закрыть", 
-              close_ticket_path(@ticket), 
+    <li><%= link_to "» просто закрыть",
+              close_ticket_path(@ticket),
               :method => :post %>
   <% elsif @ticket.closed? && @ticket.closed_at && (@ticket.closed_at > 7.days.ago) %>
-    <li><%= link_to "&raquo; переоткрыть заявку", 
-              reopen_ticket_path(@ticket), 
+    <li><%= link_to "» переоткрыть заявку",
+              reopen_ticket_path(@ticket),
               :method => :post %>
   <% end %>
 
   <% if @ticket.status != Ticket::ST_CLOSED %>
-    <li><%= link_to_function "&raquo; переадресовать.." do |page|
+    <li><%= link_to_function "» переадресовать.." do |page|
               page.visual_effect :toggle_blind, :redirects, :duration => 0.15
             end %>
 
@@ -137,9 +137,9 @@
           <%= link_to_function "в другой отдел.." do |page|
               page.visual_effect :toggle_blind, :redirect_dept_form, :duration => 0.15
           end %>
-          <% form_tag( redirect_ticket_path(@ticket), 
-              :id => 'redirect_dept_form', 
-              :style => 'display:none; margin: 5px 0 0 18px' 
+          <% form_tag( redirect_ticket_path(@ticket),
+              :id => 'redirect_dept_form',
+              :style => 'display:none; margin: 5px 0 0 18px'
              ) do %>
               <%= select_tag 'dept_id', options_for_select(depts_for_select(:exclude => @ticket.dept)) %>
               <%= submit_tag 'Переадресовать', :name => nil %>
@@ -149,44 +149,44 @@
           <%= link_to_function "конкретно на человека.." do |page|
               page.visual_effect :toggle_blind, :redirect_ppl_form, :duration => 0.15
           end %>
-          <% form_tag( redirect_ticket_path(@ticket), 
-              :id => 'redirect_ppl_form', 
-              :style => 'display:none; margin: 5px 0 0 18px' 
+          <% form_tag( redirect_ticket_path(@ticket),
+              :id => 'redirect_ppl_form',
+              :style => 'display:none; margin: 5px 0 0 18px'
              ) do %>
               <%= select_tag 'user_id', options_for_select(users_for_select(:exclude => @ticket.assignee)) %>
               <%= submit_tag 'Переадресовать', :name => nil %>
           <% end %>
         </li>
         <% if @ticket.assignee != current_user %>
-          <li><%= link_to "принять в обработку", 
-              accept_ticket_path(@ticket), 
+          <li><%= link_to "принять в обработку",
+              accept_ticket_path(@ticket),
               :method  => :post,
               :confirm => "принять заявку в обработку?" %>
         <% end %>
       </ul>
 
 
-    <li><%= link_to_function "&raquo; изменить приоритет" do |page|
+    <li><%= link_to_function "» изменить приоритет" do |page|
               page.visual_effect :toggle_blind, :priority_form, :duration => 0.15
             end %>
 
-      <% form_tag( {:action => 'change_priority', :id => @ticket }, 
-          :id => 'priority_form', 
-          :style => 'display:none; margin: 5px 0 0 18px' 
+      <% form_tag( {:action => 'change_priority', :id => @ticket },
+          :id => 'priority_form',
+          :style => 'display:none; margin: 5px 0 0 18px'
          ) do %>
           <%= select_tag 'priority', priorities_for_select(@ticket.priority) %>
           <%= submit_tag 'Изменить', :name => nil %>
       <% end %>
   <% end %>
 
-  <li><%= link_to_function "&raquo; добавить комментарий" do |page|
+  <li><%= link_to_function "» добавить комментарий" do |page|
             page.visual_effect :toggle_blind, :comment_form, :duration => 0.15
             page << 'window.setTimeout("$(\'text\').focus()",150);'
           end %>
 
-    <% form_tag( add_comment_ticket_path(@ticket), 
-        :id => 'comment_form', 
-        :style => 'display:none; margin: 5px 0 0 18px' 
+    <% form_tag( add_comment_ticket_path(@ticket),
+        :id => 'comment_form',
+        :style => 'display:none; margin: 5px 0 0 18px'
        ) do %>
         <%= text_area_tag 'text', '', :style => 'height:3.1em; width:30em; float:left' %>
         <%= submit_tag 'Отправить', :name => nil %>
@@ -211,4 +211,4 @@
   <% end %>
 </table>
 
-<%= link_to "&laquo;&laquo; назад к списку заявок", tickets_path %>
+<%= link_to "«« назад к списку заявок", tickets_path %>

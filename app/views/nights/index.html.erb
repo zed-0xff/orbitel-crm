@@ -157,7 +157,7 @@
 <% unless params[:print] || @readonly %>
 
 <ul class="actions">
-  <li><%= link_to_function "&raquo; добавить отпуск" do |page|
+  <li><%= link_to_function "» добавить отпуск" do |page|
             page.visual_effect :toggle_blind, :vacation_form, :duration => 0.2
           end %>
     <% form_tag( {:action => 'add_vacation'},
@@ -170,14 +170,14 @@
         <%= submit_tag 'Добавить', :name => nil %>
         <p class="clear"></p>
     <% end %>
-  
-  <!--li<%= link_to '&raquo; печать', :year => @year, :month => @month, :print => 1 %>-->
+
+  <!--li<%= link_to '» печать', :year => @year, :month => @month, :print => 1 %>-->
 </ul>
 
 
 <!-- hidden form for submitting params changes -->
-<% form_remote_tag( 
-    :html   => {:id => 'params_form', :style => 'display:none'}, 
+<% form_remote_tag(
+    :html   => {:id => 'params_form', :style => 'display:none'},
     :url    => { :action => 'save_param' },
     :update => 'remote-form-result'
 ) do %>
@@ -250,10 +250,10 @@
         el.style.color = 'gray'
 
       if( db === false || (da !== false && da < db )){
-        html += da + '&raquo;';
+        html += da + '»';
         el.style.textAlign = 'right';
       } else if( da === false || db < da){
-        html += '&laquo;' + db;
+        html += '«' + db;
         el.style.textAlign = 'left';
       } else {
         html += da;
@@ -321,14 +321,14 @@
 
     setnoprint();
   }
-  
+
 EOJS
 %>
 <% end %>
 
 <%= javascript_tag <<-EOJS
   #{handle_ctrl_arrows}
-  
+
   Event.observe(window,'load',setnoprint);
   Event.observe(window,'load',recountWorkCounts);
 

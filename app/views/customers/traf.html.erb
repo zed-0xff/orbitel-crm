@@ -65,10 +65,10 @@
 <h1><%= @customer.name -%></h1>
 
 <h3>
-  Трафик за 
-  <%= link_to "&laquo;", :pos => (params[:pos].to_i - 1) -%>
+  Трафик за
+  <%= link_to "«", :pos => (params[:pos].to_i - 1) -%>
   <%= @traf_dt.strftime('%m.%Y') -%>
-  <%= link_to "&raquo;", :pos => (params[:pos].to_i + 1) -%>
+  <%= link_to "»", :pos => (params[:pos].to_i + 1) -%>
 </h3>
 
 <% if @traf.blank? %>

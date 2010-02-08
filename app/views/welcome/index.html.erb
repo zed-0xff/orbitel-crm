@@ -1,14 +1,14 @@
 <h1>Welcome to Orbitel CRM</h1>
 <% if logged_in? %>
-  
+
   <div class="actions">
     Ваши действия:
     <ul class="actions">
-      <li><%= link_to "&raquo; Проверить возможность подключения", 
+      <li><%= link_to "» Проверить возможность подключения",
                 check_houses_path %>
-      <li><%= link_to "&raquo; Создать запрос на возможность подключения", 
+      <li><%= link_to "» Создать запрос на возможность подключения",
                 new_request_tickets_path %>
-      <li>&raquo; Создать заявку:
+      <li>» Создать заявку:
       <ul>
         <li><%= link_to 'Нет интернета', new_ticket_path(:title => "нет интернета") %>
         <li><%= link_to "Смена ТП", new_tariff_change_tickets_path %>

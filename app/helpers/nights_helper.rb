@@ -1,7 +1,7 @@
 module NightsHelper
   def wday_td date, klass='', &block
     buffer = ''
-  
+
     klass += " weekend" if [6,7].include?(date.cwday)
     klass += " today" if date == Date.today
     klass += " day#{date.day}" unless block_given?
@@ -27,7 +27,7 @@ module NightsHelper
     @drawed_vacations ||= {}
     return '<td style="display:none"></td>' if @drawed_vacations[vacation.id]
     @drawed_vacations[vacation.id] = true
-    ndays = 
+    ndays =
       [vacation.end_date, Date.civil(date.year, date.mon, -1)].min -
       [vacation.start_date, date].max + 1
     "<td class=\"vacation\" colspan=\"#{ndays}\">отпуск"
@@ -38,7 +38,7 @@ module NightsHelper
     %w'вс пн вт ср чт пт сб'[date.wday]
   end
 
-  def link_to_next_month title='&raquo;'
+  def link_to_next_month title='»'
     month = @month + 1
     year  = @year
     if month == 13
@@ -48,7 +48,7 @@ module NightsHelper
     link_to title, {:month => month, :year => year}, :class => 'noprint', :id => 'next-link'
   end
 
-  def link_to_prev_month title='&laquo;'
+  def link_to_prev_month title='«'
     month = @month - 1
     year  = @year
     if month == 0
