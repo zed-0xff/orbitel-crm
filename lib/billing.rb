@@ -5,10 +5,14 @@ class Billing
       @klass = klass.is_a?(Symbol) ?  "Billing::#{klass.to_s.camelize}".constantize : klass
     end
     def method_missing mname, *args
-      if @klass
-        @klass.send(mname,*args)
+      if self == Billing
+        if @klass
+          @klass.send(mname,*args)
+        else
+          raise "Billing class not set"
+        end
       else
-        raise "Billing class not set"
+        super
       end
     end
   end
