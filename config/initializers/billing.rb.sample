@@ -1,0 +1,5 @@
+ActionController::Dispatcher.to_prepare(:billing)
+  Billing.klass = :krus
+  Billing.host = 'some.krus.host'
+  Billing.port = 80
+end

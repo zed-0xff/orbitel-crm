@@ -1,4 +1,0 @@
-ActionController::Dispatcher.to_prepare(:krus)
-  Krus.host = 'some.krus.host'
-  krus.port = 80
-end

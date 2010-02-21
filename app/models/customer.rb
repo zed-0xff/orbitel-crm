@@ -80,10 +80,10 @@ class Customer < ActiveRecord::Base
 
   def billing_info
     return nil unless self.external_id
-    r = Krus.user_info(self.external_id)
+    r = Billing.user_info(self.external_id)
     if r && r[:status] && r[:status].is_a?(Hash)
       Rails.cache.write(
-        "customer.#{self.id}.ips", 
+        "customer.#{self.id}.ips",
         r[:status].keys.sort_by{ |ip| ip.split('.').map(&:to_i) },
         :expires_in => 8.hours
       )
@@ -93,10 +93,10 @@ class Customer < ActiveRecord::Base
 
   def billing_toggle_inet state
     return false unless self.external_id
-    r = Krus.user_toggle_inet(self.external_id, state)
+    r = Billing.user_toggle_inet(self.external_id, state)
     if r && r[:status] && r[:status].is_a?(Hash)
       Rails.cache.write(
-        "customer.#{self.id}.ips", 
+        "customer.#{self.id}.ips",
         r[:status].keys.sort_by{ |ip| ip.split('.').map(&:to_i) },
         :expires_in => 8.hours
       )
@@ -106,10 +106,10 @@ class Customer < ActiveRecord::Base
 
   def billing_correct_balance amount, comment
     return false unless self.external_id
-    r = Krus.user_correct_balance(self.external_id, amount, comment)
+    r = Billing.user_correct_balance(self.external_id, amount, comment)
     if r && r[:status] && r[:status].is_a?(Hash)
       Rails.cache.write(
-        "customer.#{self.id}.ips", 
+        "customer.#{self.id}.ips",
         r[:status].keys.sort_by{ |ip| ip.split('.').map(&:to_i) },
         :expires_in => 8.hours
       )

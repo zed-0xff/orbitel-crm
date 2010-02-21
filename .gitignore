@@ -1,6 +1,7 @@
 .DS_Store
 log/*.log
 log/*.pid
+tmp/*
 tmp/**/*
 config/database.yml
 config/house_coords.yml

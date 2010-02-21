@@ -18,7 +18,7 @@ module CustomersHelper
         max_amount = @info[:bandwidth] * 1024 / 8 * 3600 * 24 * Date.today.day
         percent    = 100 * @info[:traf_report][type] / max_amount
         klass      = 'traf-amount-percent' + ((percent >= 100) ? ' red' : '')
-        r += "<div title='Процент от максимально возможного на текущую дату' class='#{klass}'>(%2d%%)</div>" % percent
+        r += "<div title='Процент от максимально возможного на текущую дату' class='#{klass}'>(#{percent.to_s.rjust(2)}%)</div>"
       end
     end
     r
@@ -34,7 +34,7 @@ module CustomersHelper
 
   def karma_of cust
     r = '&nbsp;'
-    r+= link_to_remote('-', 
+    r+= link_to_remote('-',
                         {
                           :url   => {:action => 'change_karma', :id => cust, :value => -1}
                         },
@@ -52,7 +52,7 @@ module CustomersHelper
       end
     r+= cust.karma.to_i.to_s
     r+= "</span>&nbsp;</strong>"
-    r+= link_to_remote('+', 
+    r+= link_to_remote('+',
                         {
                           :url   => {:action => 'change_karma', :id => cust, :value => +1}
                         },
@@ -81,7 +81,7 @@ module CustomersHelper
         raise "Invalid direction: #{dir.inspect}"
     end
 
-    cust = 
+    cust =
       if params[:from] == 'house'
         cust_from_house dir
       else

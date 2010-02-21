@@ -102,15 +102,6 @@ class CustomersController < ApplicationController
     sleep(0.05) if (Time.now - t0) < 0.05
   end
 
-  KRUS_MAP = {
-    :bal       => 'баланс',
-    :bal_red   => nil,
-    :tarif     => 'тариф',
-    :tarif_red => nil,
-    :name      => 'имя',
-    :lic_schet => 'лиц.счет'
-  }
-
   def billing_info
     expire_fragment("customers/#{@customer.id}/billing_info")
     Rails.cache.delete "customer.#{@customer.id}.tariff"
@@ -151,7 +142,7 @@ class CustomersController < ApplicationController
     dt_start = Date.civil(@traf_dt.year, @traf_dt.month)
     dt_end   = Date.civil(@traf_dt.year, @traf_dt.month, -1)
 
-    ti = Krus.user_traf_info( @customer.external_id, args )
+    ti = Billing.user_traf_info( @customer.external_id, args )
     @traf       = ActiveSupport::OrderedHash.new
     return if ti[:traf].blank?
 

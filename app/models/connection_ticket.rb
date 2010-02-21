@@ -55,8 +55,8 @@ class ConnectionTicket < Ticket
     elsif ip.blank?
       self.billing_status = "IP не назначен"
     else
-      status = ip_info || Krus.ip_info(ip)
-      Rails.logger.info "KRUS.ip_info: #{status.inspect}"
+      status = ip_info || Billing.ip_info(ip)
+      Rails.logger.info "Billing.ip_info: #{status.inspect}"
       self.billing_status =
         if !status.is_a?(Hash)
           status.inspect
@@ -108,7 +108,7 @@ class ConnectionTicket < Ticket
 
   # создать подключение на биллинге
   def create_at_billing!
-    r = Krus.user_create_connection customer.external_id, tarif_ext_id, ip
+    r = Billing.user_create_connection customer.external_id, tarif_ext_id, ip
     Rails.logger.info "Billing response: #{r.inspect}"
     self.billing_status = r
     if r.strip.upcase == 'OK'

@@ -1,7 +1,7 @@
 require 'cgi'
 require 'yaml'
 
-class Krus
+class Billing::Krus < Billing
   cattr_accessor :host, :port, :key
 
   def self.fetch_customers
@@ -42,8 +42,8 @@ class Krus
   def self.user_correct_balance uid, amount, comment
     fetch_yaml_url(
       "payments/correct_balance/#{uid.to_i}" +
-        "?amount=#{CGI.escape(amount)}" + 
-        "&comment=#{CGI.escape(comment)}" + 
+        "?amount=#{CGI.escape(amount)}" +
+        "&comment=#{CGI.escape(comment)}" +
         "&key=#{CGI.escape(key)}",
       true
     )
@@ -53,9 +53,9 @@ class Krus
   def self.user_create_connection uid, tarif_id, ip
     fetch_url(
       "connections/create" +
-        "?user_id=#{uid.to_i}" + 
-        "&tarif_id=#{tarif_id.to_i}" + 
-        "&ip=#{CGI.escape(ip)}" + 
+        "?user_id=#{uid.to_i}" +
+        "&tarif_id=#{tarif_id.to_i}" +
+        "&ip=#{CGI.escape(ip)}" +
         "&key=#{CGI.escape(key)}"
     )
   end
@@ -72,11 +72,11 @@ class Krus
     if RAILS_ENV == 'development'
       Rails.logger.info("KRUS status:   #{res.code} #{res.msg}")
       Rails.logger.info("KRUS redirect: #{res['location']}") unless res['location'].blank?
-      Rails.logger.info("KRUS body:     #{res.body}") 
+      Rails.logger.info("KRUS body:     #{res.body}")
     end
 
     if follow_redirect && res.is_a?(Net::HTTPRedirection)
-      return fetch_url( 
+      return fetch_url(
         res['location'].
         sub("http://#{host}:#{port}/",''). # make location relative (DIRTY!)
         sub("http://#{host}/",'')
