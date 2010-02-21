@@ -33,7 +33,7 @@ Rails::Initializer.run do |config|
       :source => 'http://gems.github.com'
   config.gem "calendar_date_select"
   config.gem "ya2yaml"
-
+  config.gem "configatron"
 
   # Only load the plugins named here, in the order given. By default, all plugins
   # in vendor/plugins are loaded in alphabetical order.

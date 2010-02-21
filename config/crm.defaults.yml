@@ -1,0 +1,5 @@
+billing:
+  klass: test
+
+router:
+  klass: test

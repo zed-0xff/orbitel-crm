@@ -9,6 +9,7 @@ config/initializers/double_gis.rb
 config/initializers/krus.rb
 config/initializers/billing.rb
 config/initializers/router.rb
+config/crm.yml
 config/deploy.rb
 db/schema.rb
 test

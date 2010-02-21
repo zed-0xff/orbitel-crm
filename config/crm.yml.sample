@@ -1,0 +1,12 @@
+billing:
+  key: my_secret_key
+  host: my.billing.tld
+  port: 1234
+  klass: krus
+
+router:
+  ip_info_url: http://my.router.tld/ip_info/IP
+  create_user_url: http://my.router.tld/users/create
+  menu_items: 
+  - href: http://my.router.tld/ping?vlan={IFACE}&ip={IP}
+    name: ping
