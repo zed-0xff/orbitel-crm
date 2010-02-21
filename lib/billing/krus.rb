@@ -4,7 +4,7 @@ require 'yaml'
 class Billing::Krus < Billing
   cattr_accessor :host, :port, :key
 
-  def self.fetch_customers
+  def self.fetch_users
     fetch_yaml_url "report/users.yaml?no_zombies=1"
   end
 
@@ -13,6 +13,24 @@ class Billing::Krus < Billing
   end
 
   def self.user_info uid
+    #  ---
+    #  :user_id: 1234
+    #  :tarif_red: true
+    #  :tarif_id: 188
+    #  :bandwidth:
+    #  :tarif_change_date: 2009-05-01
+    #  :bal: 123.90
+    #  :status:
+    #    192.168.18.16:
+    #      :red: true
+    #      :name: "Выключен"
+    #  :name: "Иванов Иван Иванович"
+    #  :address: "ул. К. Мяготина 14-121"
+    #  :lic_schet: 36006102
+    #  :tarif: "Название Тарифа"
+    #  :traf_report: {}
+    #  :bal_red: true
+
     fetch_yaml_url "user_info/#{uid.to_i}.yaml"
   end
 
