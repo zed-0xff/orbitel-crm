@@ -126,7 +126,7 @@ class CustomersController < ApplicationController
 
   def router_info
     expire_fragment("customers/#{@customer.id}/router_info")
-    @info = @customer.router_info
+    @info = @customer.router_info || []
     render :layout => false
   end
 

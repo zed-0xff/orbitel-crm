@@ -36,14 +36,14 @@
     </span>
   <tr> <th>скорость <td colspan=2><%= @info[:bandwidth].blank? ? "без ограничений" : "#{@info[:bandwidth]} Кбит" %>
 
-  <tr> <th>баланс   
+  <tr> <th>баланс
     <%= @info[:bal_red] ? '<td colspan=2 class="red">' : '<td colspan=2 class="green">' %>
     <%= @info[:bal] %>
 
   <tr><th colspan=3 style="height:3px">
-  <tr> <th rowspan="<%= [@info[:traf_report].size,1].max -%>">трафик
+  <tr> <th rowspan="<%= [(@info[:traf_report] && @info[:traf_report].size).to_i,1].max -%>">трафик
   <% if @info[:traf_report] && @info[:traf_report].any? %>
-    <%= @info[:traf_report].map{ |type,amount| 
+    <%= @info[:traf_report].map{ |type,amount|
       "<td>#{traf_type(type)}<td align=right>#{traf_amount(type)}</td>"
     }.join("<tr>") %>
   <% else %>
@@ -53,7 +53,7 @@
   <% if @info[:status] %>
     <tr><th colspan=3 style="height:3px">
     <tr><th rowspan="<%= @info[:status].size -%>">ips
-    <%= @info[:status].sort_by{ |ip,status| ip.split('.').map(&:to_i) }.map{ |ip,status| 
+    <%= @info[:status].sort_by{ |ip,status| ip.split('.').map(&:to_i) }.map{ |ip,status|
       td = status[:red] ? '<td class="red">' : '<td class="green">'
       "#{td}#{ip}#{td}#{status[:name]}"
     }.join("<tr>") %>
