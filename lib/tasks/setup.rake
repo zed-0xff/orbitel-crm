@@ -42,17 +42,8 @@ namespace :setup do
 
   desc "create initial sample data"
   task :data => :admin do
-    %w'Гоголя Максима_Горького Ленина Пролетарская'.each do |street_name|
-      street_name.tr!('_',' ')
-      s = Street.new :name => street_name
-      if s.valid?
-        s.save!
-        logger.info "created street #{street_name.inspect}"
-      else
-        logger.warn "#{street_name}: #{s.errors.full_messages}"
-      end
-    end
-
+    ENV['EXTENDED_SEED'] = 'true'
+    Rake::Task['db:seed'].invoke
   end
 end
 
