@@ -34,6 +34,29 @@ class Billing::Test < Billing
       @data[uid] || {}
     end
 
+    def user_traf_info uid, args={}
+      h = { :traf => {} }
+      ((Date.today-5.days)..Date.today).each do |d|
+        h[:traf][d] = {
+          :local_in => rand(2000).megabytes,
+          :inet_in  => rand(200).megabytes,
+          :inet_out => rand(100).megabytes
+        }
+      end
+      h
+    end
+
+    # Коррекция баланса юзера
+    # возвращает то же, что и в user_info
+    def user_correct_balance uid, amount, comment
+      prepare_data
+      if @data[uid] && @data[uid][:bal]
+        @data[uid][:bal] += amount.to_f
+      end
+      write_data
+      user_info(uid)
+    end
+
     def generate_test_data
       @data = []
       75.times do
@@ -44,13 +67,29 @@ class Billing::Test < Billing
           @data << generate_test_user(:address => "#{h}-#{1+rand(100)}")
         end
       end
-      DATA_FILE.open 'w' do |f|
-        f << @data.to_yaml
-      end
+      write_data
       @data
     end
 
+    def generate_phone
+      if rand(100) < 30
+        # 30% имеют городской номер
+        "%02d-%02d-%02d" % [10+rand(90), rand(100), rand(100)]
+      else
+        # сотовый
+        "8-%03d-%03d-%02d-%02d" % [CELL_PREFIXES.rand, rand(1000), rand(100), rand(100)]
+      end
+    end
+
     private
+
+    def write_data
+      DATA_FILE.open 'w' do |f|
+        f << @data.to_yaml
+      end
+    rescue
+      nil
+    end
 
     def prepare_data
       if !@data || @data.empty?
@@ -62,16 +101,6 @@ class Billing::Test < Billing
     def generate_name
       sex = rand(100) < 26 ? :female : :male
       names = NAMES[sex].map(&:rand).join(' ')
-    end
-
-    def generate_phone
-      if rand(100) < 30
-        # 30% имеют городской номер
-        "%02d-%02d-%02d" % [10+rand(90), rand(100), rand(100)]
-      else
-        # сотовый
-        "8-%03d-%03d-%02d-%02d" % [CELL_PREFIXES.rand, rand(1000), rand(100), rand(100)]
-      end
     end
 
     def generate_test_user h={}

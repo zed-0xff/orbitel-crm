@@ -85,7 +85,90 @@ if ENV['EXTENDED_SEED']
     :dept_id  => technicians_dept.id
   }
 
+  #############################################################################
+  # generate customers
+
   if configatron.billing.klass.to_s.downcase['test']
     load(Rails.root+'contrib/import_billing_users.rb')
+  end
+
+  #############################################################################
+  # generate phone calls
+
+  customers = Customer.all
+
+  if Radius::Call.count < 50
+    phones    = Phone.all.map(&:number)
+    (phones.size/2).times do
+      # 30% unknown phone numbers
+      phones << Billing::Test::generate_phone.to_s.tr('-','').to_i
+    end
+    if customers.any?
+      start = Time.now - 10.hours
+      50.times do
+        len = rand(100) < 15 ? 0 : rand(5*60) # 15% unanswered calls
+        Radius::Call.create(
+          :acctstarttime    => start,
+          :acctstoptime     => start+len,
+          :acctsessiontime  => len,
+          :callingstationid => phones.rand
+        )
+        start += len + rand(10*60)
+      end
+    end
+  end
+
+  #############################################################################
+  # generate tickets
+
+  users = User.all
+
+  if Ticket.count < 30
+    tickets = []
+    titles = [
+      'нет сети',
+      'нет интернета',
+      'потери 30%',
+      'абонент недоволен скоростью',
+      'потери 5%',
+      'СКНП'
+    ]
+    comments = [
+      'обрыв кабеля',
+      'сделаем завтра',
+      'нет ключей от чердака',
+      'должен работать',
+      'возможно DNS не правильно прописан или в браузере ошибка',
+      'надо менять оборудование на узле',
+      'у абонента было выключено сетевое подключение',
+      'пингуется без потерь',
+      'зависание у/с',
+      'кабель поврежден на 5 этаже, порезан немного',
+      'проблемы с виндой',
+      'ну что, починили?'
+    ]
+    30.times do
+      tickets << Ticket.create!(
+        :created_by => users.rand,
+        :customer   => customers.rand,
+        :title      => titles.rand
+      )
+      sleep 0.1
+      if rand(100) < [30,tickets.size].max
+        ticket = tickets.rand
+        ticket.history.create!(
+          :user    => users.rand,
+          :comment => comments.rand
+        )
+        sleep 0.1
+      end
+      if rand(100) < 20
+        ticket = tickets.rand
+        if ticket.status == Ticket::ST_NEW
+          ticket.change_status! Ticket::ST_ACCEPTED, :user => users.rand, :assign => true
+        end
+        sleep 0.1
+      end
+    end
   end
 end
