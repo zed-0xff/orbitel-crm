@@ -1,5 +1,5 @@
 billing:
-  klass: test
+  klass: sample
 
 router:
-  klass: test
+  klass: sample

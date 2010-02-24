@@ -1,52 +1,57 @@
-require 'net/http'
-require 'yaml'
-
 class Router
-  cattr_accessor %w'ip_info_url create_user_url'
-  cattr_accessor :menu_items
+  class << self
+    attr_reader :klass
 
-  # menu items to show in Customer -> [router part]
-  # пункты меню, которые показываются в просмотре Абонента -> "Данные роутера"
-  # (надо нажать на серенький плюсик)
-  @@menu_items = [
-    {
-      :name => 'tcpdump',
-      :href => 'tcpdump://{IP}'
-    },{
-      :name => 'iftop',
-      :href => 'iftop://{IP}'
-    }
-  ]
+    def klass= klass
+      @klass = [Symbol,String].include?(klass.class) ? "Router::#{klass.to_s.camelize}".constantize : klass
+    end
 
-  # fetch ip info (vlan, mac address, etc)
-  def self.ip_info ip
-    fetch_yaml_url(ip_info_url.sub('IP',ip.to_s))
-  end
+    def configure!
+      if !@klass && defined?(configatron) && !configatron.router.klass.nil?
+        self.klass = configatron.router.klass
+        configatron.router.to_hash.each do |k,v|
+          self.send("#{k}=",v) if self.respond_to?("#{k}=")
+        end
+      end
+    end
 
-  # ping ip address to test for lost packets
-  def self.ping ip
-  end
+    def inspect
+      configure!
+      @klass || 'Router'
+    end
 
-  # создать юзера на роутере
-  def self.create_user! vlan, ip, comment
-    h = {}
-    h[:vlan] = vlan
-    h[:ip]   = ip
-    h[:fio]  = comment
-    h[:ru]  = 'ру' # для автоопределения кодировки на стороне сервера
-    r = Net::HTTP.post_form( URI.parse(create_user_url), h)
-    r.body
-  end
+    DEFAULT_MENU_ITEMS = [
+      {
+        :name => 'tcpdump',
+        :href => 'tcpdump://{IP}'
+      },{
+        :name => 'iftop',
+        :href => 'iftop://{IP}'
+      }
+    ]
 
-  private
+    # menu items to show in Customer -> [router part]
+    # пункты меню, которые показываются в просмотре Абонента -> "Данные роутера"
+    # (надо нажать на серенький плюсик)
+    def menu_items
+      if defined?(configatron) && !configatron.router.menu_items.nil?
+        configatron.router.menu_items
+      else
+        DEFAULT_MENU_ITEMS
+      end
+    end
 
-  def self.fetch_yaml_url url
-    url = URI.parse( url )
-    res = Net::HTTP.start(url.host, url.port) {|http|
-      http.read_timeout = 600
-      http.get(url.request_uri)
-    }
-
-    YAML::load( res.body )
+    def method_missing mname, *args
+      if self == Router
+        configure!
+        if @klass
+          @klass.send(mname,*args)
+        else
+          raise "Router class not set"
+        end
+      else
+        super
+      end
+    end
   end
 end

@@ -1,10 +1,11 @@
 billing:
+  klass: krus
   key: my_secret_key
   host: my.billing.tld
   port: 1234
-  klass: krus
 
 router:
+  klass: orbitel
   ip_info_url: http://my.router.tld/ip_info/IP
   create_user_url: http://my.router.tld/users/create
   menu_items: 

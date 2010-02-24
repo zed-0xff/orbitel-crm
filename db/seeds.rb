@@ -88,7 +88,7 @@ if ENV['EXTENDED_SEED']
   #############################################################################
   # generate customers
 
-  if configatron.billing.klass.to_s.downcase['test']
+  if configatron.billing.klass.to_s.downcase['sample']
     load(Rails.root+'contrib/import_billing_users.rb')
   end
 
@@ -101,7 +101,7 @@ if ENV['EXTENDED_SEED']
     phones    = Phone.all.map(&:number)
     (phones.size/2).times do
       # 30% unknown phone numbers
-      phones << Billing::Test::generate_phone.to_s.tr('-','').to_i
+      phones << Billing::Sample::generate_phone.to_s.tr('-','').to_i
     end
     if customers.any?
       start = Time.now - 10.hours

@@ -1,6 +1,7 @@
 module CustomersHelper
   TRAF_TYPES = {
     :in_sat   => 'входящий',
+    :inet_in  => 'входящий',
     :inet_out => 'исходящий',
     :local    => 'локальный'
   }
@@ -13,7 +14,7 @@ module CustomersHelper
     r = number_to_human_size(@info[:traf_report][type])
     if @info[:bandwidth]
       r = "<div class='traf-amount'>#{r}</div>"
-      if [:inet_out, :in_sat].include?(type)
+      if [:inet_in, :inet_out, :in_sat].include?(type) && @info[:bandwidth]
         # max traffic amount from start of month to current day
         max_amount = @info[:bandwidth] * 1024 / 8 * 3600 * 24 * Date.today.day
         percent    = 100 * @info[:traf_report][type] / max_amount

@@ -1,5 +1,5 @@
 # "тестовый" виртуальный биллинг
-class Billing::Test < Billing
+class Billing::Sample < Billing
 
   STREETS = %w'Аргентовского Бажова Блюхера Больничная Бурова-Петрова Васильева Войкова Володарского Галкинская Гоголя Дзержи
   нского Заводская Загородная Зорге Интернациональная Ипподромная Карельцева Карла Кирова Климова'
@@ -20,7 +20,7 @@ class Billing::Test < Billing
 
   CELL_PREFIXES = [ 912, 919, 909, 905, 906, 961, 963, 922 ]
 
-  DATA_FILE = Rails.root + 'tmp/billing_test_data.yml'
+  DATA_FILE = Rails.root + 'tmp/billing_sample_data.yml'
 
   class << self
 
@@ -36,14 +36,28 @@ class Billing::Test < Billing
 
     def user_traf_info uid, args={}
       h = { :traf => {} }
-      ((Date.today-5.days)..Date.today).each do |d|
+      ((Date.today-15.days)..Date.today).each do |d|
         h[:traf][d] = {
-          :local_in => rand(2000).megabytes,
-          :inet_in  => rand(200).megabytes,
-          :inet_out => rand(100).megabytes
+          :local_in => rand(20000).megabytes,
+          :inet_in  => rand(2000).megabytes,
+          :inet_out => rand(1000).megabytes
         }
       end
       h
+    end
+
+    # Включить/выключить юзеру доступ в инет
+    # возвращает то же, что и в user_info
+    def user_toggle_inet uid, state
+      prepare_data
+      if @data[uid] && @data[uid][:bal]
+        @data[uid][:status].each do |ip, st|
+          st[:name] = state ? 'Включен' : 'Выключен'
+          st[:red]  = !state
+        end
+        write_data
+      end
+      user_info(uid)
     end
 
     # Коррекция баланса юзера
@@ -52,19 +66,19 @@ class Billing::Test < Billing
       prepare_data
       if @data[uid] && @data[uid][:bal]
         @data[uid][:bal] += amount.to_f
+        write_data
       end
-      write_data
       user_info(uid)
     end
 
-    def generate_test_data
+    def generate_sample_data
       @data = []
       75.times do
-        @data << generate_test_user
+        @data << generate_sample_user
       end
       BIG_HOUSES.each do |h|
         (8+rand(10)).times do
-          @data << generate_test_user(:address => "#{h}-#{1+rand(100)}")
+          @data << generate_sample_user(:address => "#{h}-#{1+rand(100)}")
         end
       end
       write_data
@@ -94,7 +108,7 @@ class Billing::Test < Billing
     def prepare_data
       if !@data || @data.empty?
         @data = YAML::load(DATA_FILE.read) rescue nil
-        @data ||= generate_test_data
+        @data ||= generate_sample_data
       end
     end
 
@@ -103,7 +117,7 @@ class Billing::Test < Billing
       names = NAMES[sex].map(&:rand).join(' ')
     end
 
-    def generate_test_user h={}
+    def generate_sample_user h={}
       unless h[:user_id]
         @uid ||= 0
         @uid += 1
@@ -111,7 +125,7 @@ class Billing::Test < Billing
       end
 
       bal    = (rand(200000)-100000) / 100.0
-      bw     = rand(10)+1
+      bw     = rand(10)+1 # ширина канала в мегабитах
       phones = [generate_phone]
       phones << generate_phone if rand(100)<30 # у 30% более одного телефона
       h.reverse_merge(
@@ -125,7 +139,14 @@ class Billing::Test < Billing
         :phones      => phones.join(', '),
         :tarif       => "Безлимитный-#{bw}М",
         :tarif_change_date => (Date.today - rand(100).days),
-        :traf_report => {},
+        :traf_report => {
+          # сколько юзер успел накачать с начала текущего месяца
+          :user_id    => h[:user_id], # пережитки прошлого, необязательный параметр
+          :inet_in    => rand( bw * 1.megabyte * (Date.today.day + 2).days / 8 ),
+          :inet_out   => rand( bw * 1.megabyte * (Date.today.day + 2).days / 8 ),
+          # пусть локалка у нас в два раза быстрее глобала
+          :local      => rand( bw * 2.megabyte * (Date.today.day + 2).days / 8 )
+        },
         :status => {
           "192.168.#{rand(256)}.#{rand(256)}" => {
             :name => (bal <= 0) ? 'Выключен' : 'Включен',
