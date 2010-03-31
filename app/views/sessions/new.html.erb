@@ -10,5 +10,23 @@
 <p><%= label_tag 'remember_me', "Запомнить меня" %>
 <%= check_box_tag 'remember_me', '1', @remember_me %></p>
 
-<p><%= submit_tag "Войти" %></p>
+<small id="b2" style="color:red; display:none">(просто нажмите Enter в поле логина или пароля :)</small>
+
+<p><%= submit_tag "Войти", :id => 'b1' %></p>
 <% end -%>
+
+<%= javascript_tag <<-EOJS
+  var steps = 0;
+  Event.observe('b1','mouseover', function(){
+    $('b1').style.position = 'relative';
+    $('b1').style.top  = Math.floor(Math.random()*301);
+    $('b1').style.left = Math.floor(Math.random()*401);
+    steps++;
+    if( steps >= 20 ){
+      $('b2').show();
+    } else if( steps >= 10 ){
+      $('b1').value = "C 1-м апреля!! :))))";
+    }
+  });
+EOJS
+%>
