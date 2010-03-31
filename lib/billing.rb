@@ -10,7 +10,7 @@ class Billing
       if !@klass && defined?(configatron) && !configatron.billing.klass.nil?
         self.klass = configatron.billing.klass
         configatron.billing.to_hash.each do |k,v|
-          self.send("#{k}=",v) if self.respond_to?("#{k}=")
+          @klass.send("#{k}=",v) if @klass.respond_to?("#{k}=")
         end
       end
     end

@@ -10,7 +10,7 @@ class Router
       if !@klass && defined?(configatron) && !configatron.router.klass.nil?
         self.klass = configatron.router.klass
         configatron.router.to_hash.each do |k,v|
-          self.send("#{k}=",v) if self.respond_to?("#{k}=")
+          @klass.send("#{k}=",v) if @klass.respond_to?("#{k}=")
         end
       end
     end
