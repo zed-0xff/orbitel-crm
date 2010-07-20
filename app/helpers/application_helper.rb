@@ -29,7 +29,7 @@ module ApplicationHelper
     end
     attrs[:class] ||= klass
     link_to(title, house_path(house), attrs) +
-      ((obj.respond_to?(:flat) && !obj.flat.blank?) ? "<span style=\"color:#b8b8b8\">-#{obj.flat}</span>" : '')
+      ((obj.respond_to?(:flat) && !obj.flat.blank?) ? "<span style=\"color:#b8b8b8\">-#{obj.flat}</span>".html_safe : '')
   end
   alias :link_to_address :link_to_address_of
 
@@ -72,17 +72,17 @@ module ApplicationHelper
 
   def handle_ctrl_arrows
     <<-EOJS
-      // handle Ctrl+Left & Ctrl+Right keys 
-      Event.observe(window, 'keydown', function(ev){ 
-        if( ev.ctrlKey ){ 
-          var link; 
-          if( ev.keyCode == 0x25 )  
-            link = $('prev-link'); 
-          else if( ev.keyCode == 0x27 )  
-            link = $('next-link'); 
-     
-          if( link && link.href ) document.location = link.href; 
-        } 
+      // handle Ctrl+Left & Ctrl+Right keys
+      Event.observe(window, 'keydown', function(ev){
+        if( ev.ctrlKey ){
+          var link;
+          if( ev.keyCode == 0x25 )
+            link = $('prev-link');
+          else if( ev.keyCode == 0x27 )
+            link = $('next-link');
+
+          if( link && link.href ) document.location = link.href;
+        }
       });
     EOJS
   end
