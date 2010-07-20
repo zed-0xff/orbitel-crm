@@ -2,7 +2,7 @@ require 'net/http'
 require 'yaml'
 
 class Router::Orbitel < Router
-  cattr_accessor %w'ip_info_url create_user_url'
+  cattr_accessor :ip_info_url, :create_user_url
 
   # fetch ip info (vlan, mac address, etc)
   def self.ip_info ip
