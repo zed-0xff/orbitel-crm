@@ -17,3 +17,4 @@ krus_customers.yml
 *.sql
 public/system
 *.log
+contrib/import_1c_nodes.yml

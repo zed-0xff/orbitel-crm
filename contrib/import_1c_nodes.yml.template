@@ -1,0 +1,7 @@
+dd_fname: 1Cv7.DD
+smb:
+  user:  smb_username
+  pass:  smb_password
+  host:  smb_host
+  share: smb_share_name
+
