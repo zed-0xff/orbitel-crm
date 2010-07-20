@@ -86,6 +86,7 @@ class OneEsClient
 
     a = []
     table.each do |row|
+      next if row.attributes['ISMARK'].strip == '*' # deleted rows
       r = Node.new
       @important_fields.each do |fkey,ftitle|
         v = row.attributes[fkey]
@@ -93,6 +94,7 @@ class OneEsClient
         r.send("#{ftitle}=",v)
       end
       t = r.type
+      #p row if r.address['Горького 155'] && t!='QPE'
       #next if t == 'QPE' # skip abonents
       if t1 = TYPES[t]
         r.type = t1
@@ -139,3 +141,55 @@ a.each do |nodeinfo|
     node.update_attribute(:parent_id, parent_node.id)
   end
 end
+
+stats = Hash.new(0)
+
+puts "[.] associating customers with nodes.."
+Node.find_all_by_nodetype('абонент').each do |node|
+  next unless node.parent
+  address,customer_name_part,_ = node.name.split(/[()]/,3)
+  address.strip!
+  unless customer_name_part
+    puts "[?] no customer name part in #{node.name.inspect}"
+    stats[:no_name] += 1
+    next
+  end
+  customer_name_part.strip!
+  a = address.split("-")
+  house_addr = nil
+  flat_num = nil
+  if a.size == 2
+    house_addr, flat_num = a
+  elsif a.first.size > 4
+    house_addr, flat_num = a[0],a[1]
+  else
+    house_addr, flat_num = a[0]+'-'+a[1], a[2]
+  end
+  house_addr.strip!
+  unless flat_num
+    puts "[?] no flat in address for #{node.name.inspect}"
+    stats[:no_flat] += 1
+    next
+  end
+  flat_num.strip!
+  house = House.from_string(house_addr)
+  if house.new_record?
+    puts "[?] can't find house for #{node.name.inspect}, house_addr=#{house_addr.inspect}"
+    stats[:no_house] += 1
+    next
+  end
+  was = false
+  house.customers.each do |c|
+    if c.flat == flat_num && c.name[customer_name_part]
+      c.update_attribute :node_id, node.parent.id
+      was = true
+      stats[:ok] += 1
+    end
+  end
+  unless was
+    puts "[?] can't find flat of #{node.name.inspect}"
+    stats[:cannot_find_flat] += 1
+  end
+end
+
+puts "[_] #{stats.inspect}"

@@ -5,6 +5,7 @@ class Customer < ActiveRecord::Base
   validates_uniqueness_of :external_id, :allow_nil => true
 
   belongs_to :house
+  belongs_to :node
 
   has_many :calls
   has_many :tickets
