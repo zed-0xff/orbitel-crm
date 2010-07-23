@@ -67,8 +67,8 @@ class TicketsController < ApplicationController
 
     ok = false
 
-    if klass == Ticket && 
-      @ticket.customer && 
+    if klass == Ticket &&
+      @ticket.customer &&
       !allow_doubles   &&
       (t=Ticket.current.first( :conditions => {
         :customer_id => @ticket.customer.id,
@@ -106,14 +106,14 @@ class TicketsController < ApplicationController
 
     respond_to do |format|
       format.html { ok ? redirect_to(ticket_path(@ticket)) : render(:new) }
-      format.yaml { 
-        r = { 
+      format.yaml {
+        r = {
           'ticket'    => @ticket.attributes.reject{ |k,v| v.blank? },
           'ticket_id' => @ticket.id,
           'ok'        => ok
         }
         r['errors'] = @ticket.errors.full_messages unless ok
-        render :text => r.ya2yaml 
+        render :text => r.ya2yaml
       }
     end
   end
@@ -149,9 +149,9 @@ class TicketsController < ApplicationController
     ) if c
 
     respond_to do |format|
-      format.yaml { 
+      format.yaml {
         r['ticket'] = @ticket && @ticket.attributes.reject{ |k,v| v.blank? }
-        render :text => r.ya2yaml 
+        render :text => r.ya2yaml
       }
     end
   end
@@ -165,7 +165,7 @@ class TicketsController < ApplicationController
   def show
     @title = "Заявка №#{@ticket.id} - #{@ticket.title}"
   end
-  
+
   def mine
     @title = 'My tickets'
     @tickets = Ticket.all :conditions => {:created_by_id => current_user}
@@ -179,7 +179,7 @@ class TicketsController < ApplicationController
   end
 
 ##########################################################
-  
+
   def index
     @title = 'Текущие заявки'
     @tickets = prepare_tickets Ticket::COND_CURRENT, :order => "priority DESC, created_at"
@@ -243,22 +243,61 @@ class TicketsController < ApplicationController
 
 ##########################################################
 
+  # подготовка дерева узлов для AJAX тычки "зависание узла"
+  def nodes
+    @nodes = []
+    node = @ticket.customer.node
+    while node
+      @nodes.unshift node
+      node = node.parent
+    end
+    sp = ''
+    @nodes_for_select = []
+    @nodes.each do |node|
+      t = (sp.blank? ? "" : "#{sp}┗&nbsp;") << node.name
+      @nodes_for_select << [t.html_safe, node.id]
+      sp += "&nbsp;&nbsp;"
+    end
+    render :layout => false
+  end
+
+  def node_hang
+    @node = Node.find(params[:node_id].to_i)
+    ticket = nil
+    if ticket = NodeHangTicket.current.find_by_node_id(@node.id)
+    else
+      ticket = NodeHangTicket.create! :node => @node, :created_by => current_user
+    end
+    ticket.child_tickets << @ticket
+    redirect_to ticket
+  end
+
+##########################################################
+
   def accept
-    @ticket.change_status! Ticket::ST_ACCEPTED, 
+    @ticket.change_status! Ticket::ST_ACCEPTED,
       :user => current_user, :assign => true
     flash[:notice] = "Заявка принята в обработку"
     redirect_to ticket_path(@ticket)
   end
 
   def close
-    @ticket.change_status! Ticket::ST_CLOSED, 
+    @ticket.change_status! Ticket::ST_CLOSED,
       :user => current_user, :assign => false, :comment => params[:comment]
+    if params[:close_childs]
+      @ticket.child_tickets.each do |t|
+        if t.status != Ticket::ST_CLOSED
+          t.change_status! Ticket::ST_CLOSED,
+            :user => current_user, :assign => false, :comment => params[:comment]
+        end
+      end
+    end
     flash[:notice] = "Заявка закрыта"
     redirect_to ticket_path(@ticket)
   end
 
   def reopen
-    @ticket.change_status! Ticket::ST_REOPENED, 
+    @ticket.change_status! Ticket::ST_REOPENED,
       :user => current_user, :assign => false
     flash[:notice] = "Заявка переоткрыта"
     redirect_to ticket_path(@ticket)
@@ -305,7 +344,7 @@ class TicketsController < ApplicationController
 
     # if none of above cases matched
     r ||= Ticket.for_user(current_user)
-    
+
     options[:conditions] ||= conditions
     options[:include] = [:house, :assignee, {:house => :street}]
     r.all options
@@ -329,18 +368,18 @@ class TicketsController < ApplicationController
     r
   end
 
-  def rescue_action(exception)
-    respond_to do |format|
-      format.html {
-        super(exception)
-      }
-      format.yaml {
-        log_error exception
-        render :text => {
-          'ok'    => false,
-          'error' => exception.to_s
-        }.ya2yaml
-      }
-    end
-  end
+#  def rescue_action(exception)
+#    respond_to do |format|
+#      format.html {
+#        super(exception)
+#      }
+#      format.yaml {
+#        log_error exception
+#        render :text => {
+#          'ok'    => false,
+#          'error' => exception.to_s
+#        }.ya2yaml
+#      }
+#    end
+#  end
 end

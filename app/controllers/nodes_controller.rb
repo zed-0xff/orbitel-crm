@@ -1,7 +1,29 @@
 class NodesController < ApplicationController
   before_filter :prepare_node
+  helper :tickets
 
   def index
+    @current_tickets = NodeHangTicket.current :order => 'created_at DESC'
+    @last_tickets = NodeHangTicket.all :order => 'created_at DESC', :limit => 20
+    t = NodeHangTicket.count(
+      :group => 'node_id',
+      :conditions => ["created_at >= ?",Date.today - 30.days]
+    )
+    @weak30nodes = []
+    t.each do |node_id,cnt|
+      @weak30nodes << [Node.find(node_id),cnt]
+    end
+    @weak30nodes = @weak30nodes.sort_by{ |t| -t[1] }
+
+    t = NodeHangTicket.count(
+      :group => 'node_id',
+      :conditions => ["created_at >= ?",Date.today - 90.days]
+    )
+    @weak90nodes = []
+    t.each do |node_id,cnt|
+      @weak90nodes << [Node.find(node_id),cnt]
+    end
+    @weak90nodes = @weak90nodes.sort_by{ |t| -t[1] }
   end
 
   def show
@@ -19,6 +41,7 @@ class NodesController < ApplicationController
         @subcustomers = @subcustomers.sort_by{ |c| c.address }
       end
     end
+    @tickets = @node.tickets :order => 'created_at DESC'
   end
 
   private

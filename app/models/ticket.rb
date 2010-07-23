@@ -8,6 +8,9 @@ class Ticket < ActiveRecord::Base
   has_many :ticket_history_entries, :order => 'created_at DESC'
   alias :history :ticket_history_entries
 
+  has_many :child_tickets, :class_name => 'Ticket', :foreign_key => 'parent_id'
+  belongs_to :parent, :class_name => 'Ticket'
+
   validates_associated  :house, :message => '^Ошибки в адресе подключения'
   validates_presence_of :house, :message => '^Абонент не указан', :if => Proc.new{ |t| t.class == Ticket }
   validates_presence_of :title, :message => '^Не указана суть проблемы'
@@ -42,9 +45,9 @@ class Ticket < ActiveRecord::Base
   }
 
   named_scope :reopened_at, lambda{ |date|
-    { 
+    {
       :joins      => :ticket_history_entries,
-      :conditions => { 
+      :conditions => {
         :ticket_history_entries => {
           :created_at => (date.to_time)..((date+1).to_time - 1),
           :new_status => ST_REOPENED
@@ -115,6 +118,8 @@ class Ticket < ActiveRecord::Base
   def address
     if house
       "#{house.street.try(:name)} #{house.number}" + (flat.blank? ? '' : "-#{flat}")
+    elsif respond_to?(:node) && node
+      node.name
     else
       nil
     end
@@ -126,7 +131,7 @@ class Ticket < ActiveRecord::Base
   end
 
   def change_status! new_status, options = {}
-    if options[:user] 
+    if options[:user]
       if options[:assign]
         self.assignee = options[:user]
       end

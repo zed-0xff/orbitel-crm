@@ -16,6 +16,11 @@
   </tr>
 </table>
 
+<% if @tickets.any? %>
+  <h3>Заявки с узла (<%= @tickets.size -%>)</h3>
+  <%= render 'tickets/table' %>
+<% end %>
+
 <h3>Абоненты с узла (<%= @customers.size -%>)</h3>
 <table class="t1">
   <% @customers.each do |customer| %>

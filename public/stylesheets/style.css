@@ -498,3 +498,11 @@ div#search-box input {
   padding: 0;
   color: #96969d;
 }
+
+table.noborder {
+  border-collapse: collapse;
+  border: 0;
+}
+table.noborder td {
+  border: 0;
+}

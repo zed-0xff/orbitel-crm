@@ -5,4 +5,5 @@ class Node < ActiveRecord::Base
   has_many :subnodes, :class_name => 'Node', :foreign_key => 'parent_id'
 
   has_many :customers
+  has_many :tickets
 end

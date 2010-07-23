@@ -56,6 +56,9 @@ function show_additional_settings(ev){
                     name:      'Ночные дежурства',
                     className: 'nights',
                     href:      '/nights'
+                  },{
+                    name:      'Узлы',
+                    href:      '/nodes'
                   }
                 ];
 

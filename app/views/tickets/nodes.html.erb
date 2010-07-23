@@ -1,0 +1,4 @@
+<% form_tag :action => 'node_hang', :id => @ticket do %>
+  <%= select_tag 'node_id', options_for_select(@nodes_for_select, @nodes.last.id) %>
+  <%= submit_tag 'Отправить', :name => nil %>
+<% end %>
