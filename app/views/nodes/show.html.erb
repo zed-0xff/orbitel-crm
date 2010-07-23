@@ -1,0 +1,46 @@
+<h1><%= @node.name %></h1>
+
+<h3>Данные узла</h3>
+<table class="t1">
+  <tr>
+    <th>родительский узел</th>
+    <td><%= link_to @node.parent.name, node_path(@node.parent) if @node.parent -%></td>
+  </tr>
+  <tr>
+    <th>подчиненные узлы</th>
+    <td>
+      <% @node.subnodes.all(:conditions => "nodetype != 'абонент'", :order => :name).each do |node| %>
+        <%= link_to node.name, node_path(node) -%><br/>
+      <% end %>
+    </td>
+  </tr>
+</table>
+
+<h3>Абоненты с узла (<%= @customers.size -%>)</h3>
+<table class="t1">
+  <% @customers.each do |customer| %>
+    <tr>
+      <td><%= customer.address %></td>
+      <td><%= link_to_customer(customer, {}, :from => :node) %></td>
+    </tr>
+  <% end %>
+</table>
+
+<% if @subcustomers.any? %>
+  <h3>
+    Абоненты, включая подчиненые узлы (<%= @subcustomers.size -%>)
+    <% if @subcustomers_count > @subcustomers.size %>
+      <p style="font-size:10pt; font-weight:normal; margin-top:0; color: #999">
+        (показаны первые <%=@subcustomers.size%> из <%=@subcustomers_count%>)
+      </p>
+    <% end %>
+  </h3>
+  <table class="t1">
+    <% @subcustomers.each do |customer| %>
+      <tr>
+        <td><%= customer.address %></td>
+        <td><%= link_to_customer(customer, {}, :from => :node) %></td>
+      </tr>
+    <% end %>
+  </table>
+<% end %>

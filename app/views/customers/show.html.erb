@@ -103,6 +103,10 @@
     <th>телефон<%= 'ы' if @customer.phones.size > 1 -%>
     <td><%= @customer.phones.map(&:humanize).join("; ") %>
   </tr>
+  <tr>
+    <th>узел
+    <td><%= link_to(@customer.node.name, @customer.node) if @customer.node %>
+  </tr>
   <tr><th class="sep" colspan="2"></th></tr>
   <tr>
     <th>карма</th>

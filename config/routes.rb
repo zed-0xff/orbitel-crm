@@ -3,7 +3,7 @@ ActionController::Routing::Routes.draw do |map|
   map.login '/login', :controller => 'sessions', :action => 'new'
   #map.register '/register', :controller => 'users', :action => 'create'
   #map.signup '/signup', :controller => 'users', :action => 'new'
-  map.resources :users
+  map.resources :users, :nodes
   map.resources :houses, :collection => {
     :check => :any
   }
@@ -20,7 +20,7 @@ ActionController::Routing::Routes.draw do |map|
     :router_info   => :post
   }
 
-  map.resources :tickets, :collection => { 
+  map.resources :tickets, :collection => {
     :new_request    => :get,
     :new_tariff_change => :get,
     :mine           => :get,
@@ -59,7 +59,7 @@ ActionController::Routing::Routes.draw do |map|
 
   # Sample resource route with sub-resources:
   #   map.resources :products, :has_many => [ :comments, :sales ], :has_one => :seller
-  
+
   # Sample resource route with more complex sub-resources
   #   map.resources :products do |products|
   #     products.resources :comments
