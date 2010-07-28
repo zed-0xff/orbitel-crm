@@ -131,7 +131,9 @@
            <%= text_area_tag 'comment', '', :style => 'height:3.1em; width:30em; float:left', :id => 'close_text' %>
            <%= submit_tag 'Закрыть', :name => nil %>
            <p class="clear"></p>
-           <%= check_box_tag 'close_childs', '1', true %><%= label_tag 'close_childs', 'закрыть подчиненные заявки', :style => 'font-size:10pt' %>
+           <% if @ticket.child_tickets.any? %>
+             <%= check_box_tag 'close_childs', '1', true %><%= label_tag 'close_childs', 'закрыть подчиненные заявки', :style => 'font-size:10pt' %>
+           <% end %>
       <% end %>
 
       <% unless @ticket.is_a?(NodeHangTicket) %>
@@ -186,7 +188,7 @@
 
     </li>
 
-    <% if @ticket.customer && @ticket.assignee == current_user %>
+    <% if @ticket.customer %>
       <li><%= link_to_remote( "&raquo; зависание узла..",
                            :update => "nodes",
                            :url => { :action => 'nodes', :id => @ticket },
